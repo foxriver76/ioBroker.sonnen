@@ -1,32 +1,5 @@
 /**
- *
  * sonnen adapter
- *
- *
- *  file io-package.json comments:
- *
- *  {
- *      "common": {
- *          "name":         "sonnen",                  // name has to be set and has to be equal to adapters folder name and main file name excluding extension
- *          "version":      "0.0.0",                    // use "Semantic Versioning"! see http://semver.org/
- *          "title":        "Node.js sonnen Adapter",  // Adapter title shown in User Interfaces
- *          "authors":  [                               // Array of authord
- *              "name <mail@sonnen.com>"
- *          ]
- *          "desc":         "sonnen adapter",          // Adapter description shown in User Interfaces. Can be a language object {de:"...",ru:"..."} or a string
- *          "platform":     "Javascript/Node.js",       // possible values "javascript", "javascript/Node.js" - more coming
- *          "mode":         "daemon",                   // possible values "daemon", "schedule", "subscribe"
- *          "materialize":  true,                       // support of admin3
- *          "schedule":     "0 0 * * *"                 // cron-style schedule. Only needed if mode=schedule
- *          "loglevel":     "info"                      // Adapters Log Level
- *      },
- *      "native": {                                     // the native object is available via adapter.config in your adapters code - use it for configuration
- *          "test1": true,
- *          "test2": 42,
- *          "mySelect": "auto"
- *      }
- *  }
- *
  */
 
 /* jshint -W097 */// jshint strict:false
@@ -37,19 +10,12 @@
 const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 
 // you have to call the adapter function and pass a options object
-// name has to be set and has to be equal to adapters folder name and main file name excluding extension
-// adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.sonnen.0
 const adapter = new utils.Adapter('sonnen');
 
-/*Variable declaration, since ES6 there are let to declare variables. Let has a more clearer definition where 
-it is available then var.The variable is available inside a block and it's childs, but not outside. 
-You can define the same variable name inside a child without produce a conflict with the variable of the parent block.*/
-let variable = 1234;
-
-// is called when adapter shuts down - callback has to be called under any circumstances!
+// when adapter shuts down
 adapter.on('unload', function (callback) {
     try {
-        adapter.log.info('cleaned everything up...');
+        adapter.log.info('Stop sonnen adapter...');
         callback();
     } catch (e) {
         callback();
@@ -87,29 +53,17 @@ adapter.on('message', function (obj) {
 });
 
 // is called when databases are connected and adapter received configuration.
-// start here!
 adapter.on('ready', function () {
-    main();
+    if(adapter.config.ip) {
+    	adapter.log.info('Starting sonnen adapter');
+    	main();
+    } else adapter.log.warn('No IP-address set');
 });
 
 function main() {
 
     // The adapters config (in the instance object everything under the attribute "native") is accessible via
-    // adapter.config:
-    adapter.log.info('config test1: '    + adapter.config.test1);
-    adapter.log.info('config test1: '    + adapter.config.test2);
-    adapter.log.info('config mySelect: ' + adapter.config.mySelect);
-
-
-    /**
-     *
-     *      For every state in the system there has to be also an object of type state
-     *
-     *      Here a simple sonnen for a boolean variable named "testVariable"
-     *
-     *      Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-     *
-     */
+    adapter.log.info('config ip: '    + adapter.config.ip);
 
     adapter.setObject('testVariable', {
         type: 'state',
@@ -124,14 +78,6 @@ function main() {
     // in this sonnen all states changes inside the adapters namespace are subscribed
     adapter.subscribeStates('*');
 
-
-    /**
-     *   setState examples
-     *
-     *   you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-     *
-     */
-
     // the variable testVariable is set to true as command (ack=false)
     adapter.setState('testVariable', true);
 
@@ -141,18 +87,5 @@ function main() {
 
     // same thing, but the state is deleted after 30s (getState will return null afterwards)
     adapter.setState('testVariable', {val: true, ack: true, expire: 30});
-
-
-
-    // examples for the checkPassword/checkGroup functions
-    adapter.checkPassword('admin', 'iobroker', function (res) {
-        console.log('check user admin pw ioboker: ' + res);
-    });
-
-    adapter.checkGroup('admin', 'admin', function (res) {
-        console.log('check group user admin group admin: ' + res);
-    });
-
-
 
 }

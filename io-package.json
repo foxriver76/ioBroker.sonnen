@@ -1,68 +1,34 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "0.6.0",
+        "version": "0.0.1",
         "news": {
-            "0.6.0": {
-                "en": "Support of admin3",
-                "de": "Unterstützung von admin3",
-                "ru": "Поддержка admin3",
-                "pt": "Suporte de admin3",
-                "nl": "Ondersteuning van admin3",
-                "fr": "Support de admin3",
-                "it": "Supporto di admin3",
-                "es": "Soporte de admin3"
-            },
-            "0.5.0": {
-                "en": "beta version",
-                "de": "Betaversion",
-                "ru": "Бета версия",
-                "pt": "Versão beta",
-                "fr": "Version bêta",
-                "nl": "Beta versie"
-            },
             "0.0.1": {
                 "en": "initial adapter",
-                "de": "Initiale Version",
-                "ru": "Первоначальный адаптер",
-                "pt": "Versão inicial",
-                "fr": "Version initiale",
-                "nl": "Eerste release"
+                "de": "Initiale Version"
             }
         },
-		"title": "Javascript/Node.js based sonnen adapter",
+		"title": "sonnen",
         "titleLang": {
-            "en": "Javascript/Node.js based sonnen adapter",
-            "de": "Javascript / Node.js basierte Vorlagenadapter",
-            "ru": "Адаптер шаблонов на основе Javascript / Node.js",
-            "pt": "Adaptador de modelo baseado em Javascript / Node.js",
-            "nl": "Javascript / Node.js gebaseerde sjabloonadapter",
-            "fr": "Javascript / Node.js basé adaptateur de modèle",
-            "it": "Adattatore modello basato su Javascript / Node.js",
-            "es": "Adaptador de plantilla basado en JavaScript / Node.js"
+            "en": "sonnenBattery",
+            "de": "sonnenBatterie"
         },
         "desc": {
-            "en": "sonnen",
-            "de": "ioBroker Sonnen Adapter",
-            "ru": "ioBroker Sonnen драйвер как образец",
-            "pt": "Modelo de adaptador para o ioBroker",
-            "fr": "ioBroker adaptateur modèle",
-            "nl": "ioBroker Sonnen Adapter",
-            "it": "Adattatore modello ioBroker",
-            "es": "Adaptador de plantilla ioBroker"
+            "en": "ioBroker sonnen adapter",
+            "de": "ioBroker sonnen Adapter"
         },
         "authors": [
             "Moritz Heusinger <moritz.heusinger@gmail.com>"
         ],
         "docs": {
-            "en": "docs/en/admin.md",
-            "ru": "docs/ru/admin.md",
-            "de": "docs/de/admin.md",
-            "es": "docs/es/admin.md",
-            "it": "docs/it/admin.md",
-            "fr": "docs/fr/admin.md",
-            "nl": "docs/nl/admin.md",
-            "pt": "docs/pt/admin.md"
+			"en": "docs/en/admin.md",
+			"ru": "docs/ru/admin.md",
+			"de": "docs/de/admin.md",
+			"es": "docs/es/admin.md",
+			"it": "docs/it/admin.md",
+			"fr": "docs/fr/admin.md",
+			"nl": "docs/nl/admin.md",
+			"pt": "docs/pt/admin.md"
         },
         "platform": "Javascript/Node.js",
         "mode": "daemon",
@@ -70,20 +36,20 @@
         "materialize": true,
         "enabled": true,
         "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.sonnen/master/admin/sonnen.png",
-        "keywords": ["sonnen", "vis", "GUI", "graphical", "scada"],
+        "keywords": ["sonnen", 
+        			"photovoltaics", 
+        			"solar", 
+        			"energy", 
+        			"sun"],
         "readme": "https://github.com/ioBroker/ioBroker.sonnen/blob/master/README.md",
         "loglevel": "info",
         "type": "general",
         "license": "MIT",
-        "messagebox": false,
-        "restartAdapters": ["vis"]
+        "messagebox": false
     },
     "native": {
-        "test1": true,
-        "test2": 42,
-        "mySelect": "auto"
+		"ip": "192.168.178.31"
     },
-    "objects": [
-
-    ]
+    "objects": [],
+    "instanceObjects": []
 }
