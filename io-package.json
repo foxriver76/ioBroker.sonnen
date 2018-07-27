@@ -45,12 +45,12 @@
 		],
 		"readme": "https://github.com/ioBroker/ioBroker.sonnen/blob/master/README.md",
 		"loglevel": "info",
-		"type": "general",
+		"type": "energy",
 		"license": "MIT",
 		"messagebox": false
 	},
 	"native": {
-		"ip": "192.168.178.31"
+		"ip": ""
 	},
 	"objects": [],
 	"instanceObjects": [

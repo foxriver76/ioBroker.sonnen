@@ -6,7 +6,6 @@
 
 ## Usage
 
-
 ## Changelog
 
 ### 0.0.1

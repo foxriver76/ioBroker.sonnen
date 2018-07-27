@@ -11,6 +11,7 @@ const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 
 // you have to call the adapter function and pass a options object
 const adapter = new utils.Adapter('sonnen');
+const req = require('xmlhttprequest')
 
 // when adapter shuts down
 adapter.on('unload', callback => {
