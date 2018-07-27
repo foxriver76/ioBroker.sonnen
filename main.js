@@ -13,7 +13,7 @@ const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 const adapter = new utils.Adapter('sonnen');
 
 // when adapter shuts down
-adapter.on('unload', function (callback) {
+adapter.on('unload', callback => {
     try {
         adapter.log.info('Stop sonnen adapter...');
         callback();
@@ -22,25 +22,11 @@ adapter.on('unload', function (callback) {
     }
 });
 
-// is called if a subscribed object changes
-adapter.on('objectChange', function (id, obj) {
-    // Warning, obj can be null if it was deleted
-    adapter.log.info('objectChange ' + id + ' ' + JSON.stringify(obj));
-});
 
-// is called if a subscribed state changes
-adapter.on('stateChange', function (id, state) {
-    // Warning, state can be null if it was deleted
-    adapter.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
 
-    // you can use the ack flag to detect if it is status (true) or command (false)
-    if (state && !state.ack) {
-        adapter.log.info('ack is not set!');
-    }
-});
 
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
-adapter.on('message', function (obj) {
+adapter.on('message', obj => {
     if (typeof obj === 'object' && obj.message) {
         if (obj.command === 'send') {
             // e.g. send email or pushover or whatever
@@ -53,7 +39,7 @@ adapter.on('message', function (obj) {
 });
 
 // is called when databases are connected and adapter received configuration.
-adapter.on('ready', function () {
+adapter.on('ready', () => {
     if(adapter.config.ip) {
     	adapter.log.info('Starting sonnen adapter');
     	main();
@@ -61,31 +47,30 @@ adapter.on('ready', function () {
 });
 
 function main() {
+	// Vars
+	const ip = adapter.config.ip;
 
     // The adapters config (in the instance object everything under the attribute "native") is accessible via
-    adapter.log.info('config ip: '    + adapter.config.ip);
-
-    adapter.setObject('testVariable', {
-        type: 'state',
-        common: {
-            name: 'testVariable',
-            type: 'boolean',
-            role: 'indicator'
-        },
-        native: {}
+    adapter.log.info('config ip: '    + ip);
+    
+    // is called if a subscribed state changes
+    adapter.on('stateChange', (id, state) => {
+    	// TODO: Control charge & discharge
     });
 
-    // in this sonnen all states changes inside the adapters namespace are subscribed
+    // all states changes inside the adapters namespace are subscribed
     adapter.subscribeStates('*');
 
-    // the variable testVariable is set to true as command (ack=false)
-    adapter.setState('testVariable', true);
-
-    // same thing, but the value is flagged "ack"
-    // ack should be always set to true if the value is received from or acknowledged from the target system
-    adapter.setState('testVariable', {val: true, ack: true});
-
-    // same thing, but the state is deleted after 30s (getState will return null afterwards)
-    adapter.setState('testVariable', {val: true, ack: true, expire: 30});
-
-}
+    adapter.getForeignObject(adapter.namespace, (err, obj) => { // create device namespace
+        if (!obj) {
+            adapter.setForeignObject(adapter.namespace, {
+                type: 'device',
+                common: {
+                    name: 'sonnen device'
+                }
+            });
+        } // endIf
+    });
+    
+    
+} // endMain

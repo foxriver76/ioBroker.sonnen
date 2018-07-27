@@ -1,26 +1,26 @@
 {
-    "common": {
-        "name": "sonnen",
-        "version": "0.0.1",
-        "news": {
-            "0.0.1": {
-                "en": "initial adapter",
-                "de": "Initiale Version"
-            }
-        },
+	"common": {
+		"name": "sonnen",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial adapter",
+				"de": "Initiale Version"
+			}
+		},
 		"title": "sonnen",
-        "titleLang": {
-            "en": "sonnenBattery",
-            "de": "sonnenBatterie"
-        },
-        "desc": {
-            "en": "ioBroker sonnen adapter",
-            "de": "ioBroker sonnen Adapter"
-        },
-        "authors": [
-            "Moritz Heusinger <moritz.heusinger@gmail.com>"
-        ],
-        "docs": {
+		"titleLang": {
+			"en": "sonnenBattery",
+			"de": "sonnenBatterie"
+		},
+		"desc": {
+			"en": "ioBroker sonnen adapter",
+			"de": "ioBroker sonnen Adapter"
+		},
+		"authors": [
+			"Moritz Heusinger <moritz.heusinger@gmail.com>"
+		],
+		"docs": {
 			"en": "docs/en/admin.md",
 			"ru": "docs/ru/admin.md",
 			"de": "docs/de/admin.md",
@@ -29,27 +29,251 @@
 			"fr": "docs/fr/admin.md",
 			"nl": "docs/nl/admin.md",
 			"pt": "docs/pt/admin.md"
-        },
-        "platform": "Javascript/Node.js",
-        "mode": "daemon",
-        "icon": "sonnen.png",
-        "materialize": true,
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.sonnen/master/admin/sonnen.png",
-        "keywords": ["sonnen", 
-        			"photovoltaics", 
-        			"solar", 
-        			"energy", 
-        			"sun"],
-        "readme": "https://github.com/ioBroker/ioBroker.sonnen/blob/master/README.md",
-        "loglevel": "info",
-        "type": "general",
-        "license": "MIT",
-        "messagebox": false
-    },
-    "native": {
+		},
+		"platform": "Javascript/Node.js",
+		"mode": "daemon",
+		"icon": "sonnen.png",
+		"materialize": true,
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.sonnen/master/admin/sonnen.png",
+		"keywords": [
+			"sonnen",
+			"photovoltaics",
+			"solar",
+			"energy",
+			"sun"
+		],
+		"readme": "https://github.com/ioBroker/ioBroker.sonnen/blob/master/README.md",
+		"loglevel": "info",
+		"type": "general",
+		"license": "MIT",
+		"messagebox": false
+	},
+	"native": {
 		"ip": "192.168.178.31"
-    },
-    "objects": [],
-    "instanceObjects": []
+	},
+	"objects": [],
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "info.lastsync",
+			"type": "state",
+			"common": {
+				"name": "Last successful sync",
+				"type": "string",
+				"role": "value.datetime",
+				"read": true,
+				"write": false,
+				"desc": "Last successful synchronization"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"name": "sonnen connected",
+				"type": "boolean",
+				"role": "indicator.connected",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "Is sonnen battery connected?"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status",
+			"type": "channel",
+			"common": {
+				"name": "Status"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.consumption",
+			"type": "state",
+			"common": {
+				"name": "Consumption",
+				"type": "number",
+				"role": "value.consumption",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "House comsumption in watts",
+				"unit": "watts"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.production",
+			"type": "state",
+			"common": {
+				"name": "Production",
+				"type": "number",
+				"role": "value.production",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "Production in watts",
+				"unit": "watts"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.pacTotal",
+			"type": "state",
+			"common": {
+				"name": "Power AC Total",
+				"type": "number",
+				"role": "value.pac",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "Inverter AC Power greater than 0 is discharging, smaller charging",
+				"unit": "watts"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.relativeSoc",
+			"type": "state",
+			"common": {
+				"name": "Relative State of Charge",
+				"type": "number",
+				"role": "value.rsoc",
+				"read": true,
+				"min": 0,
+				"max": 100,
+				"write": false,
+				"def": false,
+				"desc": "State of charge in percent",
+				"unit": "%"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.userSoc",
+			"type": "state",
+			"common": {
+				"name": "User State of Charge",
+				"type": "number",
+				"role": "value.usoc",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "User State of Charge",
+				"unit": "watts"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.acFrequency",
+			"type": "state",
+			"common": {
+				"name": "AC frequency",
+				"type": "number",
+				"role": "value.fac",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "AC frequency in hertz",
+				"unit": "hertz"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.acVoltage",
+			"type": "state",
+			"common": {
+				"name": "AC voltage",
+				"type": "number",
+				"role": "value.uac",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "AC voltage in volts",
+				"unit": "volts"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.batteryVoltage",
+			"type": "state",
+			"common": {
+				"name": "Battery voltage",
+				"type": "number",
+				"role": "value.ubat",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "Battery volatge in volts",
+				"unit": "volts"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.systemTime",
+			"type": "state",
+			"common": {
+				"name": "System time",
+				"type": "timestamp",
+				"role": "time",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "System time"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.systemInstalled",
+			"type": "state",
+			"common": {
+				"name": "System Installed",
+				"type": "boolean",
+				"role": "indicator.systemInstalled",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "System is installed or not"
+			},
+			"native": {
+				
+			}
+		}
+	]
 }
