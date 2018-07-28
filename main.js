@@ -50,6 +50,10 @@ adapter.on('ready', () => {
 function main() {
 	// Vars
 	const ip = adapter.config.ip;
+	const pollingTime = 30000;
+	const xmlhttp = new req.XMLHttpRequest();
+	
+	const statusUrl = ip + ':8080/api/status'; // Status Path - api/status --> GET
 
     // The adapters config (in the instance object everything under the attribute "native") is accessible via
     adapter.log.info('config ip: '    + ip);
@@ -58,6 +62,23 @@ function main() {
     adapter.on('stateChange', (id, state) => {
     	// TODO: Control charge & discharge
     });
+    
+    let polling = setInterval(() => { // poll states every 30 seconds
+    	xmlhttp.open("GET", statusUrl, true);
+    	xmlhttp.send();
+	}, pollingTime);
+    
+    xmlhttp.onreadystatechange = () => { 
+        if (this.readyState == 4 && this.status == 200) {
+        	adapter.setState('info.connection', true, true);
+        	let response = JSON.parse(this.responseText);
+        	adapter.log.info('[RESPONSE] <== Received ' + response);
+        } else {
+        	adapter.setState('info.connection', false, true);
+        	adapter.log.warn('[RESPONSE] <== Could not get a valid response');
+        } // endElse
+
+    };
 
     // all states changes inside the adapters namespace are subscribed
     adapter.subscribeStates('*');
