@@ -14,8 +14,8 @@
 			"de": "sonnenBatterie"
 		},
 		"desc": {
-			"en": "ioBroker sonnen adapter",
-			"de": "ioBroker sonnen Adapter"
+			"en": "Monitor your sonnen battery",
+			"de": "Überwache deine sonnen Batterie"
 		},
 		"authors": [
 			"Moritz Heusinger <moritz.heusinger@gmail.com>"
