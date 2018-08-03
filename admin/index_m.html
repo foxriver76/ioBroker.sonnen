@@ -1,8 +1,9 @@
 <html>
 <head>
 <!-- these 4 files always have to be included -->
-<link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
-<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
+<link rel="stylesheet" type="text/css"
+	href="../../lib/css/materialize.css">
+<link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
 
 <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
@@ -12,79 +13,97 @@
 <script type="text/javascript" src="../../lib/js/materialize.js"></script>
 <script type="text/javascript" src="../../js/adapter-settings.js"></script>
 <script type="text/javascript" src="words.js"></script>
- <style>
-  .m .col .select-wrapper+label {
-   top: -26px;  
-  }
-     .m span{
-         font-size: 0.9em;
-     }
- </style>
+<style>
+.m .col .select-wrapper+label {
+	top: -26px;
+}
+
+.m span {
+	font-size: 0.9em;
+}
+</style>
 <!-- you have to define 2 functions in the global scope: -->
 <script type="text/javascript">
+	// the function loadSettings has to exist ...
+	function load(settings, onChange) {
+		// example: select elements with id=key and class=value and insert value
+		if(!settings) return;
+		if(settings.pollInterval === undefined) settings.pollInterval = 7000;
+		$('.value').each(function() {
+			var $key = $(this);
+			var id = $key.attr('id');
+			if ($key.attr('type') === 'checkbox') {
+				// do not call onChange direct, because onChange could expect some arguments
+				$key.prop('checked', settings[id]).change(function() {
+					onChange();
+				});
+			} else {
+				// do not call onChange direct, because onChange could expect some arguments
+				$key.val(settings[id]).change(function() {
+					onChange();
+				}).keyup(function() {
+					onChange();
+				});
+			}
+		});
+		onChange(false);
+		M.updateTextFields(); // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
+	}
 
-    // the function loadSettings has to exist ...
-    function load(settings, onChange) {
-        // example: select elements with id=key and class=value and insert value
-       if (!settings) return;
-        $('.value').each(function () {            
-            var $key = $(this);
-            var id = $key.attr('id');
-            if ($key.attr('type') === 'checkbox') {
-		        // do not call onChange direct, because onChange could expect some arguments
-                $key.prop('checked', settings[id]).change(function() {
-                    onChange();
-                });
-            } else {
-		        // do not call onChange direct, because onChange could expect some arguments
-                $key.val(settings[id]).change(function() {
-                    onChange();
-                }).keyup(function() {
-                    onChange();
-                });
-            }
-        });
-        onChange(false);
-        M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
-    }
-
-    // ... and the function save has to exist.
-    // you have to make sure the callback is called with the settings object as first param!
-    function save(callback) {
-        // example: select elements with class=value and build settings object
-        var obj = {};
-        $('.value').each(function () {
-            var $this = $(this);
-            if ($this.attr('type') === 'checkbox') {
-                obj[$this.attr('id')] = $this.prop('checked');
-            } else {
-                obj[$this.attr('id')] = $this.val();
-            }
-        });
-        callback(obj);
-    }
+	// ... and the function save has to exist.
+	// you have to make sure the callback is called with the settings object as first param!
+	function save(callback) {
+		// example: select elements with class=value and build settings object
+		var obj = {};
+		$('.value').each(function() {
+			var $this = $(this);
+			if ($this.attr('type') === 'checkbox') {
+				obj[$this.attr('id')] = $this.prop('checked');
+			} else {
+				obj[$this.attr('id')] = $this.val();
+			}
+		});
+		callback(obj);
+	}
 </script>
 </head>
+
 <body>
-    <!-- you have to put your config page in a div with id adapter-container -->
-    <div class="m adapter-container">
-        <div class="row">
-            <!-- Forms are the standard way to receive user inputted data.
-         Learn more http://materializecss.com/forms.html-->
-            <div class="row">
-                <div class="input-field col s6">
-                    <img src="sonnen.png" class="logo">
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s3">
-                    <input class="value" id="ip" type="text" placeholder="192.168.178.31"/>
-                    <label for="ip" class="translate">IP-Address:</label>
-		    <span class="translate">IP-Address of your sonnen battery</span>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="m adapter-container">
+		<div class="row">
+			<div class="col s12">
+				<ul class="tabs">
+					<li class="tab col s5"><a href="#tab-main"
+						class="translate active">Main settings</a></li>
+					<li class="tab col s5"><a href="#tab-advanced"
+						class="translate">Advanced settings</a></li>
+				</ul>
+			</div>
+
+			<div id="tab-main" class="col s12 page">
+				<div class="row">
+					<div class="input-field col s6">
+						<img src="sonnen.png" class="logo">
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s4">
+						<input class="value" id="ip" type="text" placeholder="192.168.178.31" /> 
+						<label for="ip"class="translate">IP-Address:</label> 
+						<span class="translate">IP-Address of your sonnen battery</span>
+					</div>
+				</div>
+			</div>
+			<div id="tab-advanced" class="col s12 page">
+				<div class="row">
+                    <div class="input-field col s4">
+                        <input id="pollInterval" class="value" type="number" min="2000" max="60000"/>
+                        <label for="pollInterval" class="translate">Poll interval (ms)</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

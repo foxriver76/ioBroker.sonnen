@@ -46,7 +46,7 @@ adapter.on('ready', () => {
 function main() {
 	// Vars
 	const ip = adapter.config.ip;
-	const pollingTime = 8000;
+	const pollingTime = adapter.config.pollInterval;
 	const statusUrl = 'http://' + ip + ':8080/api/v1/status'; // Status Path - api/status --> GET
 
     adapter.log.debug('Started Adapter with: ' + ip);
