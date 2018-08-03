@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "0.0.1",
+		"version": "0.0.2",
 		"news": {
+			"0.0.2": {
+				"en": "better readme, more states, bugfixes",
+				"de": "Erweiterte readme, neue States, Bugfixes"
+			},
 			"0.0.1": {
 				"en": "initial adapter",
 				"de": "Initiale Version"
@@ -186,7 +190,9 @@
 				"write": false,
 				"def": false,
 				"desc": "User State of Charge",
-				"unit": "watts"
+				"min": 0,
+				"max": 100,
+				"unit": "%"
 			},
 			"native": {
 				
@@ -424,7 +430,8 @@
 				"read": true,
 				"write": true,
 				"def": false,
-				"desc": "Battery charge rate"
+				"desc": "Battery charge rate",
+				"unit": "watts"
 			},
 			"native": {
 				
@@ -440,7 +447,8 @@
 				"read": true,
 				"write": true,
 				"def": false,
-				"desc": "Battery discharge rate"
+				"desc": "Battery discharge rate",
+				"unit": "watts"
 			},
 			"native": {
 				

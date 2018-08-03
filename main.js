@@ -70,7 +70,7 @@ function main() {
     	} else if (id === 'control.discharge') {
     		request.put('http://' + ip + ':8080/api/v1/setpoint/discharge/' + state, (error, response, body) => {
     			if(response && response.statusCode.toString() === '200') {
-    				adapter.setState('control.charge', state, true);
+    				adapter.setState('control.discharge', state, true);
     				adapter.log.debug('[PUT] ==> Sent ' + state + ' to discharge')
     			} else adapter.log.warn('[PUT] Error ' + error)		
     		});	
