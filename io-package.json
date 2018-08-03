@@ -35,7 +35,7 @@
 		"icon": "sonnen.png",
 		"materialize": true,
 		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.sonnen/master/admin/sonnen.png",
+		"extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
 		"keywords": [
 			"sonnen",
 			"photovoltaics",
@@ -249,7 +249,7 @@
 			"common": {
 				"name": "System time",
 				"type": "timestamp",
-				"role": "time",
+				"role": "value.datetime",
 				"read": true,
 				"write": false,
 				"def": false,
@@ -286,6 +286,161 @@
 				"write": false,
 				"def": false,
 				"desc": "System is installed or not"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.flowConsumptionBattery",
+			"type": "state",
+			"common": {
+				"name": "Flow consumption battery",
+				"type": "boolean",
+				"role": "indicator.flowConsumptionBattery",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "If consuming from battery"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.flowConsumptionGrid",
+			"type": "state",
+			"common": {
+				"name": "Flow consumption Grid",
+				"type": "boolean",
+				"role": "indicator.flowConsumptionGrid",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "If consuming from grid"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.flowConsumptionProduction",
+			"type": "state",
+			"common": {
+				"name": "Flow consumption production",
+				"type": "boolean",
+				"role": "indicator.flowConsumptionProduction",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "If consuming from production"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.flowGridBattery",
+			"type": "state",
+			"common": {
+				"name": "Flow grid battery",
+				"type": "boolean",
+				"role": "indicator.flowGridBattery",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "If charging from grid"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.flowProductionBattery",
+			"type": "state",
+			"common": {
+				"name": "Flow production battery",
+				"type": "boolean",
+				"role": "indicator.flowProductionBattery",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "If charging from production"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.flowProductionGrid",
+			"type": "state",
+			"common": {
+				"name": "Flow production grid",
+				"type": "boolean",
+				"role": "indicator.flowProductionGrid",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "If production flows to grid"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "status.gridFeedIn",
+			"type": "state",
+			"common": {
+				"name": "Amount of grid feed in",
+				"type": "number",
+				"role": "value.gridFeedIn",
+				"read": true,
+				"write": false,
+				"def": false,
+				"desc": "If negative consuming from grid",
+				"unit": "watts"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "control",
+			"type": "channel",
+			"common": {
+				"name": "Controlling"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "control.charge",
+			"type": "state",
+			"common": {
+				"name": "Battery charging",
+				"type": "number",
+				"role": "value.charge",
+				"read": true,
+				"write": true,
+				"def": false,
+				"desc": "Battery charge rate"
+			},
+			"native": {
+				
+			}
+		},
+		{
+			"_id": "control.discharge",
+			"type": "state",
+			"common": {
+				"name": "Battery charging",
+				"type": "number",
+				"role": "value.discharge",
+				"read": true,
+				"write": true,
+				"def": false,
+				"desc": "Battery discharge rate"
 			},
 			"native": {
 				
