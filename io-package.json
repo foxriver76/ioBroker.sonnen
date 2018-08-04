@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "0.0.2",
+		"version": "0.0.3",
 		"news": {
+			"0.0.3": {
+				"en": "fixed links to bugs, repo, etc",
+				"de": "Links zu Bugs, Repo und Co korrigiert"
+			},
 			"0.0.2": {
 				"en": "better readme, more states, bugfixes",
 				"de": "Erweiterte readme, neue States, Bugfixes"
@@ -47,7 +51,7 @@
 			"energy",
 			"sun"
 		],
-		"readme": "https://github.com/ioBroker/ioBroker.sonnen/blob/master/README.md",
+		"readme": "https://github.com/foxriver76/ioBroker.sonnen/blob/master/README.md",
 		"loglevel": "info",
 		"type": "energy",
 		"license": "MIT",

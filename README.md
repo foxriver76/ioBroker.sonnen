@@ -146,6 +146,9 @@ Here you can find a description of the states and how to use them. The most stat
 
 ## Changelog
 
+### 0.0.3
+* (foxriver76) fixed links to bugs, repo etc
+
 ### 0.0.2
 * (foxriver76) bugfixes on control states
 * (foxriver76) big readme update

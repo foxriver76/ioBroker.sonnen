@@ -1,6 +1,6 @@
 {
 	"name": "iobroker.sonnen",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "sonnen",
 	"author": {
 		"name": "Moritz Heusinger",
@@ -12,7 +12,7 @@
 			"email": "moritz.heusinger@gmail.com"
 		}
 	],
-	"homepage": "https://github.com/ioBroker/ioBroker.sonnen",
+	"homepage": "https://github.com/foxriver76/ioBroker.sonnen",
 	"license": "MIT",
 	"keywords": [
 		"ioBroker",
@@ -22,7 +22,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ioBroker/ioBroker.sonnen"
+		"url": "https://github.com/foxriver76/ioBroker.sonnen"
 	},
 	"dependencies": {
 		"request": "^2.87.0"
@@ -37,7 +37,7 @@
 		"test": "node node_modules/mocha/bin/mocha --exit"
 	},
 	"bugs": {
-		"url": "https://github.com/ioBroker/ioBroker.sonnen/issues"
+		"url": "https://github.com/foxriver76/ioBroker.sonnen/issues"
 	},
 	"readmeFilename": "README.md"
 }
