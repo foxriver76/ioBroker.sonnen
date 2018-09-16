@@ -1,6 +1,9 @@
 {
 	"name": "iobroker.sonnen",
 	"version": "0.0.3",
+	"engines": {
+    	"node": ">=6.0.0"
+	},
 	"description": "sonnen",
 	"author": {
 		"name": "Moritz Heusinger",
