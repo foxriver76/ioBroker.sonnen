@@ -14,10 +14,9 @@ You can either install the adapter via the ioBroker web interface or on your loc
 ### Browser-based
 1. Open your ioBroker web interface in a browser (eg: 192.168.30.70:8081)
 2. Click on Tab "Adapters"
-3. Click on "Install from Github"
-4. Click on "Custom"
-5. Paste the URL "https://github.com/foxriver76/ioBroker.sonnen"
-6. Click on the "Install" button
+3. Type "sonnen" in the filter
+4. Click on the three points and then on the "+" symbol of the sonnen adapter<br/>
+![Add Adapter](/doc/addInstance.png)
 
 ### Local machine
 Navigate into your iobroker folder and execute the following command: 
