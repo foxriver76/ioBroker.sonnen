@@ -86,191 +86,201 @@ der Tastenkombination "STRG + F".
 
 * info.connection
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean which is true if the adapter is connected to the battery.*
+   *Nur lesbarer boolscher Wert, welcher true ist, wenn die Verbindung zwischen ioBroker und Batterie hergestellt ist.*
    
 * info.lastSync
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |timestamp|R|
 
-   *Read-only timestamp w. r. t. the last successful synchronization time.*
+   *Nur lesbarer Zeitstempel, der bei jeder Aktualisierung der Daten, aktualisiert wird.*
    
 #### Channel: status
    
 * status.consumption
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the current consumption of your house in watts.*
+   *Nur lesbarer number Wert, welcher den aktuellen Verbrauch des Hauses in Watt beinhaltet.*
    
 * status.production
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the current production of you photovoltaics system in watts.*
+   *Nur lesbarer number Wert, welcher angibt, wie viel Watt derzeit von der PV-Anlage produziert werden.*
    
 * status.pacTotal
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the inverter AC Power in watts. If the value is greater than 0 the battery is discharging, if greather than zero it is charging.*
+   *Nur lesbarer number Wert, welcher die Wechselrichter AC-Leistung angibt. 
+   Wenn der Wert größer als 0 ist wird die Batterie entladen, bei einem Wert kleiner 0, geladen.*
    
 * status.relativeSoc
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the state of charge of your battery in percent.*
+   *Nur lesbarer number Wert, welcher den aktuellen Batterieladestand repräsentiert.*
    
 * status.userSoc
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the state of charge of your battery in percent.*
+   *Nur lesbarer number Wert, welcher den aktuellen Batterieladestand repräsentiert.*
    
 * status.acFrequency
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the AC Frequency in hertz.*
+   *Nur lesbarer number Wert, welcher die AC Frequenz in Hertz repräsentiert.*
    
 * status.acVoltage
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the current AC voltage of your inverter.*
+   *Nur lesbarer number Wert, welcher die aktuelle AC (Wechselstrom) Stromspannung des Wechselrichters darstellt.*
    
 * status.batteryVoltage
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the current DC voltage of the battery.*
+   *Nur lesbarer number Wert, welcher die derzeitige DC (Gleichstrom) Stromspannung der Batterie darstellt.*
    
 * status.systemTime
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |date|R|
 
-   *Read-only ISO date, which represents the system time of your battery.*
+   *Nur lesbares ISO Datum, welches die Systemzeit der Batterie repräsentiert.*
    
 * status.systemInstalled
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean indicator. True if system is installed otherwise false.*
+   *Nur lesbarer boolscher Wert, welcher true ist, wenn das System korrekt installiert ist.*
    
 * status.batteryCharging
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean indicator. True if battery is charging, otherwise false.*
+   *Nur lesbarer boolscher Wert. Dieser ist true, wenn die sonnenBatterie derzeit geladen wird.*
    
 * status.flowConsumptionBattery
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean indicator. True if you are consuming from battery, otherwise false.*
+   *Nur lesbarer boolscher Wert. Dieser ist True, wenn die Batterie derzeit entladen wird.*
    
 * status.flowConsumptionGrid
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean indicator. True if you are consuming from grid, otherwise false.*
+   *Nur lesbarer boolscher Wert, welcher true ist, wenn derzeit Strom vom Netz bezogen wird.*
    
 * status.flowConsumptionProduction
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean indicator. True if you are consuming from your current production, otherwise false.*
+   *Nur lesbarer boolscher Wert. Dieser ist true, wenn derzeit Strom direkt von der PV-Anlage verbraucht wird.*
    
 * status.flowGridBattery
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean indicator. True if grid charges battery, otherwise false.*
+   *Nur lesbarer boolscher Indikator, welcher true ist, wenn die Batterie derzeit durch das Netz geladen wird.*
    
 * status.flowProductionBattery
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean indicator. True if production charges battery, otherwise false.*
+   *Nur lesbarer boolscher Wert, welcher true ist, wenn die Batterie derzeit direkt durch die PV-Anlage geladen wird.*
    
 * status.flowProductionGrid
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |boolean|R|
 
-   *Read-only boolean indicator. True if production flows into grid, otherwise false.*
+   *Nur lesbarer boolscher Wert, welcher true ist, wenn der erzeugte Strom derzeit in das Netz eingespeist wird.*
    
 * status.gridFeedIn
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the amount of watts consuming from or feeding in grid. If the number is positive you are feeding the grid, if negative you are consuming from grid.*
+   *Nur lesbarer number Wert, welcher die Menge an Strom in Watt repräsentiert, die derzeit in das Netz eingespeist 
+   oder bezogen wird.
+   Wenn der Wert positiv ist, wird derzeit in das Netz eingespeist, wenn dieser negativ ist, wird die Menge an Strom 
+   vom Netz bezogen.*
    
 #### Channel: control
 
 * control.charge
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R/W|
 
-   *Number-value which allows you to control the charging rate of the battery in watts. If you set garbage here it will also be acknowledged, because acknowldging just means that the battery received your command.*
+   *Number Wert, welcher es ermöglicht die maximale Entladung der Batterie in Watt festzulegen.*
+   
+   *Hinweis: Wenn ein ungültiger Wert gesetzt wird, wird dieser trotzdem bestätigt. Die Bestätigung (Acknowledge) des Wertes bedeutet
+   lediglich, dass das Kommando an die Batterie übertragen wurde.*
    
    *Example:*
     ```javascript
-    setState('sonnen.0.control.charge', 1250); // Do not charge more than 1250 watts
+    setState('sonnen.0.control.charge', 1250); // Die Batterie wird mit maximal 1250 Watt geladen
     ```
    
 * control.discharge
 
-    |Data type|Permission|                                                                       
+    |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
     |number|R/W|
 
-   *Number-value which allows you to control the discharging rate of the battery in watts. If you set garbage here it will also be acknowledged, because acknowldging just means that the battery received your command.*
+   *Number Wert, welcher es ermöglicht die maximale Ladung der Batterie in Watt festzulegen.*
+    
+    *Hinweis: Wenn ein ungültiger Wert gesetzt wird, wird dieser trotzdem bestätigt. Die Bestätigung (Acknowledge) des Wertes bedeutet
+    lediglich, dass das Kommando an die Batterie übertragen wurde.*
    
    *Example:*
     ```javascript
-    setState('sonnen.0.control.discharge', 1250); // Do not discharge more than 1250 watts
+    setState('sonnen.0.control.discharge', 1250); // Die Batterie wird maximal mit 1250 Watt entladen
     ```
     

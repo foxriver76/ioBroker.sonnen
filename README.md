@@ -86,7 +86,7 @@ Here you can find a description of the states and how to use them. The most stat
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the inverter AC Power in watts. If the value is greater than 0 the battery is discharging, if greather than zero it is charging.*
+   *Read-only number, which represents the inverter AC Power in watts. If the value is greater than 0 the battery is discharging, if greater than zero it is charging.*
    
 * status.relativeSoc
 
