@@ -144,6 +144,9 @@ Here you can find a description of the states and how to use them. The most stat
 
 ## Changelog
 
+### 0.0.4
+* (foxriver76) translations on index_m.html
+
 ### 0.0.3
 * (foxriver76) fixed links to bugs, repo etc
 

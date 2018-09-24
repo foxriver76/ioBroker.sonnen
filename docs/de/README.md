@@ -35,23 +35,50 @@ Nach Abschluss der Installation einer Adapterinstanz öffnet sich automatisch ei
 ## Konfiguration
 
 ### Fenster "Haupteinstellungen"
+![Main Settings](media/mainSettings.png "Haupteinstellungen")
+
+| Feld         | Beschreibung |                                                                       
+|:-------------|:-------------|
+|IP-Adresse    |Hier soll die IP-Adresse der gewünschten sonnenBatterie angegeben werden.|
+
 
 ### Fenster "Erweiterte Einstellungen"
+![Advanced Settings](media/advancedSettings.png "Erweiterte Einstellungen")
 
-### ioBroker 
-1. Open your ioBroker interface in a browser (eg: 192.168.1.33:8081)
-2. Navigate to Tab "Adapters"
-3. Click on the three points and then on the "+" symbol of the sonnen adapter
-![Add Adapter](/docs/en/media/addInstance.png)
-4. Now you can see the main settings of the adapter configuration page --> type in the ip-address of your sonnen battery
-![Main Settings](/docs/en/media/mainSettings.png)
-5. If you want to thange the interval in which the states are polled, click on the tab "Advanced Settings"
-6. You can set the poll interval between 2000 ms (2 seconds) and 60000 ms (1 minute), the default value is 7 seconds
-![Advanced Settings](/docs/en/media/advancedSettings.png)
-7. Click on Save & Close
+| Feld         | Beschreibung |                                                                       
+|:-------------|:-------------|
+|Abfrageintervall|Hier kann ein alternativer Wert in Millisekunden gesetzt werden. In diesem Intervall werden die States der sonnenBatterie aktualisiert.|
 
-## Usage
-Here you can find a description of the states and how to use them. The most states of this adapter are read-only states.
+
+Nach Abschluss der Konfiguration wird der Konfigurationsdialog mit `SPEICHERN UND SCHLIEßEN` verlassen. 
+Dadurch efolgt im Anschluß ein Neustart des Adapters.
+
+## Instanzen
+Die Installation des Adapters hat im Bereich `Objekte` eine aktive Instanz des sonnen Adapters angelegt.
+<br/><br/>
+![Instanz](media/instance.png "Instanz")
+<span style="color:grey">*Erste Instanz*</span>
+
+Auf einem ioBroker Server können mehrere sonnen Adapter Instanzen angelegt werden. Umgekehrt kann eine sonnenBatterie auch
+mit mehreren ioBroker Servern betrieben werden. Sollen mehrere Geräte von einem ioBroker Server gesteuert werden, 
+sollte je Batterie eine Instanz angelegt werden.
+<br/><br/>
+Ob der Adapter aktiviert oder mit der Batterie verbunden ist, wird mit der Farbe des Status-Feldes der 
+Instanz verdeutlicht. Zeigt der Mauszeiger auf das Symbol, werden weitere Detailinformationen dargestellt. 
+
+## Objekte des Adapters
+Im Bereich `Objekte` werden in einer Baumstruktur alle vom Adapter im Hub 
+erkannten Geräte und Aktivitäten aufgelistet. Zusätzlich wird auch noch 
+darüber informiert, ob die Kommunikation mit dem Hub reibungslos erfolgt.
+
+![Objekte](media/objects.png "sonnen Objekte")
+<span style="color:grey">*Objekte des sonnen Adapters*</span>
+
+Nachfolgend werden die Objekte in States und Buttons unterteilt. 
+Jeder Datenpunkt ist mit seinem zugehörigen Datentyp sowie seinen Berechtigungen aufgehführt. 
+Berechtigungen können lesend (R) sowie schreibend (W) sein. Jeder Datenpunkt kann mindestens gelesen (R) werden, während
+andere ebenfalls beschrieben werden können. Zur Suche nach einem bestimmten Datenpunkt empfiehlt sich die Suche mittels 
+der Tastenkombination "STRG + F".
 
 ### States
 
