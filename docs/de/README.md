@@ -1,31 +1,42 @@
-![Logo](admin/sonnen.png)
-# ioBroker.sonnen
-===========================
+![Logo](media/sonnen.png)
 
-[![Build Status Travis](https://travis-ci.org/foxriver76/ioBroker.sonnen.svg?branch=master)](https://travis-ci.org/foxriver76/ioBroker.sonnen)[![Build status](https://ci.appveyor.com/api/projects/status/9c3a9qlw4ut32hbu/branch/master?svg=true)](https://ci.appveyor.com/project/foxriver76/iobroker-sonnen/branch/master)
-[![NPM version](http://img.shields.io/npm/v/iobroker.sonnen.svg)](https://www.npmjs.com/package/iobroker.sonnen)
-[![Downloads](https://img.shields.io/npm/dm/iobroker.sonnen.svg)](https://www.npmjs.com/package/iobroker.sonnen)
+# sonnen Adapter
+Der sonnen Adapter ermöglicht die Einbindung einer sonnenBatterie in den ioBroker.
 
-[![NPM](https://nodei.co/npm/iobroker.sonnen.png?downloads=true)](https://nodei.co/npm/iobroker.sonnen/)
+## Überblick
 
-## Installation
-You can either install the adapter via the ioBroker web interface or on your local machine via npm.
+### sonnenBatterie
 
-### Browser-based
-1. Open your ioBroker web interface in a browser (eg: 192.168.30.70:8081)
-2. Click on Tab "Adapters"
-3. Type "sonnen" in the filter
-4. Click on the three points and then on the "+" symbol of the sonnen adapter<br/>
-![Add Adapter](/docs/en/media/addInstance.png)
+Mit der sonnenBatterie kann selbst erzeugte Energie aus der Solaranlage für den Eigenbedarf gespeichert werden 
+und genau dann genutzt werden, wenn sie gerade benötigt wird. Dadurch ist es möglich sich von anonymen Energiekonzernen 
+unabhängig zu machen und selbst zum autarken Stromproduzenten zu werden. Der intelligente High-Tech-Stromspeicher 
+sorgt dank des integrierten Energiemanagers dafür, dass der Haushalt bestmöglich mit eigenem Strom versorgt wird. 
+Dies ist nicht nur kostengünstig, sondern auch umweltfreundlich! Die sonnenBatterie gibt es in verschiedenen und 
+flexiblen Speichermodellen.
 
-### Local machine
-Navigate into your iobroker folder and execute the following command: 
-```bash
-npm i iobroker.sonnen
-```
+### sonnen Adapter
+Der sonnen Adapter kann eine sonnenBatterie im Netzwerk überwachen und steuern. Mithilfe des Discovery Adapters (TODO: Link)
+können sonnenBatterien im Netzwerk automatisch gefunden werden.
+<br/>
+Der Adapter legt States zur Überwachung und Steuerung der sonnenBatterie in Form von Objekten an. Ein Großteil der 
+States dient lediglich zur Überwachung der Batterie, während durch das beschreiben einiger States die Batterie zusätzlich 
+gesteuert werden kann.
 
-## Setup
-Additional to the adapter installation you have to add an instance of the adapter.
+## Voraussetzungen vor der Installation
+Voraussetzungen für den Betrieb einer sonnenBatterie mit dem ioBroker, ist die erfolgreiche Einrichtung der Batterie
+durch einen Elektriker. Ebenfalls muss sich die Batterie im gleichen Netzwerk wie der ioBroker befinden.
+
+### Installation
+Eine Instanz des Adapters wird über die ioBroker Admin-Oberfläche installiert. 
+Die ausführliche Anleitung für die dazu notwendigen Installatonschritte kann hier (TODO:LINK) nachgelesen werden.
+<br/><br/>
+Nach Abschluss der Installation einer Adapterinstanz öffnet sich automatisch ein Konfigurationsfenster.
+
+## Konfiguration
+
+### Fenster "Haupteinstellungen"
+
+### Fenster "Erweiterte Einstellungen"
 
 ### ioBroker 
 1. Open your ioBroker interface in a browser (eg: 192.168.1.33:8081)
