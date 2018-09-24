@@ -44,87 +44,177 @@ Here you can find a description of the states and how to use them. The most stat
 
 ### States
 
+#### Channel: info
+
 * info.connection
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
 
    *Read-only boolean which is true if the adapter is connected to the battery.*
    
 * info.lastSync
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |timestamp|R|
+
    *Read-only timestamp w. r. t. the last successful synchronization time.*
    
+#### Channel: status
+   
 * status.consumption
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
 
    *Read-only number, which represents the current consumption of your house in watts.*
    
 * status.production
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
+
    *Read-only number, which represents the current production of you photovoltaics system in watts.*
    
 * status.pacTotal
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
 
    *Read-only number, which represents the inverter AC Power in watts. If the value is greater than 0 the battery is discharging, if greather than zero it is charging.*
    
 * status.relativeSoc
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
+
    *Read-only number, which represents the state of charge of your battery in percent.*
    
 * status.userSoc
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
 
    *Read-only number, which represents the state of charge of your battery in percent.*
    
 * status.acFrequency
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
+
    *Read-only number, which represents the AC Frequency in hertz.*
    
 * status.acVoltage
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
 
    *Read-only number, which represents the current AC voltage of your inverter.*
    
 * status.batteryVoltage
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
+
    *Read-only number, which represents the current DC voltage of the battery.*
    
 * status.systemTime
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |date|R|
 
    *Read-only ISO date, which represents the system time of your battery.*
    
 * status.systemInstalled
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
+
    *Read-only boolean indicator. True if system is installed otherwise false.*
    
 * status.batteryCharging
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
 
    *Read-only boolean indicator. True if battery is charging, otherwise false.*
    
 * status.flowConsumptionBattery
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
+
    *Read-only boolean indicator. True if you are consuming from battery, otherwise false.*
    
 * status.flowConsumptionGrid
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
 
    *Read-only boolean indicator. True if you are consuming from grid, otherwise false.*
    
 * status.flowConsumptionProduction
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
+
    *Read-only boolean indicator. True if you are consuming from your current production, otherwise false.*
    
 * status.flowGridBattery
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
 
    *Read-only boolean indicator. True if grid charges battery, otherwise false.*
    
 * status.flowProductionBattery
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
+
    *Read-only boolean indicator. True if production charges battery, otherwise false.*
    
 * status.flowProductionGrid
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |boolean|R|
 
    *Read-only boolean indicator. True if production flows into grid, otherwise false.*
    
 * status.gridFeedIn
 
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R|
+
    *Read-only number, which represents the amount of watts consuming from or feeding in grid. If the number is positive you are feeding the grid, if negative you are consuming from grid.*
    
+#### Channel: control
+
 * control.charge
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R/W|
 
    *Number-value which allows you to control the charging rate of the battery in watts. If you set garbage here it will also be acknowledged, because acknowldging just means that the battery received your command.*
    
@@ -134,6 +224,10 @@ Here you can find a description of the states and how to use them. The most stat
     ```
    
 * control.discharge
+
+    |Data type|Permission|                                                                       
+    |:---:|:---:|
+    |number|R/W|
 
    *Number-value which allows you to control the discharging rate of the battery in watts. If you set garbage here it will also be acknowledged, because acknowldging just means that the battery received your command.*
    
