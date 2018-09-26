@@ -46,14 +46,15 @@ adapter.on('ready', () => {
 function main() {
     // Vars
     const ip = adapter.config.ip;
-    const pollingTime = adapter.config.pollInterval;
+    const pollingTime = adapter.config.pollInterval || 7000;
+    adapter.log.debug('[INFO] Configured polling interval: ' + pollingTime);
     const statusUrl = 'http://' + ip + ':8080/api/v1/status'; // Status Path - api/status --> GET
+    let polling = null;
 
     adapter.log.debug('[START] Started Adapter with: ' + ip);
 
     // is called if a subscribed state changes
     adapter.on('stateChange', (id, state) => {
-        // TODO: Control charge & discharge
         if (!id || !state || state.ack) return; // Ignore acknowledged state changes or error states
         id = id.substring(adapter.namespace.length + 1); // remove instance name and id
         state = state.val;
@@ -93,23 +94,25 @@ function main() {
         setBatteryStates(JSON.parse(body));
     });
 
-    let polling = setInterval(() => { // poll states every [30] seconds
-        request(statusUrl, (error, response, body) => {
-            if (error) adapter.log.warn('[REQUEST] <== ' + error);
-            if (response && response.statusCode.toString() === '200') {
-                adapter.getState('info.connection', (obj, err) => {
-                    if (!obj || !obj.val) {
-                        adapter.setState('info.connection', true, true);
-                        adapter.log.debug('[CONNECT] Connection successful established');
-                    } // endIf
-                });
-            } else {
-                adapter.setState('info.connection', false, true);
-                adapter.log.warn('[CONNECT] Connection failed');
-            }// endElse
-            setBatteryStates(JSON.parse(body));
-        });
-    }, pollingTime);
+    if (!polling) {
+        polling = setInterval(() => { // poll states every [30] seconds
+            request(statusUrl, (error, response, body) => {
+                if (error) adapter.log.warn('[REQUEST] <== ' + error);
+                if (response && response.statusCode.toString() === '200') {
+                    adapter.getState('info.connection', (obj, err) => {
+                        if (!obj || !obj.val) {
+                            adapter.setState('info.connection', true, true);
+                            adapter.log.debug('[CONNECT] Connection successful established');
+                        } // endIf
+                    });
+                } else {
+                    adapter.setState('info.connection', false, true);
+                    adapter.log.warn('[CONNECT] Connection failed');
+                }// endElse
+                setBatteryStates(JSON.parse(body));
+            });
+        }, pollingTime);
+    } // endIf
 
     // all states changes inside the adapters namespace are subscribed
     adapter.subscribeStates('*');

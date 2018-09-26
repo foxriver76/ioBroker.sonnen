@@ -1,11 +1,11 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "0.0.4",
+		"version": "0.0.5",
 		"news": {
-			"0.0.4": {
-				"en": "translations for words.js",
-				"de": "Übersetzungen in words.js"
+			"0.0.5": {
+				"en": "translations for words.js, fallback if poll interval is undefined",
+				"de": "Übersetzungen in words.js, Absicherung falls das Abfrageintervall nicht angezogen werden konnte"
 			},
 			"0.0.3": {
 				"en": "fixed links to bugs, repo, etc",
