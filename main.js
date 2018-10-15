@@ -9,10 +9,12 @@
 const utils = require(__dirname + '/lib/utils'); // Get common adapter utils
 const adapter = new utils.Adapter('sonnen');
 const request = require('request');
+let polling;
 
 // when adapter shuts down
 adapter.on('unload', callback => {
     try {
+        clearInterval(polling);
         adapter.log.info('[END] Stopping sonnen adapter...');
         adapter.setState('info.connection', false, true);
         callback();
@@ -43,40 +45,39 @@ adapter.on('ready', () => {
     } else adapter.log.warn('[START] No IP-address set');
 });
 
+// is called if a subscribed state changes
+adapter.on('stateChange', (id, state) => {
+    if (!id || !state || state.ack) return; // Ignore acknowledged state changes or error states
+    id = id.substring(adapter.namespace.length + 1); // remove instance name and id
+    state = state.val;
+
+    adapter.log.debug('[COMMAND] State Change - ID: ' + id + '; State: ' + state);
+
+    if (id === 'control.charge') {
+        request.put('http://' + ip + ':8080/api/v1/setpoint/charge/' + state, (error, response, body) => {
+            if (response && response.statusCode.toString() === '200') {
+                adapter.setState('control.charge', state, true);
+                adapter.log.debug('[PUT] ==> Sent ' + state + ' to charge')
+            } else adapter.log.warn('[PUT] Error ' + error)
+        });
+    } else if (id === 'control.discharge') {
+        request.put('http://' + ip + ':8080/api/v1/setpoint/discharge/' + state, (error, response, body) => {
+            if (response && response.statusCode.toString() === '200') {
+                adapter.setState('control.discharge', state, true);
+                adapter.log.debug('[PUT] ==> Sent ' + state + ' to discharge')
+            } else adapter.log.warn('[PUT] Error ' + error)
+        });
+    } // endElseIf
+});
+
 function main() {
     // Vars
     const ip = adapter.config.ip;
     const pollingTime = adapter.config.pollInterval || 7000;
     adapter.log.debug('[INFO] Configured polling interval: ' + pollingTime);
     const statusUrl = 'http://' + ip + ':8080/api/v1/status'; // Status Path - api/status --> GET
-    let polling = null;
 
     adapter.log.debug('[START] Started Adapter with: ' + ip);
-
-    // is called if a subscribed state changes
-    adapter.on('stateChange', (id, state) => {
-        if (!id || !state || state.ack) return; // Ignore acknowledged state changes or error states
-        id = id.substring(adapter.namespace.length + 1); // remove instance name and id
-        state = state.val;
-
-        adapter.log.debug('[COMMAND] State Change - ID: ' + id + '; State: ' + state);
-
-        if (id === 'control.charge') {
-            request.put('http://' + ip + ':8080/api/v1/setpoint/charge/' + state, (error, response, body) => {
-                if (response && response.statusCode.toString() === '200') {
-                    adapter.setState('control.charge', state, true);
-                    adapter.log.debug('[PUT] ==> Sent ' + state + ' to charge')
-                } else adapter.log.warn('[PUT] Error ' + error)
-            });
-        } else if (id === 'control.discharge') {
-            request.put('http://' + ip + ':8080/api/v1/setpoint/discharge/' + state, (error, response, body) => {
-                if (response && response.statusCode.toString() === '200') {
-                    adapter.setState('control.discharge', state, true);
-                    adapter.log.debug('[PUT] ==> Sent ' + state + ' to discharge')
-                } else adapter.log.warn('[PUT] Error ' + error)
-            });
-        } // endElseIf
-    });
 
     request(statusUrl, (error, response, body) => { // poll states on start
         if (error) adapter.log.warn('[REQUEST] <== ' + error);
@@ -128,34 +129,34 @@ function main() {
         } // endIf
     });
 
-    /*
-     * Internals
-     */
-    function setBatteryStates(json, cb) {
-        adapter.setState('info.lastSync', new Date().toISOString(), true);
-        adapter.setState('status.consumption', json.Consumption_W, true);
-        adapter.setState('status.batteryCharging', json.BatteryCharging, true);
-        adapter.setState('status.production', json.Production_W, true);
-        adapter.setState('status.pacTotal', json.Pac_total_W, true);
-        adapter.setState('status.relativeSoc', json.RSOC, true);
-        adapter.setState('status.userSoc', json.USOC, true);
-        adapter.setState('status.acFrequency', json.Fac, true);
-        adapter.setState('status.acVoltage', json.Uac, true);
-        adapter.setState('status.batteryVoltage', json.Ubat, true);
-        adapter.setState('status.systemTime', new Date(json.Timestamp).toISOString(), true);
-        if (json.IsSystemInstalled === 1)
-            adapter.setState('status.systemInstalled', true, true);
-        else
-            adapter.setState('status.systemInstalled', false, true);
-        adapter.setState('status.gridFeedIn', json.GridFeedIn_W, true);
-        adapter.setState('status.flowConsumptionBattery', json.FlowConsumptionBattery, true);
-        adapter.setState('status.flowConsumptionGrid', json.FlowConsumptionGrid, true);
-        adapter.setState('status.flowConsumptionProduction', json.FlowConsumptionProduction, true);
-        adapter.setState('status.flowGridBattery', json.FlowGridBattery, true);
-        adapter.setState('status.flowProductionBattery', json.FlowProductionBattery, true);
-        adapter.setState('status.flowProductionGrid', json.FlowProductionGrid, true);
-
-        if (cb && typeof(cb) === "function") return cb();
-    } // endSetBatteryStates
-
 } // endMain
+
+/*
+ * Internals
+ */
+function setBatteryStates(json, cb) {
+    adapter.setState('info.lastSync', new Date().toISOString(), true);
+    adapter.setState('status.consumption', json.Consumption_W, true);
+    adapter.setState('status.batteryCharging', json.BatteryCharging, true);
+    adapter.setState('status.production', json.Production_W, true);
+    adapter.setState('status.pacTotal', json.Pac_total_W, true);
+    adapter.setState('status.relativeSoc', json.RSOC, true);
+    adapter.setState('status.userSoc', json.USOC, true);
+    adapter.setState('status.acFrequency', json.Fac, true);
+    adapter.setState('status.acVoltage', json.Uac, true);
+    adapter.setState('status.batteryVoltage', json.Ubat, true);
+    adapter.setState('status.systemTime', new Date(json.Timestamp).toISOString(), true);
+    if (json.IsSystemInstalled === 1)
+        adapter.setState('status.systemInstalled', true, true);
+    else
+        adapter.setState('status.systemInstalled', false, true);
+    adapter.setState('status.gridFeedIn', json.GridFeedIn_W, true);
+    adapter.setState('status.flowConsumptionBattery', json.FlowConsumptionBattery, true);
+    adapter.setState('status.flowConsumptionGrid', json.FlowConsumptionGrid, true);
+    adapter.setState('status.flowConsumptionProduction', json.FlowConsumptionProduction, true);
+    adapter.setState('status.flowGridBattery', json.FlowGridBattery, true);
+    adapter.setState('status.flowProductionBattery', json.FlowProductionBattery, true);
+    adapter.setState('status.flowProductionGrid', json.FlowProductionGrid, true);
+
+    if (cb && typeof(cb) === "function") return cb();
+} // endSetBatteryStates
