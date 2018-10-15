@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "0.0.5",
+		"version": "0.0.6",
 		"news": {
+			"0.0.6": {
+				"en": "fix to prevent setStates when request resulted in an error",
+				"de": "States werden nur gesetzt, wenn der Request erfolgreich war"
+			},
 			"0.0.5": {
 				"en": "translations for words.js, fallback if poll interval is undefined",
 				"de": "Übersetzungen in words.js, Absicherung falls das Abfrageintervall nicht angezogen werden konnte"

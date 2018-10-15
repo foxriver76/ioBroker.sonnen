@@ -103,13 +103,13 @@ function main() {
                         if (!obj || !obj.val) {
                             adapter.setState('info.connection', true, true);
                             adapter.log.debug('[CONNECT] Connection successful established');
+                            setBatteryStates(JSON.parse(body));
                         } // endIf
                     });
                 } else {
                     adapter.setState('info.connection', false, true);
                     adapter.log.warn('[CONNECT] Connection failed');
                 }// endElse
-                setBatteryStates(JSON.parse(body));
             });
         }, pollingTime);
     } // endIf

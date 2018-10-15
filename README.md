@@ -238,6 +238,9 @@ Here you can find a description of the states and how to use them. The most stat
 
 ## Changelog
 
+### 0.0.6
+* (foxriver76) Only set states if request was successfull --> prevents adapter crash
+
 ### 0.0.5
 * (foxriver76) translations on index_m.html
 * (foxriver76) use 7000 as interval if poll interval is undefined
