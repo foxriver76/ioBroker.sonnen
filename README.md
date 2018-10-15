@@ -238,6 +238,9 @@ Here you can find a description of the states and how to use them. The most stat
 
 ## Changelog
 
+### 0.0.7
+* (foxriver76) Only set info.connection on change
+
 ### 0.0.6
 * (foxriver76) Only set states if request was successfull --> prevents adapter crash
 

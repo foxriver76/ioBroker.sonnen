@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "0.0.6",
+		"version": "0.0.7",
 		"news": {
+			"0.0.7": {
+				"en": "only set connection it there is a change, minor fixes",
+				"de": "info.connection nur bei Änderung aktualisieren, kleine Fixes"
+			},
 			"0.0.6": {
 				"en": "fix to prevent setStates when request resulted in an error",
 				"de": "States werden nur gesetzt, wenn der Request erfolgreich war"

@@ -13,8 +13,8 @@ const request = require('request');
 // when adapter shuts down
 adapter.on('unload', callback => {
     try {
-        adapter.setState('info.connection', false, true);
         adapter.log.info('[END] Stopping sonnen adapter...');
+        adapter.setState('info.connection', false, true);
         callback();
     } catch (e) {
         callback();
@@ -81,17 +81,17 @@ function main() {
     request(statusUrl, (error, response, body) => { // poll states on start
         if (error) adapter.log.warn('[REQUEST] <== ' + error);
         if (response && response.statusCode.toString() === '200') {
-            adapter.getState('info.connection', (obj, err) => {
-                if (!obj || !obj.val) {
+            adapter.getState('info.connection', (err, state) => {
+                if (!state || !state.val) {
                     adapter.setState('info.connection', true, true);
                     adapter.log.debug('[CONNECT] Connection successful established');
                 } // endIf
             });
+            setBatteryStates(JSON.parse(body));
         } else {
             adapter.setState('info.connection', false, true);
             adapter.log.warn('[CONNECT] Connection failed');
         }// endElse
-        setBatteryStates(JSON.parse(body));
     });
 
     if (!polling) {
@@ -99,17 +99,17 @@ function main() {
             request(statusUrl, (error, response, body) => {
                 if (error) adapter.log.warn('[REQUEST] <== ' + error);
                 if (response && response.statusCode.toString() === '200') {
-                    adapter.getState('info.connection', (obj, err) => {
-                        if (!obj || !obj.val) {
+                    adapter.getState('info.connection', (err, state) => {
+                        if (!state || !state.val) {
                             adapter.setState('info.connection', true, true);
                             adapter.log.debug('[CONNECT] Connection successful established');
-                            setBatteryStates(JSON.parse(body));
                         } // endIf
                     });
+                    setBatteryStates(JSON.parse(body));
                 } else {
                     adapter.setState('info.connection', false, true);
                     adapter.log.warn('[CONNECT] Connection failed');
-                }// endElse
+                } // endElse
             });
         }, pollingTime);
     } // endIf
