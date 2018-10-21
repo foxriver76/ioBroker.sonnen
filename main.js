@@ -88,6 +88,7 @@ function main() {
                     adapter.log.debug('[CONNECT] Connection successful established');
                 } // endIf
             });
+            adapter.log.debug('[DATA] <== ' + body);
             setBatteryStates(JSON.parse(body));
         } else {
             adapter.setState('info.connection', false, true);
@@ -135,6 +136,10 @@ function main() {
  * Internals
  */
 function setBatteryStates(json, cb) {
+    if(json.ReturnCode) {
+        adapter.log.warn('[DATA] <== Return Code ' + json.ReturnCode);
+        return;
+    } // endIf
     adapter.setState('info.lastSync', new Date().toISOString(), true);
     adapter.setState('status.consumption', json.Consumption_W, true);
     adapter.setState('status.batteryCharging', json.BatteryCharging, true);

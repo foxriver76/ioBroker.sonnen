@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "0.0.7",
+		"version": "0.0.8",
 		"news": {
+			"0.0.8": {
+				"en": "enhanced debug logging, prevent crash when return code is received instead of data",
+				"de": "Verbessertes Debug Logging, Crash verhindert, wenn Return Code statt Daten erhalten werden"
+			},
 			"0.0.7": {
 				"en": "only set connection it there is a change, minor fixes",
 				"de": "info.connection nur bei Änderung aktualisieren, kleine Fixes"

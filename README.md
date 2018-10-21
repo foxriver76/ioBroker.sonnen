@@ -238,6 +238,10 @@ Here you can find a description of the states and how to use them. The most stat
 
 ## Changelog
 
+### 0.0.8
+* (foxriver76) Enhanced debug logging
+* (foxriver76) Prevent crashing when a return code is received
+
 ### 0.0.7
 * (foxriver76) Only set info.connection on change
 
