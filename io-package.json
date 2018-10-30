@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "0.0.8",
+		"version": "1.0.0",
 		"news": {
+			"1.0.0": {
+				"en": "formal version increment",
+				"de": "Formelle Versionserhöhung"
+			},
 			"0.0.8": {
 				"en": "enhanced debug logging, prevent crash when return code is received instead of data",
 				"de": "Verbessertes Debug Logging, Crash verhindert, wenn Return Code statt Daten erhalten werden"
