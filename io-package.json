@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "1.0.0",
+		"version": "1.0.1",
 		"news": {
+			"1.0.1": {
+				"en": "correct lastSync and systemTime w.r.t. timezone offset",
+				"de": "Systemzeit und lastSync Zeit berücksichtigen nun den Timezone Offset"
+			},
 			"1.0.0": {
 				"en": "formal version increment",
 				"de": "Formelle Versionserhöhung"

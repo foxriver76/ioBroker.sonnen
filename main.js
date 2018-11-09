@@ -140,7 +140,8 @@ function setBatteryStates(json, cb) {
         adapter.log.warn('[DATA] <== Return Code ' + json.ReturnCode);
         return;
     } // endIf
-    adapter.setState('info.lastSync', new Date().toISOString(), true);
+    let lastSync = new Date();
+    adapter.setState('info.lastSync', new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
     adapter.setState('status.consumption', json.Consumption_W, true);
     adapter.setState('status.batteryCharging', json.BatteryCharging, true);
     adapter.setState('status.production', json.Production_W, true);
@@ -150,7 +151,8 @@ function setBatteryStates(json, cb) {
     adapter.setState('status.acFrequency', json.Fac, true);
     adapter.setState('status.acVoltage', json.Uac, true);
     adapter.setState('status.batteryVoltage', json.Ubat, true);
-    adapter.setState('status.systemTime', new Date(json.Timestamp).toISOString(), true);
+    let systemTime = new Date();
+    adapter.setState('status.systemTime', new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
     if (json.IsSystemInstalled === 1)
         adapter.setState('status.systemInstalled', true, true);
     else
