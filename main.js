@@ -151,7 +151,7 @@ function setBatteryStates(json, cb) {
     adapter.setState('status.acFrequency', json.Fac, true);
     adapter.setState('status.acVoltage', json.Uac, true);
     adapter.setState('status.batteryVoltage', json.Ubat, true);
-    let systemTime = new Date();
+    let systemTime = new Date(json.Timestamp);
     adapter.setState('status.systemTime', new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
     if (json.IsSystemInstalled === 1)
         adapter.setState('status.systemInstalled', true, true);
