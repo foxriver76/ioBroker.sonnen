@@ -1,8 +1,12 @@
 {
 	"common": {
 		"name": "sonnen",
-		"version": "1.0.1",
+		"version": "1.0.2",
 		"news": {
+			"1.0.2": {
+				"en": "use adapter core",
+				"de": "Nutzung von Adapter-Core"
+			},
 			"1.0.1": {
 				"en": "correct lastSync and systemTime w.r.t. timezone offset",
 				"de": "Systemzeit und lastSync Zeit berücksichtigen nun den Timezone Offset"

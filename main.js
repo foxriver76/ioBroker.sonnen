@@ -6,7 +6,7 @@
 /*jslint node: true */
 'use strict';
 
-const utils = require(__dirname + '/lib/utils'); // Get common adapter utils
+const utils = require('@iobroker/adapter-core'); // Get common adapter utils
 const adapter = new utils.Adapter('sonnen');
 const request = require('request');
 let polling;

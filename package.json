@@ -1,6 +1,6 @@
 {
 	"name": "iobroker.sonnen",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"engines": {
     	"node": ">=6.0.0"
 	},
@@ -28,7 +28,8 @@
 		"url": "https://github.com/foxriver76/ioBroker.sonnen"
 	},
 	"dependencies": {
-		"request": "^2.87.0"
+		"request": "^2.87.0",
+		"@iobroker/adapter-core": "^1.0.1"
 	},
 	"devDependencies": {
 		"gulp": "^3.9.1",
