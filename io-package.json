@@ -1,483 +1,470 @@
 {
-	"common": {
-		"name": "sonnen",
-		"version": "1.0.2",
-		"news": {
-			"1.0.2": {
-				"en": "use adapter core",
-				"de": "Nutzung von Adapter-Core"
-			},
-			"1.0.1": {
-				"en": "correct lastSync and systemTime w.r.t. timezone offset",
-				"de": "Systemzeit und lastSync Zeit berücksichtigen nun den Timezone Offset"
-			},
-			"1.0.0": {
-				"en": "formal version increment",
-				"de": "Formelle Versionserhöhung"
-			},
-			"0.0.8": {
-				"en": "enhanced debug logging, prevent crash when return code is received instead of data",
-				"de": "Verbessertes Debug Logging, Crash verhindert, wenn Return Code statt Daten erhalten werden"
-			},
-			"0.0.7": {
-				"en": "only set connection it there is a change, minor fixes",
-				"de": "info.connection nur bei Änderung aktualisieren, kleine Fixes"
-			},
-			"0.0.6": {
-				"en": "fix to prevent setStates when request resulted in an error",
-				"de": "States werden nur gesetzt, wenn der Request erfolgreich war"
-			},
-			"0.0.5": {
-				"en": "translations for words.js, fallback if poll interval is undefined",
-				"de": "Übersetzungen in words.js, Absicherung falls das Abfrageintervall nicht angezogen werden konnte"
-			},
-			"0.0.3": {
-				"en": "fixed links to bugs, repo, etc",
-				"de": "Links zu Bugs, Repo und Co korrigiert"
-			},
-			"0.0.2": {
-				"en": "better readme, more states, bugfixes",
-				"de": "Erweiterte readme, neue States, Bugfixes"
-			},
-			"0.0.1": {
-				"en": "initial adapter",
-				"de": "Initiale Version"
-			}
-		},
-		"title": "sonnen",
-		"titleLang": {
-			"en": "sonnenBattery",
-			"de": "sonnenBatterie"
-		},
-		"desc": {
-			"en": "Monitor your sonnen battery",
-			"de": "Überwache deine sonnen Batterie"
-		},
-		"authors": [
-			"Moritz Heusinger <moritz.heusinger@gmail.com>"
-		],
-		"docs": {
-			"de": "docs/de/README.md"
-		},
-		"platform": "Javascript/Node.js",
-		"mode": "daemon",
-		"icon": "sonnen.png",
-		"materialize": true,
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
-		"keywords": [
-			"sonnen",
-			"photovoltaics",
-			"solar",
-			"energy",
-			"sun"
-		],
-		"readme": "https://github.com/foxriver76/ioBroker.sonnen/blob/master/README.md",
-		"loglevel": "info",
-		"type": "energy",
-		"license": "MIT",
-		"messagebox": false
-	},
-	"native": {
-		"ip": ""
-	},
-	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "info.lastSync",
-			"type": "state",
-			"common": {
-				"name": "Last successful sync",
-				"type": "string",
-				"role": "value.datetime",
-				"read": true,
-				"write": false,
-				"desc": "Last successful synchronization"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"name": "sonnen connected",
-				"type": "boolean",
-				"role": "indicator.connected",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "Is sonnen battery connected?"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status",
-			"type": "channel",
-			"common": {
-				"name": "Status"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.consumption",
-			"type": "state",
-			"common": {
-				"name": "Consumption",
-				"type": "number",
-				"role": "value.consumption",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "House comsumption in watts",
-				"unit": "watts"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.production",
-			"type": "state",
-			"common": {
-				"name": "Production",
-				"type": "number",
-				"role": "value.production",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "Production in watts",
-				"unit": "watts"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.pacTotal",
-			"type": "state",
-			"common": {
-				"name": "Power AC Total",
-				"type": "number",
-				"role": "value.pac",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "Inverter AC Power greater than 0 is discharging, smaller charging",
-				"unit": "watts"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.relativeSoc",
-			"type": "state",
-			"common": {
-				"name": "Relative State of Charge",
-				"type": "number",
-				"role": "value.rsoc",
-				"read": true,
-				"min": 0,
-				"max": 100,
-				"write": false,
-				"def": false,
-				"desc": "State of charge in percent",
-				"unit": "%"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.userSoc",
-			"type": "state",
-			"common": {
-				"name": "User State of Charge",
-				"type": "number",
-				"role": "value.usoc",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "User State of Charge",
-				"min": 0,
-				"max": 100,
-				"unit": "%"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.acFrequency",
-			"type": "state",
-			"common": {
-				"name": "AC frequency",
-				"type": "number",
-				"role": "value.fac",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "AC frequency in hertz",
-				"unit": "hertz"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.acVoltage",
-			"type": "state",
-			"common": {
-				"name": "AC voltage",
-				"type": "number",
-				"role": "value.uac",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "AC voltage in volts",
-				"unit": "volts"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.batteryVoltage",
-			"type": "state",
-			"common": {
-				"name": "Battery voltage",
-				"type": "number",
-				"role": "value.ubat",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "Battery volatge in volts",
-				"unit": "volts"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.systemTime",
-			"type": "state",
-			"common": {
-				"name": "System time",
-				"type": "timestamp",
-				"role": "value.datetime",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "System time"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.systemInstalled",
-			"type": "state",
-			"common": {
-				"name": "System Installed",
-				"type": "boolean",
-				"role": "indicator.systemInstalled",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "System is installed or not"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.batteryCharging",
-			"type": "state",
-			"common": {
-				"name": "Battery charging",
-				"type": "boolean",
-				"role": "indicator.batteryCharging",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "System is installed or not"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.flowConsumptionBattery",
-			"type": "state",
-			"common": {
-				"name": "Flow consumption battery",
-				"type": "boolean",
-				"role": "indicator.flowConsumptionBattery",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "If consuming from battery"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.flowConsumptionGrid",
-			"type": "state",
-			"common": {
-				"name": "Flow consumption Grid",
-				"type": "boolean",
-				"role": "indicator.flowConsumptionGrid",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "If consuming from grid"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.flowConsumptionProduction",
-			"type": "state",
-			"common": {
-				"name": "Flow consumption production",
-				"type": "boolean",
-				"role": "indicator.flowConsumptionProduction",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "If consuming from production"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.flowGridBattery",
-			"type": "state",
-			"common": {
-				"name": "Flow grid battery",
-				"type": "boolean",
-				"role": "indicator.flowGridBattery",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "If charging from grid"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.flowProductionBattery",
-			"type": "state",
-			"common": {
-				"name": "Flow production battery",
-				"type": "boolean",
-				"role": "indicator.flowProductionBattery",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "If charging from production"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.flowProductionGrid",
-			"type": "state",
-			"common": {
-				"name": "Flow production grid",
-				"type": "boolean",
-				"role": "indicator.flowProductionGrid",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "If production flows to grid"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "status.gridFeedIn",
-			"type": "state",
-			"common": {
-				"name": "Amount of grid feed in",
-				"type": "number",
-				"role": "value.gridFeedIn",
-				"read": true,
-				"write": false,
-				"def": false,
-				"desc": "If negative consuming from grid",
-				"unit": "watts"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "control",
-			"type": "channel",
-			"common": {
-				"name": "Controlling"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "control.charge",
-			"type": "state",
-			"common": {
-				"name": "Battery charging",
-				"type": "number",
-				"role": "value.charge",
-				"read": true,
-				"write": true,
-				"def": false,
-				"desc": "Battery charge rate",
-				"unit": "watts"
-			},
-			"native": {
-				
-			}
-		},
-		{
-			"_id": "control.discharge",
-			"type": "state",
-			"common": {
-				"name": "Battery charging",
-				"type": "number",
-				"role": "value.discharge",
-				"read": true,
-				"write": true,
-				"def": false,
-				"desc": "Battery discharge rate",
-				"unit": "watts"
-			},
-			"native": {
-				
-			}
-		}
-	]
+    "common": {
+        "name": "sonnen",
+        "version": "1.1.0",
+        "news": {
+            "1.1.0": {
+                "en": "add compact mode compatibility",
+                "de": "Kompatibilität im Kompaktmodus hinzufügen",
+                "ru": "добавить компактный режим совместимости",
+                "pt": "adicionar compatibilidade no modo compacto",
+                "nl": "voeg compatibiliteit in compacte modus toe",
+                "fr": "ajouter une compatibilité en mode compact",
+                "it": "aggiungere la compatibilità in modalità compatta",
+                "es": "añadir compatibilidad de modo compacto",
+                "pl": "dodaj kompatybilność w trybie kompaktowym"
+            },
+            "1.0.2": {
+                "en": "use adapter core",
+                "de": "Nutzung von Adapter-Core"
+            },
+            "1.0.1": {
+                "en": "correct lastSync and systemTime w.r.t. timezone offset",
+                "de": "Systemzeit und lastSync Zeit berücksichtigen nun den Timezone Offset"
+            },
+            "1.0.0": {
+                "en": "formal version increment",
+                "de": "Formelle Versionserhöhung"
+            },
+            "0.0.8": {
+                "en": "enhanced debug logging, prevent crash when return code is received instead of data",
+                "de": "Verbessertes Debug Logging, Crash verhindert, wenn Return Code statt Daten erhalten werden"
+            },
+            "0.0.7": {
+                "en": "only set connection it there is a change, minor fixes",
+                "de": "info.connection nur bei Änderung aktualisieren, kleine Fixes"
+            },
+            "0.0.6": {
+                "en": "fix to prevent setStates when request resulted in an error",
+                "de": "States werden nur gesetzt, wenn der Request erfolgreich war"
+            },
+            "0.0.5": {
+                "en": "translations for words.js, fallback if poll interval is undefined",
+                "de": "Übersetzungen in words.js, Absicherung falls das Abfrageintervall nicht angezogen werden konnte"
+            },
+            "0.0.3": {
+                "en": "fixed links to bugs, repo, etc",
+                "de": "Links zu Bugs, Repo und Co korrigiert"
+            },
+            "0.0.2": {
+                "en": "better readme, more states, bugfixes",
+                "de": "Erweiterte readme, neue States, Bugfixes"
+            },
+            "0.0.1": {
+                "en": "initial adapter",
+                "de": "Initiale Version"
+            }
+        },
+        "title": "sonnen",
+        "titleLang": {
+            "en": "sonnenBattery",
+            "de": "sonnenBatterie"
+        },
+        "desc": {
+            "en": "Monitor your sonnen battery",
+            "de": "Überwache deine sonnen Batterie"
+        },
+        "authors": [
+            "Moritz Heusinger <moritz.heusinger@gmail.com>"
+        ],
+        "docs": {
+            "de": "docs/de/README.md"
+        },
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "icon": "sonnen.png",
+        "materialize": true,
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
+        "keywords": [
+            "sonnen",
+            "photovoltaics",
+            "solar",
+            "energy",
+            "sun"
+        ],
+        "readme": "https://github.com/foxriver76/ioBroker.sonnen/blob/master/README.md",
+        "loglevel": "info",
+        "type": "energy",
+        "license": "MIT",
+        "messagebox": false
+    },
+    "native": {
+        "ip": ""
+    },
+    "compact": true,
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "info.lastSync",
+            "type": "state",
+            "common": {
+                "name": "Last successful sync",
+                "type": "string",
+                "role": "value.datetime",
+                "read": true,
+                "write": false,
+                "desc": "Last successful synchronization"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "name": "sonnen connected",
+                "type": "boolean",
+                "role": "indicator.connected",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "Is sonnen battery connected?"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status",
+            "type": "channel",
+            "common": {
+                "name": "Status"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.consumption",
+            "type": "state",
+            "common": {
+                "name": "Consumption",
+                "type": "number",
+                "role": "value.consumption",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "House comsumption in watts",
+                "unit": "watts"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.production",
+            "type": "state",
+            "common": {
+                "name": "Production",
+                "type": "number",
+                "role": "value.production",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "Production in watts",
+                "unit": "watts"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.pacTotal",
+            "type": "state",
+            "common": {
+                "name": "Power AC Total",
+                "type": "number",
+                "role": "value.pac",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "Inverter AC Power greater than 0 is discharging, smaller charging",
+                "unit": "watts"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.relativeSoc",
+            "type": "state",
+            "common": {
+                "name": "Relative State of Charge",
+                "type": "number",
+                "role": "value.rsoc",
+                "read": true,
+                "min": 0,
+                "max": 100,
+                "write": false,
+                "def": false,
+                "desc": "State of charge in percent",
+                "unit": "%"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.userSoc",
+            "type": "state",
+            "common": {
+                "name": "User State of Charge",
+                "type": "number",
+                "role": "value.usoc",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "User State of Charge",
+                "min": 0,
+                "max": 100,
+                "unit": "%"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.acFrequency",
+            "type": "state",
+            "common": {
+                "name": "AC frequency",
+                "type": "number",
+                "role": "value.fac",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "AC frequency in hertz",
+                "unit": "hertz"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.acVoltage",
+            "type": "state",
+            "common": {
+                "name": "AC voltage",
+                "type": "number",
+                "role": "value.uac",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "AC voltage in volts",
+                "unit": "volts"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.batteryVoltage",
+            "type": "state",
+            "common": {
+                "name": "Battery voltage",
+                "type": "number",
+                "role": "value.ubat",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "Battery volatge in volts",
+                "unit": "volts"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.systemTime",
+            "type": "state",
+            "common": {
+                "name": "System time",
+                "type": "timestamp",
+                "role": "value.datetime",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "System time"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.systemInstalled",
+            "type": "state",
+            "common": {
+                "name": "System Installed",
+                "type": "boolean",
+                "role": "indicator.systemInstalled",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "System is installed or not"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.batteryCharging",
+            "type": "state",
+            "common": {
+                "name": "Battery charging",
+                "type": "boolean",
+                "role": "indicator.batteryCharging",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "System is installed or not"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.flowConsumptionBattery",
+            "type": "state",
+            "common": {
+                "name": "Flow consumption battery",
+                "type": "boolean",
+                "role": "indicator.flowConsumptionBattery",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "If consuming from battery"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.flowConsumptionGrid",
+            "type": "state",
+            "common": {
+                "name": "Flow consumption Grid",
+                "type": "boolean",
+                "role": "indicator.flowConsumptionGrid",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "If consuming from grid"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.flowConsumptionProduction",
+            "type": "state",
+            "common": {
+                "name": "Flow consumption production",
+                "type": "boolean",
+                "role": "indicator.flowConsumptionProduction",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "If consuming from production"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.flowGridBattery",
+            "type": "state",
+            "common": {
+                "name": "Flow grid battery",
+                "type": "boolean",
+                "role": "indicator.flowGridBattery",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "If charging from grid"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.flowProductionBattery",
+            "type": "state",
+            "common": {
+                "name": "Flow production battery",
+                "type": "boolean",
+                "role": "indicator.flowProductionBattery",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "If charging from production"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.flowProductionGrid",
+            "type": "state",
+            "common": {
+                "name": "Flow production grid",
+                "type": "boolean",
+                "role": "indicator.flowProductionGrid",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "If production flows to grid"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "status.gridFeedIn",
+            "type": "state",
+            "common": {
+                "name": "Amount of grid feed in",
+                "type": "number",
+                "role": "value.gridFeedIn",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "If negative consuming from grid",
+                "unit": "watts"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "control",
+            "type": "channel",
+            "common": {
+                "name": "Controlling"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "control.charge",
+            "type": "state",
+            "common": {
+                "name": "Battery charging",
+                "type": "number",
+                "role": "value.charge",
+                "read": true,
+                "write": true,
+                "def": false,
+                "desc": "Battery charge rate",
+                "unit": "watts"
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "control.discharge",
+            "type": "state",
+            "common": {
+                "name": "Battery charging",
+                "type": "number",
+                "role": "value.discharge",
+                "read": true,
+                "write": true,
+                "def": false,
+                "desc": "Battery discharge rate",
+                "unit": "watts"
+            },
+            "native": {
+            }
+        }
+    ]
 }

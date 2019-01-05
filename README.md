@@ -238,6 +238,9 @@ Here you can find a description of the states and how to use them. The most stat
 
 ## Changelog
 
+### 1.1.0
+* (foxriver76) add compact mode compatibility
+
 ### 1.0.2
 * (foxriver76) use adapter-core module
 
