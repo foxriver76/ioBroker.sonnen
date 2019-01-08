@@ -1,9 +1,10 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.1.0",
+        "version": "1.1.1",
+        "compact": true,
         "news": {
-            "1.1.0": {
+            "1.1.1": {
                 "en": "add compact mode compatibility",
                 "de": "Kompatibilität im Kompaktmodus hinzufügen",
                 "ru": "добавить компактный режим совместимости",
@@ -92,7 +93,6 @@
     "native": {
         "ip": ""
     },
-    "compact": true,
     "objects": [],
     "instanceObjects": [
         {
