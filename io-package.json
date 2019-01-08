@@ -2,7 +2,6 @@
     "common": {
         "name": "sonnen",
         "version": "1.1.1",
-        "compact": true,
         "news": {
             "1.1.1": {
                 "en": "add compact mode compatibility",
@@ -76,6 +75,7 @@
         "icon": "sonnen.png",
         "materialize": true,
         "enabled": true,
+        "compact": true,
         "extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
         "keywords": [
             "sonnen",
