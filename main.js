@@ -10,6 +10,7 @@ const utils = require('@iobroker/adapter-core'); // Get common adapter utils
 let adapter;
 const request = require('request');
 let polling;
+let ip;
 
 function startAdapter(options) {
     options = options || {};
@@ -44,6 +45,7 @@ function startAdapter(options) {
 
     adapter.on('ready', () => {
         if (adapter.config.ip) {
+            ip = adapter.config.ip;
             adapter.log.info('[START] Starting sonnen adapter');
             main();
         } else adapter.log.warn('[START] No IP-address set');
@@ -78,7 +80,6 @@ function startAdapter(options) {
 
 
 function main() {
-    const ip = adapter.config.ip;
     const pollingTime = adapter.config.pollInterval || 7000;
     adapter.log.debug('[INFO] Configured polling interval: ' + pollingTime);
     const statusUrl = 'http://' + ip + ':8080/api/v1/status'; // Status Path - api/status --> GET

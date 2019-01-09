@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.1.1",
+        "version": "1.1.2",
         "news": {
+            "1.1.2": {
+                "en": "bugfix for control states",
+                "de": "Bugfix für Kontrollzustände",
+                "ru": "исправление для состояний управления",
+                "pt": "bugfix para estados de controle",
+                "nl": "bugfix voor besturingsstatussen",
+                "fr": "correction de bug pour les états de contrôle",
+                "it": "bugfix per gli stati di controllo",
+                "es": "corrección de errores para los estados de control",
+                "pl": "bugfix dla stanów kontrolnych"
+            },
             "1.1.1": {
                 "en": "add compact mode compatibility",
                 "de": "Kompatibilität im Kompaktmodus hinzufügen",
@@ -101,8 +112,7 @@
             "common": {
                 "name": "Information"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "info.lastSync",
@@ -115,8 +125,7 @@
                 "write": false,
                 "desc": "Last successful synchronization"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "info.connection",
@@ -130,8 +139,7 @@
                 "def": false,
                 "desc": "Is sonnen battery connected?"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status",
@@ -139,8 +147,7 @@
             "common": {
                 "name": "Status"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.consumption",
@@ -155,8 +162,7 @@
                 "desc": "House comsumption in watts",
                 "unit": "watts"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.production",
@@ -171,8 +177,7 @@
                 "desc": "Production in watts",
                 "unit": "watts"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.pacTotal",
@@ -187,8 +192,7 @@
                 "desc": "Inverter AC Power greater than 0 is discharging, smaller charging",
                 "unit": "watts"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.relativeSoc",
@@ -205,8 +209,7 @@
                 "desc": "State of charge in percent",
                 "unit": "%"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.userSoc",
@@ -223,8 +226,7 @@
                 "max": 100,
                 "unit": "%"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.acFrequency",
@@ -239,8 +241,7 @@
                 "desc": "AC frequency in hertz",
                 "unit": "hertz"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.acVoltage",
@@ -255,8 +256,7 @@
                 "desc": "AC voltage in volts",
                 "unit": "volts"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.batteryVoltage",
@@ -271,8 +271,7 @@
                 "desc": "Battery volatge in volts",
                 "unit": "volts"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.systemTime",
@@ -286,8 +285,7 @@
                 "def": false,
                 "desc": "System time"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.systemInstalled",
@@ -301,8 +299,7 @@
                 "def": false,
                 "desc": "System is installed or not"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.batteryCharging",
@@ -316,8 +313,7 @@
                 "def": false,
                 "desc": "System is installed or not"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.flowConsumptionBattery",
@@ -331,8 +327,7 @@
                 "def": false,
                 "desc": "If consuming from battery"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.flowConsumptionGrid",
@@ -346,8 +341,7 @@
                 "def": false,
                 "desc": "If consuming from grid"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.flowConsumptionProduction",
@@ -361,8 +355,7 @@
                 "def": false,
                 "desc": "If consuming from production"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.flowGridBattery",
@@ -376,8 +369,7 @@
                 "def": false,
                 "desc": "If charging from grid"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.flowProductionBattery",
@@ -391,8 +383,7 @@
                 "def": false,
                 "desc": "If charging from production"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.flowProductionGrid",
@@ -406,8 +397,7 @@
                 "def": false,
                 "desc": "If production flows to grid"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "status.gridFeedIn",
@@ -422,8 +412,7 @@
                 "desc": "If negative consuming from grid",
                 "unit": "watts"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "control",
@@ -431,8 +420,7 @@
             "common": {
                 "name": "Controlling"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "control.charge",
@@ -447,8 +435,7 @@
                 "desc": "Battery charge rate",
                 "unit": "watts"
             },
-            "native": {
-            }
+            "native": {}
         },
         {
             "_id": "control.discharge",
@@ -463,8 +450,7 @@
                 "desc": "Battery discharge rate",
                 "unit": "watts"
             },
-            "native": {
-            }
+            "native": {}
         }
     ]
 }

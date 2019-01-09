@@ -238,6 +238,9 @@ Here you can find a description of the states and how to use them. The most stat
 
 ## Changelog
 
+### 1.1.2
+* (foxriver76) bugfix for control states
+
 ### 1.1.1
 * (foxriver76) add compact mode compatibility
 
