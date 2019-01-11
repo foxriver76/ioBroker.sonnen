@@ -6,7 +6,7 @@
 [![NPM version](http://img.shields.io/npm/v/iobroker.sonnen.svg)](https://www.npmjs.com/package/iobroker.sonnen)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.sonnen.svg)](https://www.npmjs.com/package/iobroker.sonnen)
 
-[![NPM](https://nodei.co/npm/iobroker.sonnen.png?downloads=true)](https://nodei.co/npm/iobroker.sonnen/)
+[![NPM](https://nodei.co/npm/iobroker.sonnen.png?downloads=true)](https://nodei.co/npm/iobroker.sonnen/) [![Greenkeeper badge](https://badges.greenkeeper.io/foxriver76/ioBroker.sonnen.svg)](https://greenkeeper.io/)
 
 ## Installation
 You can either install the adapter via the ioBroker web interface or on your local machine via npm.
