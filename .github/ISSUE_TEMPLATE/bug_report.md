@@ -28,7 +28,7 @@ If applicable, add screenshots and logfiles to help explain your problem.
  - JS-Controller version: <js-controller-version>
  - Node version: <node-version>
  - Operating system: <os-name>
- - Battery model: battery-model
+ - Battery model: <battery-model>
 
 **Additional context**
 Add any other context about the problem here.
