@@ -24,10 +24,10 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots and logfiles to help explain your problem.
 
 **Versions:**
- - Adapter version: X.X
- - JS-Controller version: X.X
- - Node version:
- - Operating system: os-name
+ - Adapter version: <adapter-version>
+ - JS-Controller version: <js-controller-version>
+ - Node version: <node-version>
+ - Operating system: <os-name>
  - Battery model: battery-model
 
 **Additional context**
