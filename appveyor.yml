@@ -20,5 +20,7 @@ test_script:
   - echo %cd%
   - node --version
   - npm --version
-  - npm test
+  - npm run test:unit
+  - npm run test:integration
+  - npm run test:package
 build: 'off'
