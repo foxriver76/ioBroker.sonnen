@@ -119,7 +119,7 @@ function main() {
 
     Promise.all(promises).then(() => {
         request(statusUrl, (error, response, body) => { // poll states on start
-            if (error) adapter.log.warn(`[REQUEST] <== ` + error);
+            if (error) adapter.log.warn(`[REQUEST] <== ${error}`);
             if (response && response.statusCode.toString() === `200`) {
                 adapter.getState(`info.connection`, (err, state) => {
                     if (!state || !state.val) {
@@ -127,7 +127,7 @@ function main() {
                         adapter.log.debug(`[CONNECT] Connection successful established`);
                     } // endIf
                 });
-                adapter.log.debug(`[DATA] <== ` + body);
+                adapter.log.debug(`[DATA] <== ${body}`);
                 setBatteryStates(JSON.parse(body));
             } else {
                 adapter.setState(`info.connection`, false, true);
@@ -267,6 +267,7 @@ function restartAdapter() {
 function requestStateAndSetOldAPI(code, state) {
     return new Promise((resolve, reject) => {
         requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`).then(res => {
+            adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${state}`);
             adapter.setState(parseInt(state), res, true);
             resolve();
         }).catch(e => {
