@@ -3,8 +3,8 @@
 'use strict';
 
 systemDictionary = {
-				"Advanced settings": { "en": "Advanced settings", "de": "Erweiterte Einstellungen", "ru": "Расширенные настройки", "pt": "Configurações avançadas", "nl": "Geavanceerde instellingen", "fr": "Réglages avancés", "it": "Impostazioni avanzate", "es": "Ajustes avanzados", "pl": "Zaawansowane ustawienia"},
-                "IP-Address:": { "en": "IP-Address:", "de": "IP-Adresse:"},
-                "IP-Address of your sonnen battery": { "en": "IP-Address of your sonnen battery", "de": "IP-Adresse der sonnenBatterie"},
-                "Poll interval (ms)": { "en": "Poll interval (ms)", "de": "Abfrageintervall (ms)"}
+    "Advanced settings": { "en": `Advanced settings`, "de": `Erweiterte Einstellungen`, "ru": `Расширенные настройки`, "pt": `Configurações avançadas`, "nl": `Geavanceerde instellingen`, "fr": `Réglages avancés`, "it": `Impostazioni avanzate`, "es": `Ajustes avanzados`, "pl": `Zaawansowane ustawienia`},
+    "IP-Address:": { "en": `IP-Address:`, "de": `IP-Adresse:`},
+    "IP-Address of your sonnen battery": { "en": `IP-Address of your sonnen battery`, "de": `IP-Adresse der sonnenBatterie`},
+    "Poll interval (ms)": { "en": `Poll interval (ms)`, "de": `Abfrageintervall (ms)`}
 };

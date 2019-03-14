@@ -42,6 +42,7 @@ Additional to the adapter installation you have to add an instance of the adapte
 
 ## Usage
 Here you can find a description of the states and how to use them. The most states of this adapter are read-only states.
+Note, that there are two different sonnen API's so if you are missing states, they are probably not supported.
 
 ### States
 
@@ -238,6 +239,8 @@ Here you can find a description of the states and how to use them. The most stat
     ```
 
 ## Changelog
+### 1.2.0
+* (foxriver76) support of another sonnen api
 
 ### 1.1.2
 * (foxriver76) bugfix for control states

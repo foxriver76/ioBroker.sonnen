@@ -6,71 +6,78 @@
 /*jslint node: true */
 'use strict';
 
-const utils = require('@iobroker/adapter-core'); // Get common adapter utils
-let adapter;
-const request = require('request');
+const utils = require(`@iobroker/adapter-core`); // Get common adapter utils
+const helper = require(`${__dirname}/lib/utils`);
+const request = require(`request`);
+const requestPromise = require(`request-promise-native`);
 let polling;
 let ip;
+let adapter;
+let pollingTime;
+let apiVersion;
 
 function startAdapter(options) {
     options = options || {};
     Object.assign(options, {
-        name: 'sonnen'
+        name: `sonnen`
     });
 
     adapter = new utils.Adapter(options);
 
-    adapter.on('unload', callback => {
+    adapter.on(`unload`, callback => {
         try {
             clearInterval(polling);
-            adapter.log.info('[END] Stopping sonnen adapter...');
-            adapter.setState('info.connection', false, true);
+            adapter.log.info(`[END] Stopping sonnen adapter...`);
+            adapter.setState(`info.connection`, false, true);
             callback();
         } catch (e) {
             callback();
         }
     });
 
-    adapter.on('message', obj => {
-        if (typeof obj === 'object' && obj.message) {
-            if (obj.command === 'send') {
-                // e.g. send email or pushover or whatever
-                console.log('send command');
-
-                // Send response in callback if required
-                if (obj.callback) adapter.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-            }
-        }
-    });
-
-    adapter.on('ready', () => {
+    adapter.on(`ready`, () => {
         if (adapter.config.ip) {
             ip = adapter.config.ip;
-            adapter.log.info('[START] Starting sonnen adapter');
-            main();
-        } else adapter.log.warn('[START] No IP-address set');
+            adapter.log.info(`[START] Starting sonnen adapter`);
+            adapter.log.debug(`[START] Check API`);
+            requestPromise({url: `http://${ip}:8080/api/v1/status`, timeout: 2000}).then(() => {
+                adapter.log.debug(`[START] 8080 API detected`);
+                apiVersion = `new`;
+                main();
+            }).catch(e => {
+                adapter.log.debug(`[START] It's not 8080, because ${e}`);
+                requestPromise(`http://${ip}:7979/rest/devices/battery/M03`).then(() => {
+                    apiVersion = `old`;
+                    adapter.log.debug(`[START] 7979 API detected`);
+                    main();
+                }).catch(e => {
+                    adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e}`);
+                    setTimeout(restartAdapter, 30000);
+                });
+            });
+        } else adapter.log.warn(`[START] No IP-address set`);
     });
 
-    adapter.on('stateChange', (id, state) => {
+    adapter.on(`stateChange`, (id, state) => {
         if (!id || !state || state.ack) return; // Ignore acknowledged state changes or error states
         id = id.substring(adapter.namespace.length + 1); // remove instance name and id
         state = state.val;
 
-        adapter.log.debug('[COMMAND] State Change - ID: ' + id + '; State: ' + state);
+        adapter.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${state}`);
 
-        if (id === 'control.charge') {
-            request.put('http://' + ip + ':8080/api/v1/setpoint/charge/' + state, (error, response, body) => {
-                if (response && response.statusCode.toString() === '200') {
-                    adapter.setState('control.charge', state, true);
-                    adapter.log.debug('[PUT] ==> Sent ' + state + ' to charge');
-                } else adapter.log.warn('[PUT] Error ' + error);
+        if (id === `control.charge`) {
+            request.put(`http://${ip}:8080/api/v1/setpoint/charge/${state}`, (error, response) => {
+                if (response && response.statusCode.toString() === `200`) {
+                    adapter.setState(`control.charge`, state, true);
+                    adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
+                } else adapter.log.warn(`[PUT] Error ${error}`);
             });
-        } else if (id === 'control.discharge') {
-            request.put('http://' + ip + ':8080/api/v1/setpoint/discharge/' + state, (error, response, body) => {
-                if (response && response.statusCode.toString() === '200') {
-                    adapter.setState('control.discharge', state, true);
-                    adapter.log.debug('[PUT] ==> Sent ' + state + ' to discharge');
-                } else adapter.log.warn('[PUT] Error ' + error);
+        } else if (id === `control.discharge`) {
+            request.put(`http://${ip}:8080/api/v1/setpoint/discharge/${state}`, (error, response) => {
+                if (response && response.statusCode.toString() === `200`) {
+                    adapter.setState(`control.discharge`, state, true);
+                    adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
+                } else adapter.log.warn(`[PUT] Error ${error}`);
             });
         } // endElseIf
     });
@@ -80,100 +87,193 @@ function startAdapter(options) {
 
 
 function main() {
-    const pollingTime = adapter.config.pollInterval || 7000;
-    adapter.log.debug('[INFO] Configured polling interval: ' + pollingTime);
-    const statusUrl = 'http://' + ip + ':8080/api/v1/status'; // Status Path - api/status --> GET
-
-    adapter.log.debug('[START] Started Adapter with: ' + ip);
-
-    request(statusUrl, (error, response, body) => { // poll states on start
-        if (error) adapter.log.warn('[REQUEST] <== ' + error);
-        if (response && response.statusCode.toString() === '200') {
-            adapter.getState('info.connection', (err, state) => {
-                if (!state || !state.val) {
-                    adapter.setState('info.connection', true, true);
-                    adapter.log.debug('[CONNECT] Connection successful established');
-                } // endIf
-            });
-            adapter.log.debug('[DATA] <== ' + body);
-            setBatteryStates(JSON.parse(body));
-        } else {
-            adapter.setState('info.connection', false, true);
-            adapter.log.warn('[CONNECT] Connection failed');
-        }// endElse
-    });
-
-    if (!polling) {
-        polling = setInterval(() => { // poll states every [30] seconds
-            request(statusUrl, (error, response, body) => {
-                if (error) adapter.log.warn('[REQUEST] <== ' + error);
-                if (response && response.statusCode.toString() === '200') {
-                    adapter.getState('info.connection', (err, state) => {
-                        if (!state || !state.val) {
-                            adapter.setState('info.connection', true, true);
-                            adapter.log.debug('[CONNECT] Connection successful established');
-                        } // endIf
-                    });
-                    setBatteryStates(JSON.parse(body));
-                } else {
-                    adapter.setState('info.connection', false, true);
-                    adapter.log.warn('[CONNECT] Connection failed');
-                } // endElse
-            });
-        }, pollingTime);
-    } // endIf
-
+    pollingTime = adapter.config.pollInterval || 7000;
+    adapter.log.debug(`[INFO] Configured polling interval: ${pollingTime}`);
     // all states changes inside the adapters namespace are subscribed
-    adapter.subscribeStates('*');
+    adapter.subscribeStates(`*`);
 
     adapter.getForeignObject(adapter.namespace, (err, obj) => { // create device namespace
         if (!obj) {
             adapter.setForeignObject(adapter.namespace, {
-                type: 'device',
+                type: `device`,
                 common: {
-                    name: 'sonnen device'
+                    name: `sonnen device`
                 }
             });
         } // endIf
     });
 
+    adapter.log.debug(`[START] Started Adapter with: ${ip}`);
+
+    if (apiVersion === `old`) return oldAPImain();
+
+    const statusUrl = `http://${ip}:8080/api/v1/status`; // Status Path - api/status --> GET
+
+    // create objects
+    const promises = [];
+    for (const obj of helper.newAPIStates) {
+        const id = obj._id;
+        delete obj._id;
+        promises.push(adapter.setObjectNotExistsAsync(id, obj));
+    }
+
+    Promise.all(promises).then(() => {
+        request(statusUrl, (error, response, body) => { // poll states on start
+            if (error) adapter.log.warn(`[REQUEST] <== ` + error);
+            if (response && response.statusCode.toString() === `200`) {
+                adapter.getState(`info.connection`, (err, state) => {
+                    if (!state || !state.val) {
+                        adapter.setState(`info.connection`, true, true);
+                        adapter.log.debug(`[CONNECT] Connection successful established`);
+                    } // endIf
+                });
+                adapter.log.debug(`[DATA] <== ` + body);
+                setBatteryStates(JSON.parse(body));
+            } else {
+                adapter.setState(`info.connection`, false, true);
+                adapter.log.warn(`[CONNECT] Connection failed`);
+            }// endElse
+        });
+
+        if (!polling) {
+            polling = setInterval(() => { // poll states every [30] seconds
+                request(statusUrl, (error, response, body) => {
+                    if (error) adapter.log.warn(`[REQUEST] <== ${error}`);
+                    if (response && response.statusCode.toString() === `200`) {
+                        adapter.getState(`info.connection`, (err, state) => {
+                            if (!state || !state.val) {
+                                adapter.setState(`info.connection`, true, true);
+                                adapter.log.debug(`[CONNECT] Connection successful established`);
+                            } // endIf
+                        });
+                        setBatteryStates(JSON.parse(body));
+                    } else {
+                        adapter.setState(`info.connection`, false, true);
+                        adapter.log.warn(`[CONNECT] Connection failed`);
+                    } // endElse
+                });
+            }, pollingTime);
+        } // endIf
+    });
 } // endMain
 
 /*
  * Internals
  */
+function oldAPImain() {
+    // create objects
+    const promises = [];
+    for (const obj of helper.oldAPIStates) {
+        const id = obj._id;
+        delete obj._id;
+        promises.push(adapter.setObjectNotExistsAsync(id, obj));
+    }
+
+    Promise.all(promises).then(() => {
+        const promises = [];
+        promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
+        promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
+        promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
+        promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
+        promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
+        promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
+        promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
+        promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
+        promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
+
+        Promise.all(promises).then(() => {
+            const lastSync = new Date();
+            adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+            adapter.getStateAsync(`info.connection`).then(state => {
+                if (!state.val) adapter.setState(`info.connection`, true, true);
+            }).catch(() => {
+                adapter.setState(`info.connection`, true, true);
+            });
+        }).catch(e => {
+            adapter.log.warn(`[DATA] Error getting Data ${e}`);
+        });
+
+
+        if (!polling) {
+            polling = setInterval(() => { // poll states every configured seconds
+                const promises = [];
+                promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
+                promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
+                promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
+                promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
+                promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
+                promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
+                promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
+                promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
+                promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
+
+                Promise.all(promises).then(() => {
+                    const lastSync = new Date();
+                    adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+                    adapter.getStateAsync(`info.connection`).then(state => {
+                        if (!state.val) adapter.setState(`info.connection`, true, true);
+                    });
+                }).catch(e => {
+                    adapter.getStateAsync(`info.connection`).then(state => {
+                        if (state.val === true) adapter.setState(`info.connection`, false, true);
+                        adapter.log.warn(`[DATA] Error getting Data ${e}`);
+                    });
+                });
+            }, pollingTime);
+        } //
+    });
+
+} // endOldAPImain
+
 function setBatteryStates(json, cb) {
     if (json.ReturnCode) {
-        adapter.log.warn('[DATA] <== Return Code ' + json.ReturnCode);
+        adapter.log.warn(`[DATA] <== Return Code ${json.ReturnCode}`);
         return;
     } // endIf
     const lastSync = new Date();
-    adapter.setState('info.lastSync', new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
-    adapter.setState('status.consumption', json.Consumption_W, true);
-    adapter.setState('status.batteryCharging', json.BatteryCharging, true);
-    adapter.setState('status.production', json.Production_W, true);
-    adapter.setState('status.pacTotal', json.Pac_total_W, true);
-    adapter.setState('status.relativeSoc', json.RSOC, true);
-    adapter.setState('status.userSoc', json.USOC, true);
-    adapter.setState('status.acFrequency', json.Fac, true);
-    adapter.setState('status.acVoltage', json.Uac, true);
-    adapter.setState('status.batteryVoltage', json.Ubat, true);
+    adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+    adapter.setState(`status.consumption`, json.Consumption_W, true);
+    adapter.setState(`status.batteryCharging`, json.BatteryCharging, true);
+    adapter.setState(`status.production`, json.Production_W, true);
+    adapter.setState(`status.pacTotal`, json.Pac_total_W, true);
+    adapter.setState(`status.relativeSoc`, json.RSOC, true);
+    adapter.setState(`status.userSoc`, json.USOC, true);
+    adapter.setState(`status.acFrequency`, json.Fac, true);
+    adapter.setState(`status.acVoltage`, json.Uac, true);
+    adapter.setState(`status.batteryVoltage`, json.Ubat, true);
     const systemTime = new Date(json.Timestamp);
-    adapter.setState('status.systemTime', new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
+    adapter.setState(`status.systemTime`, new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
     if (json.IsSystemInstalled === 1)
-        adapter.setState('status.systemInstalled', true, true);
+        adapter.setState(`status.systemInstalled`, true, true);
     else
-        adapter.setState('status.systemInstalled', false, true);
-    adapter.setState('status.gridFeedIn', json.GridFeedIn_W, true);
-    adapter.setState('status.flowConsumptionBattery', json.FlowConsumptionBattery, true);
-    adapter.setState('status.flowConsumptionGrid', json.FlowConsumptionGrid, true);
-    adapter.setState('status.flowConsumptionProduction', json.FlowConsumptionProduction, true);
-    adapter.setState('status.flowGridBattery', json.FlowGridBattery, true);
-    adapter.setState('status.flowProductionBattery', json.FlowProductionBattery, true);
-    adapter.setState('status.flowProductionGrid', json.FlowProductionGrid, true);
+        adapter.setState(`status.systemInstalled`, false, true);
+    adapter.setState(`status.gridFeedIn`, json.GridFeedIn_W, true);
+    adapter.setState(`status.flowConsumptionBattery`, json.FlowConsumptionBattery, true);
+    adapter.setState(`status.flowConsumptionGrid`, json.FlowConsumptionGrid, true);
+    adapter.setState(`status.flowConsumptionProduction`, json.FlowConsumptionProduction, true);
+    adapter.setState(`status.flowGridBattery`, json.FlowGridBattery, true);
+    adapter.setState(`status.flowProductionBattery`, json.FlowProductionBattery, true);
+    adapter.setState(`status.flowProductionGrid`, json.FlowProductionGrid, true);
 
-    if (cb && typeof (cb) === 'function') return cb();
+    if (cb && typeof (cb) === `function`) return cb();
 } // endSetBatteryStates
+
+function restartAdapter() {
+    adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`).then(obj => {
+        if (obj) adapter.setForeignObject(`system.adapter.${adapter.namespace}`, obj);
+    });
+} // endFunctionRestartAdapter
+
+function requestStateAndSetOldAPI(code, state) {
+    return new Promise((resolve, reject) => {
+        requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`).then(res => {
+            adapter.setState(parseInt(state), res, true);
+            resolve();
+        }).catch(e => {
+            reject(e);
+        });
+    });
+} // endRequestStateAndSetOldAPI
 
 // If started as allInOne/compact mode => return function to create instance
 if (module && module.parent) {

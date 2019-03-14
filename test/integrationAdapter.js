@@ -1,10 +1,10 @@
 'use strict';
 
-const path = require('path');
-const {tests} = require('@iobroker/testing');
+const path = require(`path`);
+const {tests} = require(`@iobroker/testing`);
 
 // Run tests
-tests.integration(path.join(__dirname, '..'), {
+tests.integration(path.join(__dirname, `..`), {
     //            ~~~~~~~~~~~~~~~~~~~~~~~~~
     // This should be the adapter's root directory
 

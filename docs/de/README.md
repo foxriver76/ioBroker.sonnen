@@ -74,7 +74,8 @@ darüber informiert, ob die Kommunikation mit dem Hub reibungslos erfolgt.
 ![Objekte](media/objects.png "sonnen Objekte")
 <span style="color:grey">*Objekte des sonnen Adapters*</span>
 
-Nachfolgend werden die Objekte in States und Buttons unterteilt. 
+Nachfolgend werden die Objekte in States und Buttons unterteilt. Da es zwei unterschiedliche APIs je nach Batterie gibt,
+werden nur die States angelegt, die von der jeweiligen Batterie unterstützt werden.
 Jeder Datenpunkt ist mit seinem zugehörigen Datentyp sowie seinen Berechtigungen aufgehführt. 
 Berechtigungen können lesend (R) sowie schreibend (W) sein. Jeder Datenpunkt kann mindestens gelesen (R) werden, während
 andere ebenfalls beschrieben werden können. Zur Suche nach einem bestimmten Datenpunkt empfiehlt sich die Suche mittels 
