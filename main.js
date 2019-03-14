@@ -267,8 +267,9 @@ function restartAdapter() {
 function requestStateAndSetOldAPI(code, state) {
     return new Promise((resolve, reject) => {
         requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`).then(res => {
+            res = res.trim();
             adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${state}`);
-            adapter.setState(parseInt(state), res, true);
+            adapter.setState(state, parseFloat(res), true);
             resolve();
         }).catch(e => {
             reject(e);
