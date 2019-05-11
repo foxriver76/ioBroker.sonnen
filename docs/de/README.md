@@ -101,6 +101,14 @@ der Tastenkombination "STRG + F".
 
    *Nur lesbarer Zeitstempel, der bei jeder Aktualisierung der Daten, aktualisiert wird.*
    
+* info.configuration
+
+    |Datentyp|Berechtigung|                                                                       
+    |:---:|:---:|
+    |string|R|
+
+   *Nur lesbarer JSON String, mit Konfigurationsinformationen der sonnenBatterie.*
+   
 #### Channel: status
    
 * status.consumption

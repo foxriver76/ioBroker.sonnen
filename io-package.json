@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "news": {
+            "1.3.0": {
+                "en": "new state with configuration information of you sonnen battery",
+                "de": "neuer State mit Konfigurationsinformationen der sonnenBatterie",
+                "ru": "новое состояние с информацией о конфигурации вашего аккумулятора",
+                "pt": "novo estado com informações de configuração de sua bateria sonnen",
+                "nl": "nieuwe status met configuratie-informatie van uw zonne-batterij",
+                "fr": "nouvel état avec les informations de configuration de votre batterie sonnen",
+                "it": "nuovo stato con le informazioni di configurazione della batteria del tuo sonnen",
+                "es": "Nuevo estado con información de configuración de tu batería sonnen.",
+                "pl": "nowy stan z informacjami o konfiguracji baterii sonnen",
+                "zh-cn": "新的状态，你的配置信息你sonnen电池"
+            },
             "1.2.0": {
                 "en": "support the other sonnen API",
                 "de": "unterstütze die andere sonnen API",
@@ -44,10 +56,6 @@
             "1.0.1": {
                 "en": "correct lastSync and systemTime w.r.t. timezone offset",
                 "de": "Systemzeit und lastSync Zeit berücksichtigen nun den Timezone Offset"
-            },
-            "1.0.0": {
-                "en": "formal version increment",
-                "de": "Formelle Versionserhöhung"
             }
         },
         "title": "sonnen",

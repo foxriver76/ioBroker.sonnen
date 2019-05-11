@@ -109,6 +109,7 @@ function main() {
 
     const statusUrl = `http://${ip}:8080/api/v1/status`; // Status Path - api/status --> GET
 
+
     // create objects
     const promises = [];
     for (const obj of helper.newAPIStates) {
@@ -133,6 +134,10 @@ function main() {
                 adapter.setState(`info.connection`, false, true);
                 adapter.log.warn(`[CONNECT] Connection failed`);
             }// endElse
+        });
+
+        requestSettings().catch(e => {
+            adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e}`);
         });
 
         if (!polling) {
@@ -224,6 +229,18 @@ function oldAPImain() {
     });
 
 } // endOldAPImain
+
+function requestSettings() {
+    return new Promise((resolve, reject) => {
+        requestPromise(`http://${ip}:8080/api/configuration`).then(data => {
+            adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
+            adapter.setStateAsync(`info.configuration`, data, true).then(resolve);
+        }).catch(e => {
+            reject(e);
+        });
+    });
+
+} // endRequestSettings
 
 function setBatteryStates(json, cb) {
     if (json.ReturnCode) {
