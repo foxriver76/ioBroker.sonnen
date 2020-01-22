@@ -90,6 +90,7 @@
         "readme": "https://github.com/foxriver76/ioBroker.sonnen/blob/master/README.md",
         "loglevel": "info",
         "type": "energy",
+        "connectionType": "local polling",
         "license": "MIT",
         "messagebox": false
     },
