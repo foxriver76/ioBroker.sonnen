@@ -30,7 +30,7 @@
     "dependencies": {
         "request": "^2.87.0",
         "request-promise-native": "^1.0.7",
-        "@iobroker/adapter-core": "^2.0.0"
+        "@iobroker/adapter-core": "^2.2.1"
     },
     "devDependencies": {
         "gulp": "^4.0.0",
