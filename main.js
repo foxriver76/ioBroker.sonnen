@@ -86,7 +86,7 @@ function startAdapter(options) {
 } // endStartAdapter
 
 
-function main() {
+async function main() {
     pollingTime = adapter.config.pollInterval || 7000;
     adapter.log.debug(`[INFO] Configured polling interval: ${pollingTime}`);
     // all states changes inside the adapters namespace are subscribed
@@ -118,116 +118,127 @@ function main() {
         promises.push(adapter.setObjectNotExistsAsync(id, obj));
     }
 
-    Promise.all(promises).then(() => {
-        request(statusUrl, (error, response, body) => { // poll states on start
-            if (error) adapter.log.warn(`[REQUEST] <== ${error}`);
-            if (response && response.statusCode.toString() === `200`) {
-                adapter.getState(`info.connection`, (err, state) => {
-                    if (!state || !state.val) {
-                        adapter.setState(`info.connection`, true, true);
-                        adapter.log.debug(`[CONNECT] Connection successful established`);
-                    } // endIf
-                });
-                adapter.log.debug(`[DATA] <== ${body}`);
-                setBatteryStates(JSON.parse(body));
-            } else {
-                adapter.setState(`info.connection`, false, true);
-                adapter.log.warn(`[CONNECT] Connection failed`);
-            }// endElse
-        });
+    await Promise.all(promises);
 
-        requestSettings().catch(e => {
-            adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e}`);
-        });
-
-        if (!polling) {
-            polling = setInterval(() => { // poll states every [30] seconds
-                request(statusUrl, (error, response, body) => {
-                    if (error) adapter.log.warn(`[REQUEST] <== ${error}`);
-                    if (response && response.statusCode.toString() === `200`) {
-                        adapter.getState(`info.connection`, (err, state) => {
-                            if (!state || !state.val) {
-                                adapter.setState(`info.connection`, true, true);
-                                adapter.log.debug(`[CONNECT] Connection successful established`);
-                            } // endIf
-                        });
-                        setBatteryStates(JSON.parse(body));
-                    } else {
-                        adapter.setState(`info.connection`, false, true);
-                        adapter.log.warn(`[CONNECT] Connection failed`);
-                    } // endElse
-                });
-            }, pollingTime);
-        } // endIf
+    request(statusUrl, (error, response, body) => { // poll states on start
+        if (error) adapter.log.warn(`[REQUEST] <== ${error}`);
+        if (response && response.statusCode.toString() === `200`) {
+            adapter.getState(`info.connection`, (err, state) => {
+                if (!state || !state.val) {
+                    adapter.setState(`info.connection`, true, true);
+                    adapter.log.debug(`[CONNECT] Connection successful established`);
+                } // endIf
+            });
+            adapter.log.debug(`[DATA] <== ${body}`);
+            setBatteryStates(JSON.parse(body));
+        } else {
+            adapter.setState(`info.connection`, false, true);
+            adapter.log.warn(`[CONNECT] Connection failed`);
+        }// endElse
     });
+
+    requestSettings().catch(e => {
+        adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e}`);
+    });
+
+    try {
+        await requestInverterEndpoint();
+        await requestPowermeterEndpoint();
+    } catch (e) {
+        adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e}`);
+    }
+
+    if (!polling) {
+        polling = setInterval(() => { // poll states every [30] seconds
+            request(statusUrl, async (error, response, body) => {
+                if (error) adapter.log.warn(`[REQUEST] <== ${error}`);
+                if (response && response.statusCode.toString() === `200`) {
+                    adapter.getState(`info.connection`, (err, state) => {
+                        if (!state || !state.val) {
+                            adapter.setState(`info.connection`, true, true);
+                            adapter.log.debug(`[CONNECT] Connection successful established`);
+                        } // endIf
+                    });
+                    setBatteryStates(JSON.parse(body));
+                    try {
+                        await requestInverterEndpoint();
+                        await requestPowermeterEndpoint();
+                    } catch (e) {
+                        adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e}`);
+                    }
+                } else {
+                    adapter.setState(`info.connection`, false, true);
+                    adapter.log.warn(`[CONNECT] Connection failed`);
+                } // endElse
+            });
+        }, pollingTime);
+    } // endIf
 } // endMain
 
 /*
  * Internals
  */
-function oldAPImain() {
+async function oldAPImain() {
     // create objects
-    const promises = [];
+    let promises = [];
     for (const obj of helper.oldAPIStates) {
         const id = obj._id;
         delete obj._id;
         promises.push(adapter.setObjectNotExistsAsync(id, obj));
     }
 
+    await Promise.all(promises);
+    promises = [];
+    promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
+    promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
+    promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
+    promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
+    promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
+    promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
+    promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
+    promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
+    promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
+
     Promise.all(promises).then(() => {
-        const promises = [];
-        promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
-        promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
-        promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
-        promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
-        promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
-        promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
-        promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
-        promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
-        promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
-
-        Promise.all(promises).then(() => {
-            const lastSync = new Date();
-            adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
-            adapter.getStateAsync(`info.connection`).then(state => {
-                if (!state.val) adapter.setState(`info.connection`, true, true);
-            }).catch(() => {
-                adapter.setState(`info.connection`, true, true);
-            });
-        }).catch(e => {
-            adapter.log.warn(`[DATA] Error getting Data ${e}`);
+        const lastSync = new Date();
+        adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+        adapter.getStateAsync(`info.connection`).then(state => {
+            if (!state.val) adapter.setState(`info.connection`, true, true);
+        }).catch(() => {
+            adapter.setState(`info.connection`, true, true);
         });
-
-
-        if (!polling) {
-            polling = setInterval(() => { // poll states every configured seconds
-                const promises = [];
-                promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
-                promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
-                promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
-                promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
-                promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
-                promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
-                promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
-                promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
-                promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
-
-                Promise.all(promises).then(() => {
-                    const lastSync = new Date();
-                    adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
-                    adapter.getStateAsync(`info.connection`).then(state => {
-                        if (!state.val) adapter.setState(`info.connection`, true, true);
-                    });
-                }).catch(e => {
-                    adapter.getStateAsync(`info.connection`).then(state => {
-                        if (state.val === true) adapter.setState(`info.connection`, false, true);
-                        adapter.log.warn(`[DATA] Error getting Data ${e}`);
-                    });
-                });
-            }, pollingTime);
-        } //
+    }).catch(e => {
+        adapter.log.warn(`[DATA] Error getting Data ${e}`);
     });
 
+
+    if (!polling) {
+        polling = setInterval(() => { // poll states every configured seconds
+            const promises = [];
+            promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
+            promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
+            promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
+            promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
+            promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
+            promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
+            promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
+            promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
+            promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
+
+            Promise.all(promises).then(() => {
+                const lastSync = new Date();
+                adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+                adapter.getStateAsync(`info.connection`).then(state => {
+                    if (!state.val) adapter.setState(`info.connection`, true, true);
+                });
+            }).catch(e => {
+                adapter.getStateAsync(`info.connection`).then(state => {
+                    if (state.val === true) adapter.setState(`info.connection`, false, true);
+                    adapter.log.warn(`[DATA] Error getting Data ${e}`);
+                });
+            });
+        }, pollingTime);
+    } //
 } // endOldAPImain
 
 function requestSettings() {
@@ -239,10 +250,29 @@ function requestSettings() {
             reject(e);
         });
     });
-
 } // endRequestSettings
 
-function setBatteryStates(json, cb) {
+async function requestInverterEndpoint() {
+    try {
+        const data = await requestPromise(`http://${ip}:8080/api/inverter`);
+        await adapter.setStateAsync(`info.inverter`, data, true);
+        return Promise.resolve();
+    } catch(e) {
+        return Promise.reject(e);
+    }
+} // endRequestInverterEndpoint
+
+async function requestPowermeterEndpoint() {
+    try {
+        const data = await requestPromise(`http://${ip}:8080/api/powermeter`);
+        await adapter.setStateAsync(`info.powerMeter`, data, true);
+        return Promise.resolve();
+    } catch(e) {
+        return Promise.reject(e);
+    }
+} // endRequestPowermeterEndpoint
+
+function setBatteryStates(json) {
     if (json.ReturnCode) {
         adapter.log.warn(`[DATA] <== Return Code ${json.ReturnCode}`);
         return;
@@ -271,8 +301,6 @@ function setBatteryStates(json, cb) {
     adapter.setState(`status.flowGridBattery`, json.FlowGridBattery, true);
     adapter.setState(`status.flowProductionBattery`, json.FlowProductionBattery, true);
     adapter.setState(`status.flowProductionGrid`, json.FlowProductionGrid, true);
-
-    if (cb && typeof (cb) === `function`) return cb();
 } // endSetBatteryStates
 
 function restartAdapter() {

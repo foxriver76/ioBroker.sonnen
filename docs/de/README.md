@@ -109,6 +109,23 @@ der Tastenkombination "STRG + F".
 
    *Nur lesbarer JSON String, mit Konfigurationsinformationen der sonnenBatterie.*
    
+   
+* info.powerMeter
+
+    |Datentyp|Berechtigung|                                                                       
+    |:---:|:---:|
+    |string|R|
+
+   *Nur lesbarer JSON String, mit Strommessungsinformationen der sonnenBatterie.*
+   
+* info.inverter
+
+    |Datentyp|Berechtigung|                                                                       
+    |:---:|:---:|
+    |string|R|
+
+   *Nur lesbarer JSON String, mit Wechselrichter Informationen der sonnenBatterie.*
+   
 #### Channel: status
    
 * status.consumption
