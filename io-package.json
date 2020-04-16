@@ -1,9 +1,9 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "news": {
-      "1.4.1": {
+      "1.4.2": {
         "en": "added more translations",
         "de": "Weitere Übersetzungen hinzugefügt",
         "ru": "добавлено больше переводов",

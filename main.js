@@ -15,6 +15,7 @@ let ip;
 let adapter;
 let pollingTime;
 let apiVersion;
+let restartTimer;
 
 function startAdapter(options) {
     options = options || {};
@@ -27,6 +28,9 @@ function startAdapter(options) {
     adapter.on(`unload`, callback => {
         try {
             clearInterval(polling);
+            if (restartTimer) {
+                clearTimeout(restartTimer)
+            }
             adapter.log.info(`[END] Stopping sonnen adapter...`);
             adapter.setState(`info.connection`, false, true);
             callback();
@@ -52,7 +56,7 @@ function startAdapter(options) {
                     main();
                 }).catch(e => {
                     adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e}`);
-                    setTimeout(restartAdapter, 30000);
+                    restartTimer = setTimeout(restartAdapter, 30000);
                 });
             });
         } else adapter.log.warn(`[START] No IP-address set`);
