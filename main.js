@@ -56,7 +56,7 @@ function startAdapter(options) {
                     main();
                 }).catch(e => {
                     adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e}`);
-                    restartTimer = setTimeout(restartAdapter, 30000);
+                    restartTimer = setTimeout(() => {restartTimer = null; restartAdapter()}, 30000);
                 });
             });
         } else adapter.log.warn(`[START] No IP-address set`);
