@@ -29,7 +29,7 @@ function startAdapter(options) {
         try {
             clearInterval(polling);
             if (restartTimer) {
-                clearTimeout(restartTimer)
+                clearTimeout(restartTimer);
             }
             adapter.log.info(`[END] Stopping sonnen adapter...`);
             adapter.setState(`info.connection`, false, true);
@@ -59,11 +59,15 @@ function startAdapter(options) {
                     restartTimer = setTimeout(restartAdapter, 30000);
                 });
             });
-        } else adapter.log.warn(`[START] No IP-address set`);
+        } else {
+            adapter.log.warn(`[START] No IP-address set`);
+        }
     });
 
     adapter.on(`stateChange`, (id, state) => {
-        if (!id || !state || state.ack) return; // Ignore acknowledged state changes or error states
+        if (!id || !state || state.ack) {
+            return;
+        } // Ignore acknowledged state changes or error states
         id = id.substring(adapter.namespace.length + 1); // remove instance name and id
         state = state.val;
 
@@ -74,21 +78,24 @@ function startAdapter(options) {
                 if (response && response.statusCode.toString() === `200`) {
                     adapter.setState(`control.charge`, state, true);
                     adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
-                } else adapter.log.warn(`[PUT] Error ${error}`);
+                } else {
+                    adapter.log.warn(`[PUT] Error ${error}`);
+                }
             });
         } else if (id === `control.discharge`) {
             request.put(`http://${ip}:8080/api/v1/setpoint/discharge/${state}`, (error, response) => {
                 if (response && response.statusCode.toString() === `200`) {
                     adapter.setState(`control.discharge`, state, true);
                     adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
-                } else adapter.log.warn(`[PUT] Error ${error}`);
+                } else {
+                    adapter.log.warn(`[PUT] Error ${error}`);
+                }
             });
         } // endElseIf
     });
 
     return adapter;
 } // endStartAdapter
-
 
 async function main() {
     pollingTime = adapter.config.pollInterval || 7000;
@@ -109,10 +116,11 @@ async function main() {
 
     adapter.log.debug(`[START] Started Adapter with: ${ip}`);
 
-    if (apiVersion === `old`) return oldAPImain();
+    if (apiVersion === `old`) {
+        return oldAPImain();
+    }
 
     const statusUrl = `http://${ip}:8080/api/v1/status`; // Status Path - api/status --> GET
-
 
     // create objects
     const promises = [];
@@ -125,7 +133,9 @@ async function main() {
     await Promise.all(promises);
 
     request(statusUrl, (error, response, body) => { // poll states on start
-        if (error) adapter.log.warn(`[REQUEST] <== ${error}`);
+        if (error) {
+            adapter.log.warn(`[REQUEST] <== ${error}`);
+        }
         if (response && response.statusCode.toString() === `200`) {
             adapter.getState(`info.connection`, (err, state) => {
                 if (!state || !state.val) {
@@ -148,6 +158,7 @@ async function main() {
     try {
         await requestInverterEndpoint();
         await requestPowermeterEndpoint();
+        await requestOnlineStatus();
     } catch (e) {
         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e}`);
     }
@@ -155,7 +166,9 @@ async function main() {
     if (!polling) {
         polling = setInterval(() => { // poll states every [30] seconds
             request(statusUrl, async (error, response, body) => {
-                if (error) adapter.log.warn(`[REQUEST] <== ${error}`);
+                if (error) {
+                    adapter.log.warn(`[REQUEST] <== ${error}`);
+                }
                 if (response && response.statusCode.toString() === `200`) {
                     adapter.getState(`info.connection`, (err, state) => {
                         if (!state || !state.val) {
@@ -167,6 +180,7 @@ async function main() {
                     try {
                         await requestInverterEndpoint();
                         await requestPowermeterEndpoint();
+                        await requestOnlineStatus();
                     } catch (e) {
                         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e}`);
                     }
@@ -207,14 +221,15 @@ async function oldAPImain() {
         const lastSync = new Date();
         adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
         adapter.getStateAsync(`info.connection`).then(state => {
-            if (!state.val) adapter.setState(`info.connection`, true, true);
+            if (!state.val) {
+                adapter.setState(`info.connection`, true, true);
+            }
         }).catch(() => {
             adapter.setState(`info.connection`, true, true);
         });
     }).catch(e => {
         adapter.log.warn(`[DATA] Error getting Data ${e}`);
     });
-
 
     if (!polling) {
         polling = setInterval(() => { // poll states every configured seconds
@@ -233,11 +248,15 @@ async function oldAPImain() {
                 const lastSync = new Date();
                 adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
                 adapter.getStateAsync(`info.connection`).then(state => {
-                    if (!state.val) adapter.setState(`info.connection`, true, true);
+                    if (!state.val) {
+                        adapter.setState(`info.connection`, true, true);
+                    }
                 });
             }).catch(e => {
                 adapter.getStateAsync(`info.connection`).then(state => {
-                    if (state.val === true) adapter.setState(`info.connection`, false, true);
+                    if (state.val === true) {
+                        adapter.setState(`info.connection`, false, true);
+                    }
                     adapter.log.warn(`[DATA] Error getting Data ${e}`);
                 });
             });
@@ -265,6 +284,24 @@ async function requestInverterEndpoint() {
         return Promise.reject(e);
     }
 } // endRequestInverterEndpoint
+
+async function requestOnlineStatus() {
+    try {
+        let data = await requestPromise(`http://${ip}/api/online_status`);
+        if (data === `true`) {
+            data = true;
+        } else if (data === `false`) {
+            data = false;
+        } else {
+            return Promise.reject(new Error(`Expected string with "true" or "false" as onlineStatus, got "${data}"`));
+        }
+
+        await adapter.setStateAsync(`status.onlineStatus`, data, true);
+        return Promise.resolve();
+    } catch (e) {
+        return Promise.reject(e);
+    }
+}
 
 async function requestPowermeterEndpoint() {
     try {
@@ -294,10 +331,11 @@ function setBatteryStates(json) {
     adapter.setState(`status.batteryVoltage`, json.Ubat, true);
     const systemTime = new Date(json.Timestamp);
     adapter.setState(`status.systemTime`, new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
-    if (json.IsSystemInstalled === 1)
+    if (json.IsSystemInstalled === 1) {
         adapter.setState(`status.systemInstalled`, true, true);
-    else
+    } else {
         adapter.setState(`status.systemInstalled`, false, true);
+    }
     adapter.setState(`status.gridFeedIn`, json.GridFeedIn_W, true);
     adapter.setState(`status.flowConsumptionBattery`, json.FlowConsumptionBattery, true);
     adapter.setState(`status.flowConsumptionGrid`, json.FlowConsumptionGrid, true);
@@ -309,7 +347,9 @@ function setBatteryStates(json) {
 
 function restartAdapter() {
     adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`).then(obj => {
-        if (obj) adapter.setForeignObject(`system.adapter.${adapter.namespace}`, obj);
+        if (obj) {
+            adapter.setForeignObject(`system.adapter.${adapter.namespace}`, obj);
+        }
     });
 } // endFunctionRestartAdapter
 

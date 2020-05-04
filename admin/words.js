@@ -3,51 +3,51 @@
 'use strict';
 
 systemDictionary = {
-    "Advanced settings": {
-        "en": `Advanced settings`,
-        "de": `Erweiterte Einstellungen`,
-        "ru": `Расширенные настройки`,
-        "pt": `Configurações avançadas`,
-        "nl": `Geavanceerde instellingen`,
-        "fr": `Réglages avancés`,
-        "it": `Impostazioni avanzate`,
-        "es": `Ajustes avanzados`,
-        "pl": `Zaawansowane ustawienia`
+    'Advanced settings': {
+        'en': `Advanced settings`,
+        'de': `Erweiterte Einstellungen`,
+        'ru': `Расширенные настройки`,
+        'pt': `Configurações avançadas`,
+        'nl': `Geavanceerde instellingen`,
+        'fr': `Réglages avancés`,
+        'it': `Impostazioni avanzate`,
+        'es': `Ajustes avanzados`,
+        'pl': `Zaawansowane ustawienia`
     },
-    "IP-Address:": {
-        "en": `IP-Address`,
-        "de": `IP Adresse`,
-        "ru": `Айпи адрес`,
-        "pt": `Endereço de IP`,
-        "nl": `IP adres`,
-        "fr": `Adresse IP`,
-        "it": `Indirizzo IP`,
-        "es": `Dirección IP`,
-        "pl": `Adres IP`,
-        "zh-cn": `IP地址`
+    'IP-Address:': {
+        'en': `IP-Address`,
+        'de': `IP Adresse`,
+        'ru': `Айпи адрес`,
+        'pt': `Endereço de IP`,
+        'nl': `IP adres`,
+        'fr': `Adresse IP`,
+        'it': `Indirizzo IP`,
+        'es': `Dirección IP`,
+        'pl': `Adres IP`,
+        'zh-cn': `IP地址`
     },
-    "IP-Address of your sonnen battery": {
-        "en": `IP-Address of your sonnen battery`,
-        "de": `IP-Adresse Ihres sonnenBatterie`,
-        "ru": `IP-адрес вашего аккумулятора`,
-        "pt": `Endereço IP da sua bateria sonnen`,
-        "nl": `IP-adres van uw sonnen-batterij`,
-        "fr": `Adresse IP de votre batterie sonnen`,
-        "it": `Indirizzo IP della batteria collegata`,
-        "es": `Dirección IP de su batería sonnen`,
-        "pl": `Adres IP baterii sonnen`,
-        "zh-cn": `太阳能电池的IP地址`
+    'IP-Address of your sonnen battery': {
+        'en': `IP-Address of your sonnen battery`,
+        'de': `IP-Adresse Ihres sonnenBatterie`,
+        'ru': `IP-адрес вашего аккумулятора`,
+        'pt': `Endereço IP da sua bateria sonnen`,
+        'nl': `IP-adres van uw sonnen-batterij`,
+        'fr': `Adresse IP de votre batterie sonnen`,
+        'it': `Indirizzo IP della batteria collegata`,
+        'es': `Dirección IP de su batería sonnen`,
+        'pl': `Adres IP baterii sonnen`,
+        'zh-cn': `太阳能电池的IP地址`
     },
-    "Poll interval (ms)": {
-        "en": `Poll interval (ms)`,
-        "de": `Abfrageintervall (ms)`,
-        "ru": `Интервал опроса (мс)`,
-        "pt": `Intervalo de pesquisa (ms)`,
-        "nl": `Poll interval (ms)`,
-        "fr": `Intervalle d'interrogation (ms)`,
-        "it": `Intervallo di polling (ms)`,
-        "es": `Intervalo de encuesta (ms)`,
-        "pl": `Interwał sondowania (ms)`,
-        "zh-cn": `轮询间隔（毫秒）`
+    'Poll interval (ms)': {
+        'en': `Poll interval (ms)`,
+        'de': `Abfrageintervall (ms)`,
+        'ru': `Интервал опроса (мс)`,
+        'pt': `Intervalo de pesquisa (ms)`,
+        'nl': `Poll interval (ms)`,
+        'fr': `Intervalle d'interrogation (ms)`,
+        'it': `Intervallo di polling (ms)`,
+        'es': `Intervalo de encuesta (ms)`,
+        'pl': `Interwał sondowania (ms)`,
+        'zh-cn': `轮询间隔（毫秒）`
     }
 };

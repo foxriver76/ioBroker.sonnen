@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.4.2",
+    "version": "1.5.0",
     "news": {
+      "1.5.0": {
+        "en": "added online status indicator",
+        "de": "Online-Statusanzeige hinzugefügt",
+        "ru": "добавлен онлайн индикатор состояния",
+        "pt": "adicionado indicador de status online",
+        "nl": "online statusindicator toegevoegd",
+        "fr": "indicateur de statut en ligne ajouté",
+        "it": "aggiunto indicatore di stato online",
+        "es": "indicador de estado en línea agregado",
+        "pl": "dodano wskaźnik stanu online",
+        "zh-cn": "增加了在线状态指示器"
+      },
       "1.4.2": {
         "en": "added more translations",
         "de": "Weitere Übersetzungen hinzugefügt",

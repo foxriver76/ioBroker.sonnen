@@ -39,7 +39,9 @@ function lang2data(lang, isFlat) {
             }
         }
     }
-    if (!count) return isFlat ? `` : `{\n}`;
+    if (!count) {
+        return isFlat ? `` : `{\n}`;
+    }
     if (isFlat) {
         return str;
     } else {
@@ -141,7 +143,9 @@ function words2languages(src) {
             fs.mkdirSync(src + `i18n/`);
         }
         for (const l in langs) {
-            if (!langs.hasOwnProperty(l)) continue;
+            if (!langs.hasOwnProperty(l)) {
+                continue;
+            }
             const keys = Object.keys(langs[l]);
             keys.sort();
             const obj = {};
@@ -181,7 +185,9 @@ function words2languagesFlat(src) {
         const keys = Object.keys(langs.en);
         keys.sort();
         for (const l in langs) {
-            if (!langs.hasOwnProperty(l)) continue;
+            if (!langs.hasOwnProperty(l)) {
+                continue;
+            }
             const obj = {};
             for (let k = 0; k < keys.length; k++) {
                 obj[keys[k]] = langs[l][keys[k]];
@@ -192,7 +198,9 @@ function words2languagesFlat(src) {
             fs.mkdirSync(src + `i18n/`);
         }
         for (const ll in langs) {
-            if (!langs.hasOwnProperty(ll)) continue;
+            if (!langs.hasOwnProperty(ll)) {
+                continue;
+            }
             if (!fs.existsSync(src + `i18n/` + ll)) {
                 fs.mkdirSync(src + `i18n/` + ll);
             }
@@ -214,23 +222,33 @@ function languagesFlat2words(src) {
         const posA = order.indexOf(a);
         const posB = order.indexOf(b);
         if (posA === -1 && posB === -1) {
-            if (a > b) return 1;
-            if (a < b) return -1;
+            if (a > b) {
+                return 1;
+            }
+            if (a < b) {
+                return -1;
+            }
             return 0;
         } else if (posA === -1) {
             return -1;
         } else if (posB === -1) {
             return 1;
         } else {
-            if (posA > posB) return 1;
-            if (posA < posB) return -1;
+            if (posA > posB) {
+                return 1;
+            }
+            if (posA < posB) {
+                return -1;
+            }
             return 0;
         }
     });
     const keys = fs.readFileSync(src + `i18n/flat.txt`).toString().split(`\n`);
 
     for (let l = 0; l < dirs.length; l++) {
-        if (dirs[l] === `flat.txt`) continue;
+        if (dirs[l] === `flat.txt`) {
+            continue;
+        }
         const lang = dirs[l];
         const values = fs.readFileSync(src + `i18n/` + lang + `/flat.txt`).toString().split(`\n`);
         langs[lang] = {};
@@ -261,7 +279,9 @@ function languagesFlat2words(src) {
                     bigOne[w] = aWords[w];
                 }
                 dirs.forEach(function (lang) {
-                    if (temporaryIgnore.indexOf(lang) !== -1) return;
+                    if (temporaryIgnore.indexOf(lang) !== -1) {
+                        return;
+                    }
                     if (!bigOne[w][lang]) {
                         console.warn(`Missing "` + lang + `": ` + w);
                     }
@@ -283,21 +303,31 @@ function languages2words(src) {
         const posA = order.indexOf(a);
         const posB = order.indexOf(b);
         if (posA === -1 && posB === -1) {
-            if (a > b) return 1;
-            if (a < b) return -1;
+            if (a > b) {
+                return 1;
+            }
+            if (a < b) {
+                return -1;
+            }
             return 0;
         } else if (posA === -1) {
             return -1;
         } else if (posB === -1) {
             return 1;
         } else {
-            if (posA > posB) return 1;
-            if (posA < posB) return -1;
+            if (posA > posB) {
+                return 1;
+            }
+            if (posA < posB) {
+                return -1;
+            }
             return 0;
         }
     });
     for (let l = 0; l < dirs.length; l++) {
-        if (dirs[l] === `flat.txt`) continue;
+        if (dirs[l] === `flat.txt`) {
+            continue;
+        }
         const lang = dirs[l];
         langs[lang] = fs.readFileSync(src + `i18n/` + lang + `/translations.json`).toString();
         langs[lang] = JSON.parse(langs[lang]);
@@ -324,7 +354,9 @@ function languages2words(src) {
                     bigOne[w] = aWords[w];
                 }
                 dirs.forEach(function (lang) {
-                    if (temporaryIgnore.indexOf(lang) !== -1) return;
+                    if (temporaryIgnore.indexOf(lang) !== -1) {
+                        return;
+                    }
                     if (!bigOne[w][lang]) {
                         console.warn(`Missing "` + lang + `": ` + w);
                     }
@@ -357,7 +389,6 @@ gulp.task(`adminLanguages2words`, function (done) {
     done();
 });
 
-
 gulp.task(`updatePackages`, function (done) {
     iopackage.common.version = pkg.version;
     iopackage.common.news = iopackage.common.news || {};
@@ -389,7 +420,6 @@ gulp.task(`rename`, function () {
             author = process.argv[a + 1];
         }
     }
-
 
     console.log(`Try to rename to "` + newname + `"`);
     if (!newname) {
