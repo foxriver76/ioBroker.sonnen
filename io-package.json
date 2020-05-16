@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.5.0",
+    "version": "1.5.2",
     "news": {
+      "1.5.2": {
+        "en": "we check if online status is supported else we do not poll it",
+        "de": "Wir prüfen, ob der Online-Status unterstützt wird. Andernfalls wird er nicht abgefragt",
+        "ru": "мы проверяем, поддерживается ли онлайн-статус, иначе мы не опрашиваем его",
+        "pt": "verificamos se o status online é suportado, caso contrário, não o pesquisamos",
+        "nl": "we controleren of de online status wordt ondersteund, anders peilen we deze niet",
+        "fr": "nous vérifions si le statut en ligne est pris en charge sinon nous ne le sondons pas",
+        "it": "controlliamo se lo stato online è supportato altrimenti non lo sondiamo",
+        "es": "comprobamos si el estado en línea es compatible; de lo contrario, no lo encuestamos",
+        "pl": "sprawdzamy, czy status online jest obsługiwany, w przeciwnym razie nie sondujemy go",
+        "zh-cn": "我们检查是否支持在线状态，否则我们不对其进行轮询"
+      },
       "1.5.0": {
         "en": "added online status indicator",
         "de": "Online-Statusanzeige hinzugefügt",

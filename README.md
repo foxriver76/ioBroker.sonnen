@@ -270,6 +270,9 @@ Note, that there are two different sonnen API's so if you are missing states, th
     ```
 
 ## Changelog
+# 1.5.2 (2020-05-16)
+* (foxriver76) check if onlineStatus is supported at adapter start - else do not poll it
+
 # 1.5.0 (2020-05-04)
 * (foxriver76) added online status indicator
 
