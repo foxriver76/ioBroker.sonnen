@@ -103,15 +103,12 @@ async function main() {
     // all states changes inside the adapters namespace are subscribed
     adapter.subscribeStates(`*`);
 
-    adapter.getForeignObject(adapter.namespace, (err, obj) => { // create device namespace
-        if (!obj) {
-            adapter.setForeignObject(adapter.namespace, {
-                type: `device`,
-                common: {
-                    name: `sonnen device`
-                }
-            });
-        } // endIf
+    // create device namespace
+    adapter.setForeignObjectNotExists(adapter.namespace, {
+        type: `device`,
+        common: {
+            name: `sonnen device`
+        }
     });
 
     adapter.log.debug(`[START] Started Adapter with: ${ip}`);
@@ -281,7 +278,7 @@ async function requestInverterEndpoint() {
         await adapter.setStateAsync(`info.inverter`, data, true);
         return Promise.resolve();
     } catch(e) {
-        return Promise.reject(e);
+        return Promise.reject(new Error(`Could not request inverter endpoint: ${e}`));
     }
 } // endRequestInverterEndpoint
 
@@ -299,7 +296,7 @@ async function requestOnlineStatus() {
         await adapter.setStateAsync(`status.onlineStatus`, data, true);
         return Promise.resolve();
     } catch (e) {
-        return Promise.reject(e);
+        return Promise.reject(new Error(`Could not request online status: ${e}`));
     }
 }
 
@@ -309,7 +306,7 @@ async function requestPowermeterEndpoint() {
         await adapter.setStateAsync(`info.powerMeter`, data, true);
         return Promise.resolve();
     } catch(e) {
-        return Promise.reject(e);
+        return Promise.reject(new Error(`Could not request powermeter endpoint: ${e}`));
     }
 } // endRequestPowermeterEndpoint
 
