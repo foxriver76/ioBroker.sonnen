@@ -154,17 +154,10 @@ async function main() {
         adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e}`);
     }
 
-    let onlineStatusSupport = true;
-
     try {
         await requestInverterEndpoint();
         await requestPowermeterEndpoint();
-        try {
-            await requestOnlineStatus(true);
-        } catch (e) {
-            adapter.log.debug(`[ADDITIONAL] Online status not supported: ${e}`);
-            onlineStatusSupport = false;
-        }
+        await requestOnlineStatus();
     } catch (e) {
         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
     }
@@ -186,9 +179,7 @@ async function main() {
                     try {
                         await requestInverterEndpoint();
                         await requestPowermeterEndpoint();
-                        if (onlineStatusSupport === true) {
-                            await requestOnlineStatus(false);
-                        }
+                        await requestOnlineStatus();
                     } catch (e) {
                         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
                     }
@@ -296,10 +287,9 @@ async function requestInverterEndpoint() {
 /**
  * request online status of the battery
  *
- * @param {boolean} firstCall if true the object will be created too
  * @return {Promise<void>}
  */
-async function requestOnlineStatus(firstCall) {
+async function requestOnlineStatus() {
     try {
         let data = await requestPromise(`http://${ip}/api/online_status`);
         if (data === `true`) {
@@ -308,21 +298,6 @@ async function requestOnlineStatus(firstCall) {
             data = false;
         } else {
             return Promise.reject(new Error(`Expected string with "true" or "false" as onlineStatus, got "${data}"`));
-        }
-
-        if (firstCall === true) {
-            await adapter.setObjectNotExistsAsync('status.onlineStatus', {
-                type: `state`,
-                common: {
-                    name: `Battery Online Status`,
-                    type: `boolean`,
-                    role: `indicator`,
-                    read: true,
-                    write: false,
-                    desc: `Online status of your sonnen battery`
-                },
-                native: {}
-            });
         }
 
         await adapter.setStateAsync(`status.onlineStatus`, data, true);

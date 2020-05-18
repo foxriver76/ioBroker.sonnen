@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "news": {
+      "1.5.3": {
+        "en": "poll online status always again if not confirmed that there are differences in api, more specific error handling ",
+        "de": "Online-Status immer wieder abfragen, wenn nicht bestätigt wird, dass es Unterschiede in der API gibt, spezifischere Fehlerbehandlung",
+        "ru": "Опять онлайн-статус всегда, если не подтверждено, что есть различия в API, более конкретная обработка ошибок",
+        "pt": "sondar o status on-line sempre novamente, se não confirmado que há diferenças na API, tratamento de erros mais específico",
+        "nl": "poll online status altijd opnieuw indien niet bevestigd dat er verschillen zijn in api, meer specifieke foutafhandeling",
+        "fr": "interroger le statut en ligne toujours à nouveau s'il n'est pas confirmé qu'il existe des différences dans l'api, gestion des erreurs plus spécifique",
+        "it": "sondare lo stato online sempre di nuovo se non confermato che ci sono differenze nell'API, una gestione degli errori più specifica",
+        "es": "sondee el estado en línea siempre de nuevo si no se confirma que hay diferencias en la API, manejo de errores más específico",
+        "pl": "sonduj status online zawsze, jeśli nie potwierdzono, że istnieją różnice w interfejsie API, bardziej szczegółowa obsługa błędów",
+        "zh-cn": "如果未确认api的差异（更具体的错误处理），则始终再次轮询在线状态"
+      },
       "1.5.2": {
         "en": "we check if online status is supported else we do not poll it",
         "de": "Wir prüfen, ob der Online-Status unterstützt wird. Andernfalls wird er nicht abgefragt",
