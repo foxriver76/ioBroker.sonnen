@@ -16,6 +16,7 @@ let adapter;
 let pollingTime;
 let apiVersion;
 let restartTimer;
+const requestOptions = {};
 
 function startAdapter(options) {
     options = options || {};
@@ -39,11 +40,24 @@ function startAdapter(options) {
         }
     });
 
-    adapter.on(`ready`, () => {
+    adapter.on(`ready`, async () => {
         if (adapter.config.ip) {
             ip = adapter.config.ip;
             adapter.log.info(`[START] Starting sonnen adapter`);
             adapter.log.debug(`[START] Check API`);
+            if (adapter.config.token) {
+                adapter.log.debug('[START] Auth-Token provided... trying official API');
+                requestOptions['Auth-Token'] = adapter.config.token;
+                try {
+                    await requestPromise({url: `http://${ip}/api/v2/latestdata`, ...requestOptions});
+                    apiVersion = `v2`;
+                    adapter.log.debug('[START] Check ok, using official API');
+                    return;
+                } catch (e) {
+                    adapter.log.error(`Auth-Token provided, but could not use official API: ${e}`);
+                }
+            }
+
             requestPromise({url: `http://${ip}:8080/api/v1/status`, timeout: 2000}).then(() => {
                 adapter.log.debug(`[START] 8080 API detected`);
                 apiVersion = `new`;

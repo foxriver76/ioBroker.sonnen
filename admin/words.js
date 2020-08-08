@@ -49,5 +49,29 @@ systemDictionary = {
         'es': `Intervalo de encuesta (ms)`,
         'pl': `Interwał sondowania (ms)`,
         'zh-cn': `轮询间隔（毫秒）`
+    },
+    'Auth-Token:': {
+        'en': 'Auth-Token',
+        'de': 'Auth-Token',
+        'ru': 'Auth-Токен',
+        'pt': 'Auth-Token',
+        'nl': 'Auth-token',
+        'fr': 'Auth-Token',
+        'it': 'Auth-Token',
+        'es': 'Auth-Token',
+        'pl': 'Token autoryzacji',
+        'zh-cn': '验证令牌'
+    },
+    'Auth-Token of the official API': {
+        'en': 'Auth-Token of the official API',
+        'de': 'Auth-Token der offiziellen API',
+        'ru': 'Auth-Token официального API',
+        'pt': 'Auth-Token da API oficial',
+        'nl': 'Auth-Token van de officiële API',
+        'fr': "Auth-Token de l'API officielle",
+        'it': "Token di autenticazione dell'API ufficiale",
+        'es': 'Auth-Token de la API oficial',
+        'pl': 'Auth-Token oficjalnego API',
+        'zh-cn': '官方API的Auth-Token'
     }
 };

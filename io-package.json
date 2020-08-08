@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.5.3",
+    "version": "1.6.0",
     "news": {
+      "1.6.0": {
+        "en": "added support for official api",
+        "de": "Unterstützung für offizielle API hinzugefügt",
+        "ru": "добавлена поддержка официального API",
+        "pt": "adicionado suporte para API oficial",
+        "nl": "ondersteuning toegevoegd voor officiële api",
+        "fr": "ajout de la prise en charge de l'API officielle",
+        "it": "aggiunto il supporto per l'API ufficiale",
+        "es": "soporte agregado para api oficial",
+        "pl": "dodano obsługę oficjalnego interfejsu API",
+        "zh-cn": "增加了对官方api的支持"
+      },
       "1.5.3": {
         "en": "poll online status always again if not confirmed that there are differences in api, more specific error handling ",
         "de": "Online-Status immer wieder abfragen, wenn nicht bestätigt wird, dass es Unterschiede in der API gibt, spezifischere Fehlerbehandlung",
@@ -152,7 +164,8 @@
     "messagebox": false
   },
   "native": {
-    "ip": ""
+    "ip": "",
+    "token": ""
   },
   "objects": [],
   "instanceObjects": [

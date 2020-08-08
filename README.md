@@ -269,17 +269,20 @@ Note, that there are two different sonnen API's so if you are missing states, th
     ```
 
 ## Changelog
-# 1.5.3 (2020-05-18)
+### 1.6.0 (2020-08-09)
+* (foxriver76) added support for official api, automatically used when auth token is given by user
+
+### 1.5.3 (2020-05-18)
 * (foxriver76) poll online status always again if not confirmed that there are differences in api (old solution could lead to false negative)
 * (foxriver76) more specific error handling 
 
-# 1.5.2 (2020-05-16)
+### 1.5.2 (2020-05-16)
 * (foxriver76) check if onlineStatus is supported at adapter start - else do not poll it
 
-# 1.5.0 (2020-05-04)
+### 1.5.0 (2020-05-04)
 * (foxriver76) added online status indicator
 
-# 1.4.2 (2020-04-16)
+### 1.4.2 (2020-04-16)
 * (foxriver76) added more translations
 * (foxriver76) optimizations for compact mode
 
