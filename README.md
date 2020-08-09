@@ -32,7 +32,8 @@ Additional to the adapter installation you have to add an instance of the adapte
 2. Navigate to Tab "Adapters"
 3. Click on the three points and then on the "+" symbol of the sonnen adapter
 ![Add Adapter](/docs/en/media/addInstance.png)
-4. Now you can see the main settings of the adapter configuration page --> type in the ip-address of your sonnen battery
+4. Now you can see the main settings of the adapter configuration page --> type in the ip-address of your sonnen battery.
+__It is also strongly recommended, to provide an API key, which can be found in the webinterface of your sonnen battery (Tab: Software Integration). Otherwise, the adapter uses the unofficial API.__
 ![Main Settings](/docs/en/media/mainSettings.png)
 5. If you want to thange the interval in which the states are polled, click on the tab "Advanced Settings"
 6. You can set the poll interval between 2000 ms (2 seconds) and 60000 ms (1 minute), the default value is 7 seconds

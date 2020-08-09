@@ -41,6 +41,9 @@ Nach Abschluss der Installation einer Adapterinstanz öffnet sich automatisch ei
 |:-------------|:-------------|
 |IP-Adresse    |Hier soll die IP-Adresse der gewünschten sonnenBatterie angegeben werden.|
 
+| Feld         | Beschreibung |                                                                       
+|:-------------|:-------------|
+|Auth-Token    |Hier soll der Auth-Token eingegeben werden, welcher im sonnen Webinterface unter "Software Integration" zu finden ist. Wird kein Auth-Token eingegeben, wird die inoffizielle API genutzt, welche jederzeit abgeschaltet werden kann.|
 
 ### Fenster "Erweiterte Einstellungen"
 ![Advanced Settings](media/advancedSettings.png "Erweiterte Einstellungen")
