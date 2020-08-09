@@ -249,7 +249,9 @@ Note, that there are two different sonnen API's so if you are missing states, th
     |number|R/W|
 
    *Number-value which allows you to control the charging rate of the battery in watts. If you set garbage here it will also be acknowledged, because acknowldging just means that the battery received your command.*
-   
+    *The corresponding value of the setpoint is kept until the battery receives a new charging or discharging value.
+    If VPP is active, the request will be rejected.*
+       
    *Example:*
     ```javascript
     setState('sonnen.0.control.charge', 1250); // Do not charge more than 1250 watts
@@ -262,6 +264,8 @@ Note, that there are two different sonnen API's so if you are missing states, th
     |number|R/W|
 
    *Number-value which allows you to control the discharging rate of the battery in watts. If you set garbage here it will also be acknowledged, because acknowldging just means that the battery received your command.*
+   *The corresponding value of the setpoint is kept until the battery receives a new charging or discharging value.
+    If VPP is active, the request will be rejected.*
    
    *Example:*
     ```javascript

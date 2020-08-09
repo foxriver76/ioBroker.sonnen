@@ -16,7 +16,7 @@ let adapter;
 let pollingTime;
 let apiVersion;
 let restartTimer;
-const requestOptions = {};
+const requestOptions = {headers: {}};
 
 function startAdapter(options) {
     options = options || {};
@@ -47,14 +47,14 @@ function startAdapter(options) {
             adapter.log.debug(`[START] Check API`);
             if (adapter.config.token) {
                 adapter.log.debug('[START] Auth-Token provided... trying official API');
-                requestOptions['Auth-Token'] = adapter.config.token;
+                requestOptions.headers['Auth-Token'] = adapter.config.token;
                 try {
                     await requestPromise({url: `http://${ip}/api/v2/latestdata`, ...requestOptions});
                     apiVersion = `v2`;
                     adapter.log.debug('[START] Check ok, using official API');
-                    return;
+                    return void main();
                 } catch (e) {
-                    adapter.log.error(`Auth-Token provided, but could not use official API: ${e}`);
+                    adapter.log.error(`Auth-Token provided, but could not use official API: ${e.message}`);
                 }
             }
 
@@ -88,7 +88,14 @@ function startAdapter(options) {
         adapter.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${state}`);
 
         if (id === `control.charge`) {
-            request.put(`http://${ip}:8080/api/v1/setpoint/charge/${state}`, (error, response) => {
+            let reqOpts;
+            if (apiVersion === 'v2') {
+                reqOpts = {url: `http://${ip}/api/v2/setpoint/charge/${state}`, ...requestOptions};
+            } else {
+                reqOpts = {url: `http://${ip}:8080/api/v1/setpoint/charge/${state}`};
+            }
+
+            request.put(reqOpts, (error, response) => {
                 if (response && response.statusCode.toString() === `200`) {
                     adapter.setState(`control.charge`, state, true);
                     adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
@@ -97,7 +104,13 @@ function startAdapter(options) {
                 }
             });
         } else if (id === `control.discharge`) {
-            request.put(`http://${ip}:8080/api/v1/setpoint/discharge/${state}`, (error, response) => {
+            let reqOpts;
+            if (apiVersion === 'v2') {
+                reqOpts = {url: `http://${ip}/api/v2/setpoint/discharge/${state}`, ...requestOptions};
+            } else {
+                reqOpts = {url: `http://${ip}:8080/api/v1/setpoint/discharge/${state}`};
+            }
+            request.put(reqOpts, (error, response) => {
                 if (response && response.statusCode.toString() === `200`) {
                     adapter.setState(`control.discharge`, state, true);
                     adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
@@ -131,7 +144,7 @@ async function main() {
         return oldAPImain();
     }
 
-    const statusUrl = `http://${ip}:8080/api/v1/status`; // Status Path - api/status --> GET
+    const statusUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/status` : `http://${ip}:8080/api/v1/status`;
 
     // create objects
     const promises = [];

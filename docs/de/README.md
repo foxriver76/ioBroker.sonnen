@@ -297,6 +297,9 @@ der Tastenkombination "STRG + F".
    *Hinweis: Wenn ein ungültiger Wert gesetzt wird, wird dieser trotzdem bestätigt. Die Bestätigung (Acknowledge) des Wertes bedeutet
    lediglich, dass das Kommando an die Batterie übertragen wurde.*
    
+   *Der entsprechende Wert des Sollwerts wird beibehalten, bis die Batterie einen neuen Lade- oder Entladewert erhält.
+    Wenn VPP aktiv ist, wird die Anfrage abgelehnt.*
+   
    *Example:*
     ```javascript
     setState('sonnen.0.control.charge', 1250); // Die Batterie wird mit maximal 1250 Watt geladen
@@ -312,9 +315,11 @@ der Tastenkombination "STRG + F".
     
     *Hinweis: Wenn ein ungültiger Wert gesetzt wird, wird dieser trotzdem bestätigt. Die Bestätigung (Acknowledge) des Wertes bedeutet
     lediglich, dass das Kommando an die Batterie übertragen wurde.*
+    
+    *Der entsprechende Wert des Sollwerts wird beibehalten, bis die Batterie einen neuen Lade- oder Entladewert erhält.
+     Wenn VPP aktiv ist, wird die Anfrage abgelehnt.*
    
    *Example:*
     ```javascript
     setState('sonnen.0.control.discharge', 1250); // Die Batterie wird maximal mit 1250 Watt entladen
     ```
-    
