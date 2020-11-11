@@ -8,7 +8,6 @@
 
 const utils = require(`@iobroker/adapter-core`); // Get common adapter utils
 const helper = require(`${__dirname}/lib/utils`);
-const request = require(`request`);
 const requestPromise = require(`request-promise-native`);
 let polling;
 let ip;
@@ -78,7 +77,7 @@ function startAdapter(options) {
         }
     });
 
-    adapter.on(`stateChange`, (id, state) => {
+    adapter.on(`stateChange`, async (id, state) => {
         if (!id || !state || state.ack) {
             return;
         } // Ignore acknowledged state changes or error states
@@ -95,14 +94,13 @@ function startAdapter(options) {
                 reqOpts = {url: `http://${ip}:8080/api/v1/setpoint/charge/${state}`};
             }
 
-            request.put(reqOpts, (error, response) => {
-                if (response && response.statusCode.toString() === `200`) {
-                    adapter.setState(`control.charge`, state, true);
-                    adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
-                } else {
-                    adapter.log.warn(`[PUT] Error ${error}`);
-                }
-            });
+            try {
+                await requestPromise.put(reqOpts);
+                adapter.setState(`control.charge`, state, true);
+                adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
+            } catch (e) {
+                adapter.log.warn(`[PUT] Error ${e.message}`);
+            }
         } else if (id === `control.discharge`) {
             let reqOpts;
             if (apiVersion === 'v2') {
@@ -110,14 +108,14 @@ function startAdapter(options) {
             } else {
                 reqOpts = {url: `http://${ip}:8080/api/v1/setpoint/discharge/${state}`};
             }
-            request.put(reqOpts, (error, response) => {
-                if (response && response.statusCode.toString() === `200`) {
-                    adapter.setState(`control.discharge`, state, true);
-                    adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
-                } else {
-                    adapter.log.warn(`[PUT] Error ${error}`);
-                }
-            });
+
+            try {
+                await requestPromise.put(reqOpts);
+                adapter.setState(`control.discharge`, state, true);
+                adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
+            } catch (e) {
+                adapter.log.warn(`[PUT] Error ${e.message}`);
+            }
         } // endElseIf
     });
 
@@ -156,28 +154,24 @@ async function main() {
 
     await Promise.all(promises);
 
-    request(statusUrl, (error, response, body) => { // poll states on start
-        if (error) {
-            adapter.log.warn(`[REQUEST] <== ${error}`);
-        }
-        if (response && response.statusCode.toString() === `200`) {
-            adapter.getState(`info.connection`, (err, state) => {
-                if (!state || !state.val) {
-                    adapter.setState(`info.connection`, true, true);
-                    adapter.log.debug(`[CONNECT] Connection successful established`);
-                } // endIf
-            });
-            adapter.log.debug(`[DATA] <== ${body}`);
-            setBatteryStates(JSON.parse(body));
-        } else {
-            adapter.setState(`info.connection`, false, true);
-            adapter.log.warn(`[CONNECT] Connection failed`);
-        }// endElse
-    });
+    try {
+        const data = await requestPromise(statusUrl); // poll states on start
+        const state = await adapter.getStateAsync(`info.connection`);
+        if (!state || !state.val) {
+            adapter.setState(`info.connection`, true, true);
+            adapter.log.debug(`[CONNECT] Connection successful established`);
+        } // endIf
+        adapter.log.debug(`[DATA] <== ${data}`);
+        setBatteryStates(JSON.parse(data));
+    } catch (e) {
+        adapter.log.warn(`[REQUEST] <== ${e.message}`);
+        adapter.setState(`info.connection`, false, true);
+        adapter.log.warn(`[CONNECT] Connection failed`);
+    }
 
     try {
         await requestSettings();
-    } catch(e) {
+    } catch (e) {
         adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e}`);
     }
 
@@ -190,31 +184,28 @@ async function main() {
     }
 
     if (!polling) {
-        polling = setInterval(() => { // poll states every [30] seconds
-            request(statusUrl, async (error, response, body) => {
-                if (error) {
-                    adapter.log.warn(`[REQUEST] <== ${error}`);
+        polling = setInterval(async () => { // poll states every [30] seconds
+            try {
+                const data = await requestPromise(statusUrl);
+                adapter.getState(`info.connection`, (err, state) => {
+                    if (!state || !state.val) {
+                        adapter.setState(`info.connection`, true, true);
+                        adapter.log.debug(`[CONNECT] Connection successful established`);
+                    } // endIf
+                });
+                setBatteryStates(JSON.parse(data));
+                try {
+                    await requestInverterEndpoint();
+                    await requestPowermeterEndpoint();
+                    await requestOnlineStatus();
+                } catch (e) {
+                    adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
                 }
-                if (response && response.statusCode.toString() === `200`) {
-                    adapter.getState(`info.connection`, (err, state) => {
-                        if (!state || !state.val) {
-                            adapter.setState(`info.connection`, true, true);
-                            adapter.log.debug(`[CONNECT] Connection successful established`);
-                        } // endIf
-                    });
-                    setBatteryStates(JSON.parse(body));
-                    try {
-                        await requestInverterEndpoint();
-                        await requestPowermeterEndpoint();
-                        await requestOnlineStatus();
-                    } catch (e) {
-                        adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
-                    }
-                } else {
-                    adapter.setState(`info.connection`, false, true);
-                    adapter.log.warn(`[CONNECT] Connection failed`);
-                } // endElse
-            });
+            } catch (e) {
+                adapter.log.warn(`[REQUEST] <== ${e.message}`);
+                adapter.setState(`info.connection`, false, true);
+                adapter.log.warn(`[CONNECT] Connection failed`);
+            }
         }, pollingTime);
     } // endIf
 } // endMain
@@ -306,7 +297,7 @@ async function requestInverterEndpoint() {
         const data = await requestPromise(`http://${ip}:8080/api/inverter`);
         await adapter.setStateAsync(`info.inverter`, data, true);
         return Promise.resolve();
-    } catch(e) {
+    } catch (e) {
         return Promise.reject(new Error(`Could not request inverter endpoint: ${e}`));
     }
 } // endRequestInverterEndpoint
@@ -339,7 +330,7 @@ async function requestPowermeterEndpoint() {
         const data = await requestPromise(`http://${ip}:8080/api/powermeter`);
         await adapter.setStateAsync(`info.powerMeter`, data, true);
         return Promise.resolve();
-    } catch(e) {
+    } catch (e) {
         return Promise.reject(new Error(`Could not request powermeter endpoint: ${e}`));
     }
 } // endRequestPowermeterEndpoint
