@@ -274,6 +274,9 @@ Note, that there are two different sonnen API's so if you are missing states, th
     ```
 
 ## Changelog
+### 1.6.1 (2020-11-11)
+* (foxriver76) fixed charge and discharge not working with api v2
+
 ### 1.6.0 (2020-08-09)
 * (foxriver76) added support for official api, automatically used when auth token is given by user
 

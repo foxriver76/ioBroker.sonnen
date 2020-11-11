@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "news": {
+      "1.6.1": {
+        "en": "fixed error with charge and discharge for api v2",
+        "de": "Fehler beim Laden und Entladen für API v2 behoben",
+        "ru": "исправлена ошибка с зарядкой и разрядкой для api v2",
+        "pt": "Erro corrigido com carga e descarga para API v2",
+        "nl": "vaste fout met laden en ontladen voor api v2",
+        "fr": "erreur fixe avec charge et décharge pour api v2",
+        "it": "corretto errore con carica e scarica per api v2",
+        "es": "error fijo con carga y descarga para api v2",
+        "pl": "naprawiono błąd z ładowaniem i rozładowywaniem dla api v2",
+        "zh-cn": "修复了api v2的充放电错误"
+      },
       "1.6.0": {
         "en": "added support for official api",
         "de": "Unterstützung für offizielle API hinzugefügt",

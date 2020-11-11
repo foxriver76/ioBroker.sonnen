@@ -87,30 +87,24 @@ function startAdapter(options) {
         adapter.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${state}`);
 
         if (id === `control.charge`) {
-            let reqOpts;
-            if (apiVersion === 'v2') {
-                reqOpts = {url: `http://${ip}/api/v2/setpoint/charge/${state}`, ...requestOptions};
-            } else {
-                reqOpts = {url: `http://${ip}:8080/api/v1/setpoint/charge/${state}`};
-            }
-
             try {
-                await requestPromise.put(reqOpts);
+                if (apiVersion === 'v2') {
+                    await requestPromise.post({url: `http://${ip}/api/v2/setpoint/charge/${state}`, ...requestOptions});
+                } else {
+                    await requestPromise.put({url: `http://${ip}:8080/api/v1/setpoint/charge/${state}`});
+                }
                 adapter.setState(`control.charge`, state, true);
                 adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
             } catch (e) {
                 adapter.log.warn(`[PUT] Error ${e.message}`);
             }
         } else if (id === `control.discharge`) {
-            let reqOpts;
-            if (apiVersion === 'v2') {
-                reqOpts = {url: `http://${ip}/api/v2/setpoint/discharge/${state}`, ...requestOptions};
-            } else {
-                reqOpts = {url: `http://${ip}:8080/api/v1/setpoint/discharge/${state}`};
-            }
-
             try {
-                await requestPromise.put(reqOpts);
+                if (apiVersion === 'v2') {
+                    await requestPromise.post({url: `http://${ip}/api/v2/setpoint/discharge/${state}`, ...requestOptions});
+                } else {
+                    await requestPromise.put({url: `http://${ip}:8080/api/v1/setpoint/discharge/${state}`});
+                }
                 adapter.setState(`control.discharge`, state, true);
                 adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
             } catch (e) {
