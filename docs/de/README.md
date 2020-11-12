@@ -326,3 +326,11 @@ der Tastenkombination "STRG + F".
     ```javascript
     setState('sonnen.0.control.discharge', 1250); // Die Batterie wird maximal mit 1250 Watt entladen
     ```
+  
+#### Channel: powermeter
+Dieser Kanal hat zwei Unterkanäle, z.B. `4_1` und `4_2`, wobei einer den Konsum und der andere die Produktion repräsentiert.
+ 
+Die beiden Kanäle haben die identischen Zustände. Alle Zustände sind schreibgeschützt und vom Typ `number`.
+
+### Channel: inverter
+Der Kanal besteht aus schreibgeschützten Zuständen vom Typ `number`, die Informationen über den Wechselrichter der sonnenBatterie liefern.

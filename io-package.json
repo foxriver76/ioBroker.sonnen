@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.6.1",
+    "version": "1.7.0",
     "news": {
+      "1.7.0": {
+        "en": "new channels for inverter and powermeter",
+        "de": "neue Kanäle für Wechselrichter und Leistungsmesser",
+        "ru": "новые каналы для инвертора и измерителя мощности",
+        "pt": "novos canais para inversor e medidor de potência",
+        "nl": "nieuwe kanalen voor omvormer en vermogensmeter",
+        "fr": "nouveaux canaux pour onduleur et wattmètre",
+        "it": "nuovi canali per inverter e misuratore di potenza",
+        "es": "nuevos canales para inversor y medidor de potencia",
+        "pl": "nowe kanały dla falownika i miernika mocy",
+        "zh-cn": "逆变器和功率计的新渠道"
+      },
       "1.6.1": {
         "en": "fixed error with charge and discharge for api v2",
         "de": "Fehler beim Laden und Entladen für API v2 behoben",

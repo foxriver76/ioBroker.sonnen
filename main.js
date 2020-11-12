@@ -15,6 +15,7 @@ let adapter;
 let pollingTime;
 let apiVersion;
 let restartTimer;
+let powermeterCreated = false;
 const requestOptions = {headers: {}};
 
 function startAdapter(options) {
@@ -288,11 +289,35 @@ function requestSettings() {
 
 async function requestInverterEndpoint() {
     try {
-        const data = await requestPromise(`http://${ip}:8080/api/inverter`);
-        await adapter.setStateAsync(`info.inverter`, data, true);
-        return Promise.resolve();
+        let data = await requestPromise(`http://${ip}:8080/api/inverter`);
+        const promises = [];
+
+        promises.push(adapter.setStateAsync(`info.inverter`, data, true));
+        data = JSON.parse(data);
+
+        const relevantStates = [
+            'iac1',
+            'iac2',
+            'iac3',
+            'uac1',
+            'uac2',
+            'uac3',
+            'udc',
+            'temphmi',
+            'tempbdc',
+            'temppu',
+            'pac1',
+            'pac2',
+            'pac3'
+        ];
+
+        for (const state of relevantStates) {
+            promises.push(adapter.setStateAsync(`inverter.${state}`, data.status[state], true));
+        }
+
+        await Promise.all(promises);
     } catch (e) {
-        return Promise.reject(new Error(`Could not request inverter endpoint: ${e}`));
+        throw new Error(`Could not request inverter endpoint: ${e}`);
     }
 } // endRequestInverterEndpoint
 
@@ -321,11 +346,50 @@ async function requestOnlineStatus() {
 
 async function requestPowermeterEndpoint() {
     try {
-        const data = await requestPromise(`http://${ip}:8080/api/powermeter`);
-        await adapter.setStateAsync(`info.powerMeter`, data, true);
-        return Promise.resolve();
+        let data = await requestPromise(`http://${ip}:8080/api/powermeter`);
+        const promises = [];
+        promises.push(adapter.setStateAsync(`info.powerMeter`, data, true));
+        data = JSON.parse(data);
+
+        const relevantStates = [
+            'a_l1',
+            'a_l2',
+            'a_l3',
+            'v_l1_l2',
+            'v_l2_l3',
+            'v_l3_l1',
+            'v_l1_n',
+            'v_l2_n',
+            'v_l3_n',
+            'kwh_exported',
+            'kwh_imported',
+            'w_l1',
+            'w_l2',
+            'w_l3'
+        ];
+
+        // we have multiple powermeters
+        for (const pm of Object.keys(data)) {
+            for (const state of relevantStates) {
+                if (!powermeterCreated) {
+                    const objs = helper.getPowermeterStates(pm, data[pm].direction);
+                    for (const obj of objs) {
+                        const id = obj._id;
+                        delete obj._id;
+                        await adapter.extendObjectAsync(id, obj);
+                    }
+                }
+
+                promises.push(adapter.setStateAsync(`powermeter.${pm}.${state}`, data[pm][state], true));
+            }
+        }
+
+        // all powermeters created
+        powermeterCreated = true;
+
+        await Promise.all(promises);
     } catch (e) {
-        return Promise.reject(new Error(`Could not request powermeter endpoint: ${e}`));
+        throw new Error(`Could not request powermeter endpoint: ${e}`);
     }
 } // endRequestPowermeterEndpoint
 
