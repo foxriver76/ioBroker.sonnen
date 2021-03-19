@@ -1,284 +1,296 @@
 {
-  "common": {
-    "name": "sonnen",
-    "version": "1.7.0",
-    "news": {
-      "1.7.0": {
-        "en": "new channels for inverter and powermeter",
-        "de": "neue Kanäle für Wechselrichter und Leistungsmesser",
-        "ru": "новые каналы для инвертора и измерителя мощности",
-        "pt": "novos canais para inversor e medidor de potência",
-        "nl": "nieuwe kanalen voor omvormer en vermogensmeter",
-        "fr": "nouveaux canaux pour onduleur et wattmètre",
-        "it": "nuovi canali per inverter e misuratore di potenza",
-        "es": "nuevos canales para inversor y medidor de potencia",
-        "pl": "nowe kanały dla falownika i miernika mocy",
-        "zh-cn": "逆变器和功率计的新渠道"
-      },
-      "1.6.1": {
-        "en": "fixed error with charge and discharge for api v2",
-        "de": "Fehler beim Laden und Entladen für API v2 behoben",
-        "ru": "исправлена ошибка с зарядкой и разрядкой для api v2",
-        "pt": "Erro corrigido com carga e descarga para API v2",
-        "nl": "vaste fout met laden en ontladen voor api v2",
-        "fr": "erreur fixe avec charge et décharge pour api v2",
-        "it": "corretto errore con carica e scarica per api v2",
-        "es": "error fijo con carga y descarga para api v2",
-        "pl": "naprawiono błąd z ładowaniem i rozładowywaniem dla api v2",
-        "zh-cn": "修复了api v2的充放电错误"
-      },
-      "1.6.0": {
-        "en": "added support for official api",
-        "de": "Unterstützung für offizielle API hinzugefügt",
-        "ru": "добавлена поддержка официального API",
-        "pt": "adicionado suporte para API oficial",
-        "nl": "ondersteuning toegevoegd voor officiële api",
-        "fr": "ajout de la prise en charge de l'API officielle",
-        "it": "aggiunto il supporto per l'API ufficiale",
-        "es": "soporte agregado para api oficial",
-        "pl": "dodano obsługę oficjalnego interfejsu API",
-        "zh-cn": "增加了对官方api的支持"
-      },
-      "1.5.3": {
-        "en": "poll online status always again if not confirmed that there are differences in api, more specific error handling ",
-        "de": "Online-Status immer wieder abfragen, wenn nicht bestätigt wird, dass es Unterschiede in der API gibt, spezifischere Fehlerbehandlung",
-        "ru": "Опять онлайн-статус всегда, если не подтверждено, что есть различия в API, более конкретная обработка ошибок",
-        "pt": "sondar o status on-line sempre novamente, se não confirmado que há diferenças na API, tratamento de erros mais específico",
-        "nl": "poll online status altijd opnieuw indien niet bevestigd dat er verschillen zijn in api, meer specifieke foutafhandeling",
-        "fr": "interroger le statut en ligne toujours à nouveau s'il n'est pas confirmé qu'il existe des différences dans l'api, gestion des erreurs plus spécifique",
-        "it": "sondare lo stato online sempre di nuovo se non confermato che ci sono differenze nell'API, una gestione degli errori più specifica",
-        "es": "sondee el estado en línea siempre de nuevo si no se confirma que hay diferencias en la API, manejo de errores más específico",
-        "pl": "sonduj status online zawsze, jeśli nie potwierdzono, że istnieją różnice w interfejsie API, bardziej szczegółowa obsługa błędów",
-        "zh-cn": "如果未确认api的差异（更具体的错误处理），则始终再次轮询在线状态"
-      },
-      "1.5.2": {
-        "en": "we check if online status is supported else we do not poll it",
-        "de": "Wir prüfen, ob der Online-Status unterstützt wird. Andernfalls wird er nicht abgefragt",
-        "ru": "мы проверяем, поддерживается ли онлайн-статус, иначе мы не опрашиваем его",
-        "pt": "verificamos se o status online é suportado, caso contrário, não o pesquisamos",
-        "nl": "we controleren of de online status wordt ondersteund, anders peilen we deze niet",
-        "fr": "nous vérifions si le statut en ligne est pris en charge sinon nous ne le sondons pas",
-        "it": "controlliamo se lo stato online è supportato altrimenti non lo sondiamo",
-        "es": "comprobamos si el estado en línea es compatible; de lo contrario, no lo encuestamos",
-        "pl": "sprawdzamy, czy status online jest obsługiwany, w przeciwnym razie nie sondujemy go",
-        "zh-cn": "我们检查是否支持在线状态，否则我们不对其进行轮询"
-      },
-      "1.5.0": {
-        "en": "added online status indicator",
-        "de": "Online-Statusanzeige hinzugefügt",
-        "ru": "добавлен онлайн индикатор состояния",
-        "pt": "adicionado indicador de status online",
-        "nl": "online statusindicator toegevoegd",
-        "fr": "indicateur de statut en ligne ajouté",
-        "it": "aggiunto indicatore di stato online",
-        "es": "indicador de estado en línea agregado",
-        "pl": "dodano wskaźnik stanu online",
-        "zh-cn": "增加了在线状态指示器"
-      },
-      "1.4.2": {
-        "en": "added more translations",
-        "de": "Weitere Übersetzungen hinzugefügt",
-        "ru": "добавлено больше переводов",
-        "pt": "adicionou mais traduções",
-        "nl": "meer vertalingen toegevoegd",
-        "fr": "ajouté plus de traductions",
-        "it": "aggiunte altre traduzioni",
-        "es": "agregó más traducciones",
-        "pl": "dodano więcej tłumaczeń",
-        "zh-cn": "添加了更多翻译"
-      },
-      "1.4.0": {
-        "en": "minimum support for two new endpoints until we know what users need from there",
-        "de": "Mindestunterstützung für zwei neue Endpunkte, bis wir wissen, was Benutzer von dort benötigen",
-        "ru": "минимальная поддержка двух новых конечных точек, пока мы не узнаем, что оттуда нужно пользователям",
-        "pt": "suporte mínimo para dois novos pontos de extremidade até sabermos o que os usuários precisam a partir daí",
-        "nl": "minimale ondersteuning voor twee nieuwe eindpunten totdat we weten wat gebruikers daar nodig hebben",
-        "fr": "prise en charge minimale de deux nouveaux points de terminaison jusqu'à ce que nous sachions de quoi les utilisateurs ont besoin",
-        "it": "supporto minimo per due nuovi endpoint fino a quando non sapremo di cosa hanno bisogno gli utenti da lì",
-        "es": "soporte mínimo para dos puntos finales nuevos hasta que sepamos qué necesitan los usuarios a partir de ahí",
-        "pl": "minimalna obsługa dwóch nowych punktów końcowych, dopóki nie dowiemy się, czego potrzebują użytkownicy z tego miejsca",
-        "zh-cn": "对两个新端点的最低支持，直到我们知道那里的用户需要什么"
-      },
-      "1.3.0": {
-        "en": "new state with configuration information of you sonnen battery",
-        "de": "neuer State mit Konfigurationsinformationen der sonnenBatterie",
-        "ru": "новое состояние с информацией о конфигурации вашего аккумулятора",
-        "pt": "novo estado com informações de configuração de sua bateria sonnen",
-        "nl": "nieuwe status met configuratie-informatie van uw zonne-batterij",
-        "fr": "nouvel état avec les informations de configuration de votre batterie sonnen",
-        "it": "nuovo stato con le informazioni di configurazione della batteria del tuo sonnen",
-        "es": "Nuevo estado con información de configuración de tu batería sonnen.",
-        "pl": "nowy stan z informacjami o konfiguracji baterii sonnen",
-        "zh-cn": "新的状态，你的配置信息你sonnen电池"
-      },
-      "1.2.0": {
-        "en": "support the other sonnen API",
-        "de": "unterstütze die andere sonnen API",
-        "ru": "поддерживать другой sonnen API",
-        "pt": "suporte a outra API sonnen",
-        "nl": "steun de andere sonnen API",
-        "fr": "supporte l'autre API sonnen",
-        "it": "supporta l'altra API sonnen",
-        "es": "apoyar la otra API sonnen",
-        "pl": "obsługuje inne API sonnen",
-        "zh-cn": "支持其他sonnen API"
-      },
-      "1.1.2": {
-        "en": "bugfix for control states",
-        "de": "Bugfix für Kontrollzustände",
-        "ru": "исправление для состояний управления",
-        "pt": "bugfix para estados de controle",
-        "nl": "bugfix voor besturingsstatussen",
-        "fr": "correction de bug pour les états de contrôle",
-        "it": "bugfix per gli stati di controllo",
-        "es": "corrección de errores para los estados de control",
-        "pl": "bugfix dla stanów kontrolnych"
-      },
-      "1.1.1": {
-        "en": "add compact mode compatibility",
-        "de": "Kompatibilität im Kompaktmodus hinzufügen",
-        "ru": "добавить компактный режим совместимости",
-        "pt": "adicionar compatibilidade no modo compacto",
-        "nl": "voeg compatibiliteit in compacte modus toe",
-        "fr": "ajouter une compatibilité en mode compact",
-        "it": "aggiungere la compatibilità in modalità compatta",
-        "es": "añadir compatibilidad de modo compacto",
-        "pl": "dodaj kompatybilność w trybie kompaktowym"
-      },
-      "1.0.2": {
-        "en": "use adapter core",
-        "de": "Nutzung von Adapter-Core"
-      }
+    "common": {
+        "name": "sonnen",
+        "version": "1.7.1",
+        "news": {
+            "1.7.1": {
+                "en": "do not log warnings on inverter endpoint if battery does not support it (closes #55)",
+                "de": "Protokollieren Sie keine Warnungen am Endpunkt des Wechselrichters, wenn die Batterie dies nicht unterstützt (schließt # 55).",
+                "ru": "не регистрировать предупреждения на конечной точке инвертора, если батарея не поддерживает его (закрывается # 55)",
+                "pt": "não registre avisos no ponto final do inversor se a bateria não o suportar (fecha # 55)",
+                "nl": "log geen waarschuwingen op het eindpunt van de omvormer als de batterij dit niet ondersteunt (sluit # 55)",
+                "fr": "ne consignez pas les avertissements sur le point final de l'onduleur si la batterie ne le prend pas en charge (ferme # 55)",
+                "it": "non registrare gli avvisi sull'endpoint dell'inverter se la batteria non lo supporta (chiude # 55)",
+                "es": "no registre advertencias en el punto final del inversor si la batería no lo admite (cierra # 55)",
+                "pl": "nie rejestruj ostrzeżeń na punkcie końcowym falownika, jeśli bateria go nie obsługuje (zamyka # 55)",
+                "zh-cn": "如果电池不支持，请不要在逆变器端点上记录警告（关闭＃55）"
+            },
+            "1.7.0": {
+                "en": "new channels for inverter and powermeter",
+                "de": "neue Kanäle für Wechselrichter und Leistungsmesser",
+                "ru": "новые каналы для инвертора и измерителя мощности",
+                "pt": "novos canais para inversor e medidor de potência",
+                "nl": "nieuwe kanalen voor omvormer en vermogensmeter",
+                "fr": "nouveaux canaux pour onduleur et wattmètre",
+                "it": "nuovi canali per inverter e misuratore di potenza",
+                "es": "nuevos canales para inversor y medidor de potencia",
+                "pl": "nowe kanały dla falownika i miernika mocy",
+                "zh-cn": "逆变器和功率计的新渠道"
+            },
+            "1.6.1": {
+                "en": "fixed error with charge and discharge for api v2",
+                "de": "Fehler beim Laden und Entladen für API v2 behoben",
+                "ru": "исправлена ошибка с зарядкой и разрядкой для api v2",
+                "pt": "Erro corrigido com carga e descarga para API v2",
+                "nl": "vaste fout met laden en ontladen voor api v2",
+                "fr": "erreur fixe avec charge et décharge pour api v2",
+                "it": "corretto errore con carica e scarica per api v2",
+                "es": "error fijo con carga y descarga para api v2",
+                "pl": "naprawiono błąd z ładowaniem i rozładowywaniem dla api v2",
+                "zh-cn": "修复了api v2的充放电错误"
+            },
+            "1.6.0": {
+                "en": "added support for official api",
+                "de": "Unterstützung für offizielle API hinzugefügt",
+                "ru": "добавлена поддержка официального API",
+                "pt": "adicionado suporte para API oficial",
+                "nl": "ondersteuning toegevoegd voor officiële api",
+                "fr": "ajout de la prise en charge de l'API officielle",
+                "it": "aggiunto il supporto per l'API ufficiale",
+                "es": "soporte agregado para api oficial",
+                "pl": "dodano obsługę oficjalnego interfejsu API",
+                "zh-cn": "增加了对官方api的支持"
+            },
+            "1.5.3": {
+                "en": "poll online status always again if not confirmed that there are differences in api, more specific error handling ",
+                "de": "Online-Status immer wieder abfragen, wenn nicht bestätigt wird, dass es Unterschiede in der API gibt, spezifischere Fehlerbehandlung",
+                "ru": "Опять онлайн-статус всегда, если не подтверждено, что есть различия в API, более конкретная обработка ошибок",
+                "pt": "sondar o status on-line sempre novamente, se não confirmado que há diferenças na API, tratamento de erros mais específico",
+                "nl": "poll online status altijd opnieuw indien niet bevestigd dat er verschillen zijn in api, meer specifieke foutafhandeling",
+                "fr": "interroger le statut en ligne toujours à nouveau s'il n'est pas confirmé qu'il existe des différences dans l'api, gestion des erreurs plus spécifique",
+                "it": "sondare lo stato online sempre di nuovo se non confermato che ci sono differenze nell'API, una gestione degli errori più specifica",
+                "es": "sondee el estado en línea siempre de nuevo si no se confirma que hay diferencias en la API, manejo de errores más específico",
+                "pl": "sonduj status online zawsze, jeśli nie potwierdzono, że istnieją różnice w interfejsie API, bardziej szczegółowa obsługa błędów",
+                "zh-cn": "如果未确认api的差异（更具体的错误处理），则始终再次轮询在线状态"
+            },
+            "1.5.2": {
+                "en": "we check if online status is supported else we do not poll it",
+                "de": "Wir prüfen, ob der Online-Status unterstützt wird. Andernfalls wird er nicht abgefragt",
+                "ru": "мы проверяем, поддерживается ли онлайн-статус, иначе мы не опрашиваем его",
+                "pt": "verificamos se o status online é suportado, caso contrário, não o pesquisamos",
+                "nl": "we controleren of de online status wordt ondersteund, anders peilen we deze niet",
+                "fr": "nous vérifions si le statut en ligne est pris en charge sinon nous ne le sondons pas",
+                "it": "controlliamo se lo stato online è supportato altrimenti non lo sondiamo",
+                "es": "comprobamos si el estado en línea es compatible; de lo contrario, no lo encuestamos",
+                "pl": "sprawdzamy, czy status online jest obsługiwany, w przeciwnym razie nie sondujemy go",
+                "zh-cn": "我们检查是否支持在线状态，否则我们不对其进行轮询"
+            },
+            "1.5.0": {
+                "en": "added online status indicator",
+                "de": "Online-Statusanzeige hinzugefügt",
+                "ru": "добавлен онлайн индикатор состояния",
+                "pt": "adicionado indicador de status online",
+                "nl": "online statusindicator toegevoegd",
+                "fr": "indicateur de statut en ligne ajouté",
+                "it": "aggiunto indicatore di stato online",
+                "es": "indicador de estado en línea agregado",
+                "pl": "dodano wskaźnik stanu online",
+                "zh-cn": "增加了在线状态指示器"
+            },
+            "1.4.2": {
+                "en": "added more translations",
+                "de": "Weitere Übersetzungen hinzugefügt",
+                "ru": "добавлено больше переводов",
+                "pt": "adicionou mais traduções",
+                "nl": "meer vertalingen toegevoegd",
+                "fr": "ajouté plus de traductions",
+                "it": "aggiunte altre traduzioni",
+                "es": "agregó más traducciones",
+                "pl": "dodano więcej tłumaczeń",
+                "zh-cn": "添加了更多翻译"
+            },
+            "1.4.0": {
+                "en": "minimum support for two new endpoints until we know what users need from there",
+                "de": "Mindestunterstützung für zwei neue Endpunkte, bis wir wissen, was Benutzer von dort benötigen",
+                "ru": "минимальная поддержка двух новых конечных точек, пока мы не узнаем, что оттуда нужно пользователям",
+                "pt": "suporte mínimo para dois novos pontos de extremidade até sabermos o que os usuários precisam a partir daí",
+                "nl": "minimale ondersteuning voor twee nieuwe eindpunten totdat we weten wat gebruikers daar nodig hebben",
+                "fr": "prise en charge minimale de deux nouveaux points de terminaison jusqu'à ce que nous sachions de quoi les utilisateurs ont besoin",
+                "it": "supporto minimo per due nuovi endpoint fino a quando non sapremo di cosa hanno bisogno gli utenti da lì",
+                "es": "soporte mínimo para dos puntos finales nuevos hasta que sepamos qué necesitan los usuarios a partir de ahí",
+                "pl": "minimalna obsługa dwóch nowych punktów końcowych, dopóki nie dowiemy się, czego potrzebują użytkownicy z tego miejsca",
+                "zh-cn": "对两个新端点的最低支持，直到我们知道那里的用户需要什么"
+            },
+            "1.3.0": {
+                "en": "new state with configuration information of you sonnen battery",
+                "de": "neuer State mit Konfigurationsinformationen der sonnenBatterie",
+                "ru": "новое состояние с информацией о конфигурации вашего аккумулятора",
+                "pt": "novo estado com informações de configuração de sua bateria sonnen",
+                "nl": "nieuwe status met configuratie-informatie van uw zonne-batterij",
+                "fr": "nouvel état avec les informations de configuration de votre batterie sonnen",
+                "it": "nuovo stato con le informazioni di configurazione della batteria del tuo sonnen",
+                "es": "Nuevo estado con información de configuración de tu batería sonnen.",
+                "pl": "nowy stan z informacjami o konfiguracji baterii sonnen",
+                "zh-cn": "新的状态，你的配置信息你sonnen电池"
+            },
+            "1.2.0": {
+                "en": "support the other sonnen API",
+                "de": "unterstütze die andere sonnen API",
+                "ru": "поддерживать другой sonnen API",
+                "pt": "suporte a outra API sonnen",
+                "nl": "steun de andere sonnen API",
+                "fr": "supporte l'autre API sonnen",
+                "it": "supporta l'altra API sonnen",
+                "es": "apoyar la otra API sonnen",
+                "pl": "obsługuje inne API sonnen",
+                "zh-cn": "支持其他sonnen API"
+            },
+            "1.1.2": {
+                "en": "bugfix for control states",
+                "de": "Bugfix für Kontrollzustände",
+                "ru": "исправление для состояний управления",
+                "pt": "bugfix para estados de controle",
+                "nl": "bugfix voor besturingsstatussen",
+                "fr": "correction de bug pour les états de contrôle",
+                "it": "bugfix per gli stati di controllo",
+                "es": "corrección de errores para los estados de control",
+                "pl": "bugfix dla stanów kontrolnych"
+            },
+            "1.1.1": {
+                "en": "add compact mode compatibility",
+                "de": "Kompatibilität im Kompaktmodus hinzufügen",
+                "ru": "добавить компактный режим совместимости",
+                "pt": "adicionar compatibilidade no modo compacto",
+                "nl": "voeg compatibiliteit in compacte modus toe",
+                "fr": "ajouter une compatibilité en mode compact",
+                "it": "aggiungere la compatibilità in modalità compatta",
+                "es": "añadir compatibilidad de modo compacto",
+                "pl": "dodaj kompatybilność w trybie kompaktowym"
+            },
+            "1.0.2": {
+                "en": "use adapter core",
+                "de": "Nutzung von Adapter-Core"
+            }
+        },
+        "title": "sonnen",
+        "titleLang": {
+            "en": "sonnenBattery",
+            "de": "sonnenBatterie"
+        },
+        "desc": {
+            "en": "Monitor your sonnen battery",
+            "de": "Überwache deine sonnen Batterie"
+        },
+        "authors": [
+            "Moritz Heusinger <moritz.heusinger@gmail.com>"
+        ],
+        "docs": {
+            "de": "docs/de/README.md"
+        },
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "icon": "sonnen.png",
+        "materialize": true,
+        "enabled": true,
+        "compact": true,
+        "extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
+        "keywords": [
+            "sonnen",
+            "photovoltaics",
+            "solar",
+            "energy",
+            "sun"
+        ],
+        "readme": "https://github.com/foxriver76/ioBroker.sonnen/blob/master/README.md",
+        "loglevel": "info",
+        "type": "energy",
+        "connectionType": "local",
+        "dataSource": "poll",
+        "license": "MIT",
+        "messagebox": false
     },
-    "title": "sonnen",
-    "titleLang": {
-      "en": "sonnenBattery",
-      "de": "sonnenBatterie"
+    "native": {
+        "ip": "",
+        "token": ""
     },
-    "desc": {
-      "en": "Monitor your sonnen battery",
-      "de": "Überwache deine sonnen Batterie"
-    },
-    "authors": [
-      "Moritz Heusinger <moritz.heusinger@gmail.com>"
-    ],
-    "docs": {
-      "de": "docs/de/README.md"
-    },
-    "platform": "Javascript/Node.js",
-    "mode": "daemon",
-    "icon": "sonnen.png",
-    "materialize": true,
-    "enabled": true,
-    "compact": true,
-    "extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
-    "keywords": [
-      "sonnen",
-      "photovoltaics",
-      "solar",
-      "energy",
-      "sun"
-    ],
-    "readme": "https://github.com/foxriver76/ioBroker.sonnen/blob/master/README.md",
-    "loglevel": "info",
-    "type": "energy",
-    "connectionType": "local",
-    "dataSource": "poll",
-    "license": "MIT",
-    "messagebox": false
-  },
-  "native": {
-    "ip": "",
-    "token": ""
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.lastSync",
-      "type": "state",
-      "common": {
-        "name": "Last successful sync",
-        "type": "string",
-        "role": "value.datetime",
-        "read": true,
-        "write": false,
-        "desc": "Last successful synchronization"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "name": "sonnen connected",
-        "type": "boolean",
-        "role": "indicator.connected",
-        "read": true,
-        "write": false,
-        "def": false,
-        "desc": "Is sonnen battery connected?"
-      },
-      "native": {}
-    },
-    {
-      "_id": "status",
-      "type": "channel",
-      "common": {
-        "name": "Status"
-      },
-      "native": {}
-    },
-    {
-      "_id": "status.consumption",
-      "type": "state",
-      "common": {
-        "name": "Consumption",
-        "type": "number",
-        "role": "value.consumption",
-        "read": true,
-        "write": false,
-        "desc": "House comsumption in watts",
-        "unit": "watts"
-      },
-      "native": {}
-    },
-    {
-      "_id": "status.production",
-      "type": "state",
-      "common": {
-        "name": "Production",
-        "type": "number",
-        "role": "value.production",
-        "read": true,
-        "write": false,
-        "desc": "Production in watts",
-        "unit": "watts"
-      },
-      "native": {}
-    },
-    {
-      "_id": "status.relativeSoc",
-      "type": "state",
-      "common": {
-        "name": "Relative State of Charge",
-        "type": "number",
-        "role": "value.rsoc",
-        "read": true,
-        "min": 0,
-        "max": 100,
-        "write": false,
-        "desc": "State of charge in percent",
-        "unit": "%"
-      },
-      "native": {}
-    }
-  ]
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastSync",
+            "type": "state",
+            "common": {
+                "name": "Last successful sync",
+                "type": "string",
+                "role": "value.datetime",
+                "read": true,
+                "write": false,
+                "desc": "Last successful synchronization"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "name": "sonnen connected",
+                "type": "boolean",
+                "role": "indicator.connected",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "Is sonnen battery connected?"
+            },
+            "native": {}
+        },
+        {
+            "_id": "status",
+            "type": "channel",
+            "common": {
+                "name": "Status"
+            },
+            "native": {}
+        },
+        {
+            "_id": "status.consumption",
+            "type": "state",
+            "common": {
+                "name": "Consumption",
+                "type": "number",
+                "role": "value.consumption",
+                "read": true,
+                "write": false,
+                "desc": "House comsumption in watts",
+                "unit": "watts"
+            },
+            "native": {}
+        },
+        {
+            "_id": "status.production",
+            "type": "state",
+            "common": {
+                "name": "Production",
+                "type": "number",
+                "role": "value.production",
+                "read": true,
+                "write": false,
+                "desc": "Production in watts",
+                "unit": "watts"
+            },
+            "native": {}
+        },
+        {
+            "_id": "status.relativeSoc",
+            "type": "state",
+            "common": {
+                "name": "Relative State of Charge",
+                "type": "number",
+                "role": "value.rsoc",
+                "read": true,
+                "min": 0,
+                "max": 100,
+                "write": false,
+                "desc": "State of charge in percent",
+                "unit": "%"
+            },
+            "native": {}
+        }
+    ]
 }

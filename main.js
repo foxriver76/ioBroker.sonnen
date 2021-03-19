@@ -17,6 +17,7 @@ let apiVersion;
 let restartTimer;
 let powermeterCreated = false;
 const requestOptions = {headers: {}};
+let inverterEndpoint = false;
 
 function startAdapter(options) {
     options = options || {};
@@ -63,13 +64,13 @@ function startAdapter(options) {
                 apiVersion = `new`;
                 main();
             }).catch(e => {
-                adapter.log.debug(`[START] It's not 8080, because ${e}`);
+                adapter.log.debug(`[START] It's not 8080, because ${e.message}`);
                 requestPromise(`http://${ip}:7979/rest/devices/battery/M03`).then(() => {
                     apiVersion = `old`;
                     adapter.log.debug(`[START] 7979 API detected`);
                     main();
                 }).catch(e => {
-                    adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e}`);
+                    adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e.message}`);
                     restartTimer = setTimeout(restartAdapter, 30000);
                 });
             });
@@ -167,7 +168,7 @@ async function main() {
     try {
         await requestSettings();
     } catch (e) {
-        adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e}`);
+        adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e.message}`);
     }
 
     try {
@@ -240,7 +241,7 @@ async function oldAPImain() {
             adapter.setState(`info.connection`, true, true);
         });
     }).catch(e => {
-        adapter.log.warn(`[DATA] Error getting Data ${e}`);
+        adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
     });
 
     if (!polling) {
@@ -269,22 +270,17 @@ async function oldAPImain() {
                     if (state.val === true) {
                         adapter.setState(`info.connection`, false, true);
                     }
-                    adapter.log.warn(`[DATA] Error getting Data ${e}`);
+                    adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
                 });
             });
         }, pollingTime);
     } //
 } // endOldAPImain
 
-function requestSettings() {
-    return new Promise((resolve, reject) => {
-        requestPromise(`http://${ip}:8080/api/configuration`).then(data => {
-            adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
-            adapter.setStateAsync(`info.configuration`, data, true).then(resolve);
-        }).catch(e => {
-            reject(e);
-        });
-    });
+async function requestSettings() {
+    const data = await requestPromise(`http://${ip}:8080/api/configuration`);
+    adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
+    await adapter.setStateAsync(`info.configuration`, data, true);
 } // endRequestSettings
 
 async function requestInverterEndpoint() {
@@ -316,8 +312,15 @@ async function requestInverterEndpoint() {
         }
 
         await Promise.all(promises);
+        // inverter endpoint exists
+        inverterEndpoint = true;
     } catch (e) {
-        throw new Error(`Could not request inverter endpoint: ${e}`);
+        if (inverterEndpoint) {
+            throw new Error(`Could not request inverter endpoint: ${e.message}`);
+        } else {
+            // not all batteries seem to have this endpoint so don't throw an error if it was never there, see Issue #55
+            adapter.log.debug(`Could not request inverter endpoint: ${e.message}`);
+        }
     }
 } // endRequestInverterEndpoint
 
@@ -334,13 +337,12 @@ async function requestOnlineStatus() {
         } else if (data === `false`) {
             data = false;
         } else {
-            return Promise.reject(new Error(`Expected string with "true" or "false" as onlineStatus, got "${data}"`));
+            throw new Error(`Expected string with "true" or "false" as onlineStatus, got "${data}"`);
         }
 
         await adapter.setStateAsync(`status.onlineStatus`, data, true);
-        return Promise.resolve();
     } catch (e) {
-        return Promise.reject(new Error(`Could not request online status: ${e}`));
+        throw new Error(`Could not request online status: ${e.message}`);
     }
 }
 
@@ -389,7 +391,7 @@ async function requestPowermeterEndpoint() {
 
         await Promise.all(promises);
     } catch (e) {
-        throw new Error(`Could not request powermeter endpoint: ${e}`);
+        throw new Error(`Could not request powermeter endpoint: ${e.message}`);
     }
 } // endRequestPowermeterEndpoint
 
@@ -425,31 +427,24 @@ function setBatteryStates(json) {
     adapter.setState(`status.flowProductionGrid`, json.FlowProductionGrid, true);
 } // endSetBatteryStates
 
-function restartAdapter() {
-    adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`).then(obj => {
-        if (obj) {
-            adapter.setForeignObject(`system.adapter.${adapter.namespace}`, obj);
-        }
-    });
+async function restartAdapter() {
+    const obj = await adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`);
+    if (obj) {
+        adapter.setForeignObject(`system.adapter.${adapter.namespace}`, obj);
+    }
 } // endFunctionRestartAdapter
 
-function requestStateAndSetOldAPI(code, state) {
-    return new Promise((resolve, reject) => {
-        requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`).then(res => {
-            res = res.trim();
-            adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${state}`);
-            adapter.setState(state, parseFloat(res), true);
-            resolve();
-        }).catch(e => {
-            reject(e);
-        });
-    });
+async function requestStateAndSetOldAPI(code, state) {
+    let res = await requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`);
+    res = res.trim();
+    adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${state}`);
+    adapter.setState(state, parseFloat(res), true);
 } // endRequestStateAndSetOldAPI
 
 // If started as allInOne/compact mode => return function to create instance
-if (module && module.parent) {
-    module.exports = startAdapter;
-} else {
-    // or start the instance directly
+if (require.main === module) {
+    // start the instance directly
     startAdapter();
+} else {
+    module.exports = startAdapter;
 } // endElse
