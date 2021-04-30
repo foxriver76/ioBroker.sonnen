@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.7.1",
+        "version": "1.7.2",
         "news": {
+            "1.7.2": {
+                "en": "we fixed some type issues (fixes #58)",
+                "de": "Wir haben einige Typprobleme behoben (Fixes # 58).",
+                "ru": "мы исправили некоторые проблемы с типом (исправления # 58)",
+                "pt": "corrigimos alguns problemas de tipo (correções # 58)",
+                "nl": "we hebben enkele typeproblemen opgelost (fix # 58)",
+                "fr": "nous avons corrigé quelques problèmes de type (corrections # 58)",
+                "it": "abbiamo risolto alcuni problemi di tipo (correzioni # 58)",
+                "es": "arreglamos algunos problemas de tipo (arreglos # 58)",
+                "pl": "naprawiliśmy niektóre problemy z typami (poprawki # 58)",
+                "zh-cn": "我们修复了一些类型问题（修复＃58）"
+            },
             "1.7.1": {
                 "en": "do not log warnings on inverter endpoint if battery does not support it (closes #55)",
                 "de": "Protokollieren Sie keine Warnungen am Endpunkt des Wechselrichters, wenn die Batterie dies nicht unterstützt (schließt # 55).",

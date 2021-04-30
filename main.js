@@ -308,7 +308,8 @@ async function requestInverterEndpoint() {
         ];
 
         for (const state of relevantStates) {
-            promises.push(adapter.setStateAsync(`inverter.${state}`, data.status[state], true));
+            // inverter states are string but are all numbers
+            promises.push(adapter.setStateAsync(`inverter.${state}`, parseFloat(data.status[state]), true));
         }
 
         await Promise.all(promises);
