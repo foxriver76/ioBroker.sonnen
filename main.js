@@ -145,7 +145,8 @@ async function main() {
     for (const obj of helper.newAPIStates) {
         const id = obj._id;
         delete obj._id;
-        promises.push(adapter.setObjectNotExistsAsync(id, obj));
+        // use extend to update stuff like types if they were wrong, but preserve name
+        promises.push(adapter.extendObjectAsync(id, obj, {preserve: {common: ['name']}}));
     }
 
     await Promise.all(promises);
@@ -215,7 +216,8 @@ async function oldAPImain() {
     for (const obj of helper.oldAPIStates) {
         const id = obj._id;
         delete obj._id;
-        promises.push(adapter.setObjectNotExistsAsync(id, obj));
+        // use extend to update stuff like types if they were wrong, but preserve name
+        promises.push(adapter.extendObjectAsync(id, obj, {preserve: {common: ['name']}}));
     }
 
     await Promise.all(promises);

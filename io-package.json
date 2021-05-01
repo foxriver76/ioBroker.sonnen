@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.7.2",
+        "version": "1.7.3",
         "news": {
+            "1.7.3": {
+                "en": "we now update objects if attributes are updated, but preserve common.name attribute",
+                "de": "Wir aktualisieren jetzt Objekte, wenn Attribute aktualisiert werden, behalten jedoch das Attribut common.name bei",
+                "ru": "теперь мы обновляем объекты, если атрибуты обновлены, но сохраняем атрибут common.name",
+                "pt": "agora atualizamos objetos se os atributos são atualizados, mas preservamos o atributo common.name",
+                "nl": "we werken nu objecten bij als attributen worden bijgewerkt, maar behouden het kenmerk common.name",
+                "fr": "nous mettons maintenant à jour les objets si les attributs sont mis à jour, mais conservons l'attribut common.name",
+                "it": "ora aggiorniamo gli oggetti se gli attributi vengono aggiornati, ma preserviamo l'attributo common.name",
+                "es": "ahora actualizamos los objetos si se actualizan los atributos, pero preservamos el atributo common.name",
+                "pl": "teraz aktualizujemy obiekty, jeśli atrybuty są aktualizowane, ale zachowujemy atrybut common.name",
+                "zh-cn": "现在，如果属性已更新，我们将更新对象，但保留common.name属性"
+            },
             "1.7.2": {
                 "en": "we fixed some type issues (fixes #58)",
                 "de": "Wir haben einige Typprobleme behoben (Fixes # 58).",
