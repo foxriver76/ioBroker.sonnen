@@ -64,7 +64,7 @@ vis.binds['sonnen'] = {
         function onChange(obj, newVal, oldVal) {
             console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: objectChange ' + obj.type + ' - ' + newVal + ' - ' + oldVal);
             //$div.find('.template-value').html(newVal);
-            let id = obj.type.split('.')[3];
+            const id = obj.type.split('.')[3];
             switch (id) {
                 case 'userSoc':
                     $('#soc-value').text(newVal + ' %');
@@ -76,14 +76,43 @@ vis.binds['sonnen'] = {
                 case 'gridFeedIn':
                     break;
                 case 'flowConsumptionBattery':
-                    break;
                 case 'flowGridBattery':
                 case 'flowConsumptionGrid':
                 case 'flowProductionBattery':
-                    break;
                 case 'flowConsumptionProduction':
-                    break;
                 case 'flowProductionGrid':
+                    // if one on the flows changed we have to cross check so do it everytime
+                    if (!(vis.states['sonnen.0.status.flowConsumptionBattery.val'] || vis.states['sonnen.0.status.flowGridBattery.val'] ||
+                        vis.states ['sonnen.0.status.flowProductionBattery.val'])) {
+                        // no flow to battery disable line
+                        $('.battery-line').hide();
+                    } else {
+                        $('.battery-line').show();
+                    }
+
+                    if (!(vis.states['sonnen.0.status.flowConsumptionBattery.val'] || vis.states['sonnen.0.status.flowConsumptionGrid.val'] ||
+                        vis.states['sonnen.0.status.flowConsumptionProduction.val'])) {
+                        // no consumption disable house line
+                        $('.house-line').hide();
+                    } else {
+                        $('.house-line').show();
+                    }
+
+                    if (!(vis.states['sonnen.0.status.flowProductionBattery.val'] || vis.states['sonnen.0.status.flowProductionGrid.val'] ||
+                        vis.states['sonnen.0.status.flowConsumptionProduction.val'])) {
+                        // no production disable photovoltaics-line line
+                        $('.photovoltaics-line').hide();
+                    } else {
+                        $('.photovoltaics-line').show();
+                    }
+
+                    if (!(vis.states['sonnen.0.status.flowGridBattery.val'] || vis.states['sonnen.0.status.flowProductionGrid.val'] ||
+                        vis.states['sonnen.0.status.flowConsumptionGrid.val'])) {
+                        // no grid disable photovoltaics-line line
+                        $('.grid-line').hide();
+                    } else {
+                        $('.grid-line').show();
+                    }
                     break;
                 default:
                     console.error(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: objectChange unknown id: ' + id);
@@ -91,7 +120,7 @@ vis.binds['sonnen'] = {
 
         }
 
-        let dps = [
+        const dps = [
             'sonnen.0.status.userSoc',
             'sonnen.0.status.consumption',
             'sonnen.0.status.production',
@@ -111,17 +140,42 @@ vis.binds['sonnen'] = {
             vis.conn.subscribe(dps);
 
             // ad onChange listener
-            for (var i = 0; i < dps.length; i++) {
+            for (let i = 0; i < dps.length; i++) {
                 dps[i] = dps[i] + '.val';
                 vis.states.bind(dps[i], onChange);
             } // endFor
 
             // give vis ability to destroy on change
-            var $div = $('#' + widgetID);
+            const $div = $('#' + widgetID);
             $div.data('bound', dps);
             $div.data('bindHandler', onChange);
 
+            // set initial values
             $('#soc-value').text(states['sonnen.0.status.userSoc'].val + ' %');
+
+            if (!(states['sonnen.0.status.flowConsumptionBattery'].val || states['sonnen.0.status.flowGridBattery'].val ||
+            states ['sonnen.0.status.flowProductionBattery'].val)) {
+                // no flow to battery disable line
+                $('.battery-line').hide();
+            }
+
+            if (!(states['sonnen.0.status.flowConsumptionBattery'].val || states['sonnen.0.status.flowConsumptionGrid'].val ||
+            states['sonnen.0.status.flowConsumptionProduction'].val)) {
+                // no consumption disable house line
+                $('.house-line').hide();
+            }
+
+            if (!(states['sonnen.0.status.flowProductionBattery'].val || states['sonnen.0.status.flowProductionGrid'].val ||
+                states['sonnen.0.status.flowConsumptionProduction'].val)) {
+                // no production disable photovoltaics-line line
+                $('.photovoltaics-line').hide();
+            }
+
+            if (!(states['sonnen.0.status.flowGridBattery'].val || states['sonnen.0.status.flowProductionGrid'].val ||
+                states['sonnen.0.status.flowConsumptionGrid'].val)) {
+                // no grid disable photovoltaics-line line
+                $('.grid-line').hide();
+            }
         });
     }
 };
