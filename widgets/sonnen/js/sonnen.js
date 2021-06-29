@@ -60,17 +60,39 @@ vis.binds['sonnen'] = {
         $('#' + widgetID).html(text);
 
         // subscribe on updates of value
-        function onChange(e, newVal, oldVal) {
-            $div.find('.template-value').html(newVal);
+        function onChange(obj, newVal, oldVal) {
+            console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: objectChange ' + JSON.stringify(obj) + ' - ' + newVal + ' - ' + oldVal);
+            //$div.find('.template-value').html(newVal);
         }
 
-        if (data.oid) {
-            vis.states.bind(data.oid + '.val', onChange);
-            //remember bound state that vis can release if didnt needed
-            $div.data('bound', [data.oid + '.val']);
-            //remember onchange handler to release bound states
+        let dps = [
+            'sonnen.0.status.userSoc',
+            'sonnen.0.status.consumption',
+            'sonnen.0.status.production',
+            'sonnen.0.status.gridFeedIn',
+            'sonnen.0.status.flowConsumptionBattery',
+            'sonnen.0.status.flowGridBattery',
+            'sonnen.0.status.flowConsumptionGrid',
+            'sonnen.0.status.flowProductionBattery'
+        ];
+
+        // Update states and subscribe to changes
+        vis.conn.getStates(dps, function (error, states) {
+            console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: Subscribing to state changes');
+            vis.updateStates(states);
+            vis.conn.subscribe(dps);
+
+            // ad onChange listener
+            for (var i = 0; i < dps.length; i++) {
+                dps[i] = dps[i] + '.val';
+                vis.states.bind(dps[i], onChange);
+            } // endFor
+
+            // give vis ability to destroy on change
+            var $div = $('#' + widgetID);
+            $div.data('bound', dps);
             $div.data('bindHandler', onChange);
-        }
+        });
     }
 };
 
