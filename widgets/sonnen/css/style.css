@@ -1,4 +1,84 @@
 /* Style your widget here */
 .grid {
-    vertical-align: middle;
+    position: absolute;
+    right: 0;
+    bottom: calc(50% - 31px - 15px);
+    box-shadow: 0 0 20px #9ecaed;
+    border-radius: 50%;
+}
+
+.house {
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 29px - 15px);
+    box-shadow: 0 0 20px #9ecaed;
+    border-radius: 50%;
+}
+
+.battery {
+    position: absolute;
+    bottom: calc(50% - 31px - 15px);
+    left: 0;
+    box-shadow: 0 0 20px #9ecaed;
+    border-radius: 50%;
+}
+
+.photovoltaics {
+    position: absolute;
+    top: 0;
+    left: calc(50% - 29px - 15px);
+    box-shadow: 0 0 20px #9ecaed;
+    border-radius: 50%;
+}
+
+.photovoltaics-line {
+    border-left: 3px solid purple;
+    height: calc(50% - 62px - 30px - 10px);
+    position: absolute;
+    box-shadow: 0 0 20px purple;
+    left: 50%;
+    margin-left: -3px;
+    top: 0;
+    margin-top: calc(62px + 30px + 10px);
+}
+
+.house-line {
+    border-left: 3px solid red;
+    height: calc(50% - 62px - 30px - 10px);
+    box-shadow: 0 0 20px red;
+    position: absolute;
+    left: 50%;
+    margin-left: -3px;
+    top: 50%;
+}
+
+.battery-line {
+    border-bottom: 3px solid forestgreen;
+    width: calc(50% - 62px - 30px - 10px);
+    height: 0;
+    bottom: 50%;
+    left: calc(62px + 30px + 10px);
+    position: absolute;
+    box-shadow: 0 0 20px forestgreen;
+    margin-bottom: -3px;
+    margin-top: 50%;
+}
+
+.grid-line {
+    border-bottom: 3px solid orange;
+    width: calc(50% - 62px - 30px - 10px);
+    box-shadow: 0 0 20px orange;
+    height: 0;
+    left: 50%;
+    bottom: 50%;
+    position: absolute;
+    margin-bottom: -3px;
+    margin-top: 50%;
+}
+
+.img {
+    border: 0;
+    width: 58px;
+    height: 62px;
+    padding: 15px;
 }

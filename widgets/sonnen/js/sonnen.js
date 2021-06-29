@@ -48,10 +48,14 @@ vis.binds['sonnen'] = {
         }
 
         let text = '';
-        text += '<img src="widgets/sonnen/img/sonnen.png" alt="sonnen" class="grid"/>';
-        text += '<img src="widgets/sonnen/img/sonnen.png" alt="sonnen" class="house"/>';
-        text += '<img src="widgets/sonnen/img/sonnen.png" alt="sonnen" class="battery"/>';
-        text += '<img src="widgets/sonnen/img/sonnen.png" alt="sonnen" class="photovoltaics"/>';
+        text += '<div class="grid"><img src="widgets/sonnen/img/grid.svg" alt="grid" class="img"/></div>';
+        text += '<div class="house"><img src="widgets/sonnen/img/house.svg" alt="house" class="img"/></div>';
+        text += '<div class="battery"><img src="widgets/sonnen/img/battery.svg" alt="battery" class="img"/></div>';
+        text += '<div class="photovoltaics"><img src="widgets/sonnen/img/photovoltaics.svg" alt="photovoltaics" class="img"/></div>';
+        text += '<div class="photovoltaics-line"></div>';
+        text += '<div class="house-line"></div>';
+        text += '<div class="battery-line"></div>';
+        text += '<div class="grid-line"></div>';
 
         $('#' + widgetID).html(text);
 
