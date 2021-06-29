@@ -3,7 +3,7 @@
     position: absolute;
     right: 5px;
     bottom: calc(50% - 31px - 15px);
-    box-shadow: 0 0 20px #9ecaed;
+    box-shadow: 0 0 20px orange;
     border-radius: 50%;
 }
 
@@ -11,7 +11,7 @@
     position: absolute;
     bottom: 5px;
     left: calc(50% - 29px - 15px);
-    box-shadow: 0 0 20px #9ecaed;
+    box-shadow: 0 0 20px red;
     border-radius: 50%;
 }
 
@@ -19,7 +19,7 @@
     position: absolute;
     bottom: calc(50% - 31px - 15px);
     left: 5px;
-    box-shadow: 0 0 20px #9ecaed;
+    box-shadow: 0 0 20px forestgreen;
     border-radius: 50%;
 }
 
@@ -27,7 +27,7 @@
     position: absolute;
     top: 5px;
     left: calc(50% - 29px - 15px);
-    box-shadow: 0 0 20px #9ecaed;
+    box-shadow: 0 0 20px purple;
     border-radius: 50%;
 }
 
@@ -94,4 +94,5 @@
 
 .value {
     color: black;
+    font-weight: bold;
 }
