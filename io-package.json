@@ -199,6 +199,7 @@
             "Moritz Heusinger <moritz.heusinger@gmail.com>"
         ],
         "docs": {
+            "en": "README.md",
             "de": "docs/de/README.md"
         },
         "platform": "Javascript/Node.js",
@@ -221,7 +222,8 @@
         "connectionType": "local",
         "dataSource": "poll",
         "license": "MIT",
-        "messagebox": false
+        "messagebox": false,
+        "restartAdapters": ["vis"]
     },
     "native": {
         "ip": "",
