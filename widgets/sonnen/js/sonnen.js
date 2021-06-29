@@ -56,13 +56,39 @@ vis.binds['sonnen'] = {
         text += '<div class="house-line"></div>';
         text += '<div class="battery-line"></div>';
         text += '<div class="grid-line"></div>';
+        text += '<div id="soc"><p class="value" id="soc-value"></p></div>';
 
         $('#' + widgetID).html(text);
 
         // subscribe on updates of value
         function onChange(obj, newVal, oldVal) {
-            console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: objectChange ' + JSON.stringify(obj) + ' - ' + newVal + ' - ' + oldVal);
+            console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: objectChange ' + obj.type + ' - ' + newVal + ' - ' + oldVal);
             //$div.find('.template-value').html(newVal);
+            let id = obj.type.split('.')[3];
+            switch (id) {
+                case 'userSoc':
+                    $('#soc-value').text(newVal + ' %');
+                    break;
+                case 'consumption':
+                    break;
+                case 'production':
+                    break;
+                case 'gridFeedIn':
+                    break;
+                case 'flowConsumptionBattery':
+                    break;
+                case 'flowGridBattery':
+                case 'flowConsumptionGrid':
+                case 'flowProductionBattery':
+                    break;
+                case 'flowConsumptionProduction':
+                    break;
+                case 'flowProductionGrid':
+                    break;
+                default:
+                    console.error(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: objectChange unknown id: ' + id);
+            }
+
         }
 
         let dps = [
@@ -73,7 +99,9 @@ vis.binds['sonnen'] = {
             'sonnen.0.status.flowConsumptionBattery',
             'sonnen.0.status.flowGridBattery',
             'sonnen.0.status.flowConsumptionGrid',
-            'sonnen.0.status.flowProductionBattery'
+            'sonnen.0.status.flowProductionBattery',
+            'sonnen.0.status.flowConsumptionProduction',
+            'sonnen.0.status.flowProductionGrid'
         ];
 
         // Update states and subscribe to changes
@@ -92,6 +120,8 @@ vis.binds['sonnen'] = {
             var $div = $('#' + widgetID);
             $div.data('bound', dps);
             $div.data('bindHandler', onChange);
+
+            $('#soc-value').text(states['sonnen.0.status.userSoc'].val + ' %');
         });
     }
 };

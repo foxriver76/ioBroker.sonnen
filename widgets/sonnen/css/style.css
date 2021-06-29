@@ -82,3 +82,16 @@
     height: 62px;
     padding: 15px;
 }
+
+#soc {
+    position: absolute;
+    bottom: calc(50% - 31px - 15px);
+    left: calc(29px + 15px - 25px + 5px);
+    width: 50px;
+    height: 15px;
+    text-align: center;
+}
+
+.value {
+    color: black;
+}
