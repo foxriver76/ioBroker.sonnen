@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.7.3",
+        "version": "1.8.0",
         "news": {
+            "1.8.0": {
+                "en": "added widget",
+                "de": "Widget hinzugefügt",
+                "ru": "добавлен виджет",
+                "pt": "widget adicionado",
+                "nl": "toegevoegde widget",
+                "fr": "widget ajouté",
+                "it": "widget aggiunto",
+                "es": "widget añadido",
+                "pl": "dodano widżet",
+                "zh-cn": "添加小部件"
+            },
             "1.7.3": {
                 "en": "we now update objects if attributes are updated, but preserve common.name attribute",
                 "de": "Wir aktualisieren jetzt Objekte, wenn Attribute aktualisiert werden, behalten jedoch das Attribut common.name bei",
@@ -223,7 +235,9 @@
         "dataSource": "poll",
         "license": "MIT",
         "messagebox": false,
-        "restartAdapters": ["vis"]
+        "restartAdapters": [
+            "vis"
+        ]
     },
     "native": {
         "ip": "",

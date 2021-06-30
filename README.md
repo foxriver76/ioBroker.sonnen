@@ -12,6 +12,10 @@
 The developers of this module are in no way endorsed by or affiliated with sonnen GmbH,
 or any associated subsidiaries, logos or trademarks.
 
+## Widget
+From version 1.8.0 on, the adapter comes with a vis widget.
+![Widget](/docs/en/media/widgetPreview.png)
+
 ## Installation
 You can either install the adapter via the ioBroker web interface or on your local machine via npm.
 
@@ -290,6 +294,9 @@ The channel consists of read-only states of type `number`, providing information
 	### __WORK IN PROGRESS__
 -->
 
+### 1.8.0 (2021-06-30)
+* (foxriver76) added widget
+
 ### 1.7.3 (2021-05-01)
 * (foxriver76) we now update objects if attributes are updated, but preserve common.name attribute
 
@@ -376,7 +383,7 @@ The channel consists of read-only states of type `number`, providing information
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2018-2020 Moritz Heusinger <moritz.heusinger@gmail.com>
+Copyright (c) 2018-2021 Moritz Heusinger <moritz.heusinger@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
