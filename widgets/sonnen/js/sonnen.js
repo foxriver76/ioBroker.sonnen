@@ -57,6 +57,9 @@ vis.binds['sonnen'] = {
         text += '<div class="battery-line"></div>';
         text += '<div class="grid-line"></div>';
         text += '<div id="soc"><p class="value" id="soc-value"></p></div>';
+        text += '<div id="consumption"><p class="value" id="consumption-value"></p></div>';
+        text += '<div id="production"><p class="value" id="production-value"></p></div>';
+        text += '<div id="grid"><p class="value" id="grid-value"></p></div>';
 
         $('#' + widgetID).html(text);
 
@@ -70,10 +73,13 @@ vis.binds['sonnen'] = {
                     $('#soc-value').text(newVal + ' %');
                     break;
                 case 'consumption':
+                    $('#consumption-value').text(newVal + ' W');
                     break;
                 case 'production':
+                    $('#production-value').text(newVal + ' W');
                     break;
                 case 'gridFeedIn':
+                    $('#grid-value').text(newVal + ' W');
                     break;
                 case 'flowConsumptionBattery':
                 case 'flowGridBattery':
@@ -152,6 +158,9 @@ vis.binds['sonnen'] = {
 
             // set initial values
             $('#soc-value').text(states['sonnen.0.status.userSoc'].val + ' %');
+            $('#consumption-value').text(states['sonnen.0.status.consumption'].val + ' W');
+            $('#production-value').text(states['sonnen.0.status.production'].val + ' W');
+            $('#grid-value').text(states['sonnen.0.status.gridFeedIn'].val + ' W');
 
             if (!(states['sonnen.0.status.flowConsumptionBattery'].val || states['sonnen.0.status.flowGridBattery'].val ||
             states ['sonnen.0.status.flowProductionBattery'].val)) {
