@@ -13,18 +13,18 @@ $.extend(
     systemDictionary,
     {
         // Add your translations here, e.g.:
-        // "size": {
-        // 	"en": "Size",
-        // 	"de": "Größe",
-        // 	"ru": "Размер",
-        // 	"pt": "Tamanho",
-        // 	"nl": "Grootte",
-        // 	"fr": "Taille",
-        // 	"it": "Dimensione",
-        // 	"es": "Talla",
-        // 	"pl": "Rozmiar",
-        // 	"zh-cn": "尺寸"
-        // }
+        'mainColor': {
+            'en': 'primary color',
+            'de': 'Primärfarbe',
+            'ru': 'Основной цвет',
+            'pt': 'cor primária',
+            'nl': 'primaire kleur',
+            'fr': 'couleur primaire',
+            'it': 'colore primario',
+            'es': 'color primario',
+            'pl': 'kolor podstawowy',
+            'zh-cn': '原色'
+        }
     }
 );
 
@@ -38,8 +38,9 @@ vis.binds['sonnen'] = {
         }
     },
     createWidget: function (widgetID, view, data, style) {
+        let mainColor = data._data.mainColor || '#181A27';
         console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: Trying to render widget');
-        const $div = $('#' + widgetID);
+        let $div = $('#' + widgetID);
         // if nothing found => wait
         if (!$div.length) {
             return setTimeout(function () {
@@ -49,27 +50,27 @@ vis.binds['sonnen'] = {
 
         let text = '';
         text += '<div class="grid"><svg class="img" xmlns="http://www.w3.org/2000/svg" width="31" height="33" viewBox="0 0 31 33">\n' +
-            '    <g fill="none" fill-rule="evenodd" stroke="#181A27" stroke-linecap="round" stroke-linejoin="round">\n' +
+            '    <g fill="none" fill-rule="evenodd" stroke="' + mainColor + '" stroke-linecap="round" stroke-linejoin="round">\n' +
             '        <path d="M.5 32.5h30M25 32.5L18.523.5h-5.858L6 32.5M19.379 3.5H26.5M4.5 3.5H12M21 11.5h4.5M5.508 11.5H10"/>\n' +
             '        <path d="M19.5 6.5l-9.5 9 14 13"/>\n' +
             '        <path d="M11.5 6.5l9.5 9-14 13"/>\n' +
             '    </g>\n' +
             '</svg>\n</div>';
         text += '<div class="house"><svg class="img" xmlns="http://www.w3.org/2000/svg" width="37" height="31" viewBox="0 0 37 31">\n' +
-            '    <g fill="none" fill-rule="evenodd" stroke="#181A27" stroke-linecap="round" stroke-linejoin="round">\n' +
+            '    <g fill="none" fill-rule="evenodd" stroke="' + mainColor + '" stroke-linecap="round" stroke-linejoin="round">\n' +
             '        <path d="M36.204 12.656L18.602.463 1 12.656"/>\n' +
             '        <path d="M6.5 9v21.5h4v-12h8v12h12V9"/>\n' +
             '    </g>\n' +
             '</svg>\n</div>';
         text += '<div class="battery"><svg class="img" xmlns="http://www.w3.org/2000/svg" width="29" height="31" viewBox="0 0 29 31">\n' +
-            '    <g fill="none" fill-rule="evenodd" stroke="#181A27">\n' +
+            '    <g fill="none" fill-rule="evenodd" stroke="' + mainColor + '">\n' +
             '        <rect width="28" height="30" x=".5" y=".5" rx="1"/>\n' +
             '        <path stroke-width=".9" d="M14.5 13.5c1.678 0 3.039-1.343 3.039-3s-1.36-3-3.039-3c-1.678 0-3.039 1.343-3.039 3s1.36 3 3.039 3z"/>\n' +
             '        <path stroke-linecap="round" d="M10.5 16.5h8"/>\n' +
             '    </g>\n' +
             '</svg>\n</div>';
         text += '<div class="photovoltaics"><svg class="img" xmlns="http://www.w3.org/2000/svg" width="43" height="28" viewBox="0 0 43 28">\n' +
-            '    <g fill="none" fill-rule="evenodd" stroke="#181A27" stroke-linejoin="round">\n' +
+            '    <g fill="none" fill-rule="evenodd" stroke="' + mainColor + '" stroke-linejoin="round">\n' +
             '        <path d="M36.5.5h-30l-6 22h42z"/>\n' +
             '        <path stroke-width=".5" d="M21.5.5v22M12.5.5l-3 22M30.5.5l3 22"/>\n' +
             '        <path stroke-linecap="round" stroke-width=".5" d="M5.496 6h32.008M3.5 13h36"/>\n' +
@@ -91,7 +92,7 @@ vis.binds['sonnen'] = {
         function onChange(obj, newVal, oldVal) {
             console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: objectChange ' + obj.type + ' - ' + newVal + ' - ' + oldVal);
             //$div.find('.template-value').html(newVal);
-            const id = obj.type.split('.')[3];
+            let id = obj.type.split('.')[3];
             switch (id) {
                 case 'userSoc':
                     $('#soc-value').text(newVal + ' %');
@@ -150,7 +151,7 @@ vis.binds['sonnen'] = {
 
         }
 
-        const dps = [
+        let dps = [
             'sonnen.0.status.userSoc',
             'sonnen.0.status.consumption',
             'sonnen.0.status.production',
@@ -176,7 +177,7 @@ vis.binds['sonnen'] = {
             } // endFor
 
             // give vis ability to destroy on change
-            const $div = $('#' + widgetID);
+            let $div = $('#' + widgetID);
             $div.data('bound', dps);
             $div.data('bindHandler', onChange);
 
@@ -185,6 +186,8 @@ vis.binds['sonnen'] = {
             $('#consumption-value').text(states['sonnen.0.status.consumption'].val + ' W');
             $('#production-value').text(states['sonnen.0.status.production'].val + ' W');
             $('#grid-value').text(states['sonnen.0.status.gridFeedIn'].val + ' W');
+            // change color
+            $('.value').css('color', mainColor);
 
             if (!(states['sonnen.0.status.flowConsumptionBattery'].val || states['sonnen.0.status.flowGridBattery'].val ||
             states ['sonnen.0.status.flowProductionBattery'].val)) {
