@@ -85,6 +85,7 @@ vis.binds['sonnen'] = {
         text += '<div id="consumption"><p class="value" id="consumption-value"></p></div>';
         text += '<div id="production"><p class="value" id="production-value"></p></div>';
         text += '<div id="grid"><p class="value" id="grid-value"></p></div>';
+        text += '<div id="pac"><p class="value" id="pac-value"></p></div>';
 
         $('#' + widgetID).html(text);
 
@@ -105,6 +106,9 @@ vis.binds['sonnen'] = {
                     break;
                 case 'gridFeedIn':
                     $('#grid-value').text(newVal + ' W');
+                    break;
+                case 'pacTotal':
+                    $('#pac-value').text(newVal + ' W');
                     break;
                 case 'flowConsumptionBattery':
                 case 'flowGridBattery':
@@ -156,6 +160,7 @@ vis.binds['sonnen'] = {
             'sonnen.0.status.consumption',
             'sonnen.0.status.production',
             'sonnen.0.status.gridFeedIn',
+            'sonnen.0.status.pacTotal',
             'sonnen.0.status.flowConsumptionBattery',
             'sonnen.0.status.flowGridBattery',
             'sonnen.0.status.flowConsumptionGrid',
@@ -186,6 +191,7 @@ vis.binds['sonnen'] = {
             $('#consumption-value').text(states['sonnen.0.status.consumption'].val + ' W');
             $('#production-value').text(states['sonnen.0.status.production'].val + ' W');
             $('#grid-value').text(states['sonnen.0.status.gridFeedIn'].val + ' W');
+            $('#pac-value').text(states['sonnen.0.status.pacTotal'].val + ' W');
             // change color
             $('.value').css('color', mainColor);
 

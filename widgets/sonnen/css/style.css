@@ -85,6 +85,15 @@
 
 #soc {
     position: absolute;
+    bottom: calc(50% - 31px + 15px + 5px);
+    left: calc(29px + 26px - 25px + 5px);
+    width: 50px;
+    height: 15px;
+    text-align: center;
+}
+
+#pac {
+    position: absolute;
     bottom: calc(50% - 31px);
     left: calc(29px + 26px - 25px + 5px);
     width: 50px;
