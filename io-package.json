@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.8.0",
+        "version": "1.8.1",
         "news": {
+            "1.8.1": {
+                "en": "widget now has flow directions",
+                "de": "Widget hat jetzt Flussrichtungen",
+                "ru": "виджет теперь имеет направления потока",
+                "pt": "widget agora tem direções de fluxo",
+                "nl": "widget heeft nu stroomrichtingen",
+                "fr": "le widget a maintenant des directions de flux",
+                "it": "il widget ora ha le direzioni di flusso",
+                "es": "el widget ahora tiene direcciones de flujo",
+                "pl": "widget ma teraz wskazówki przepływu",
+                "zh-cn": "小部件现在有流向"
+            },
             "1.8.0": {
                 "en": "added widget",
                 "de": "Widget hinzugefügt",

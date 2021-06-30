@@ -77,10 +77,18 @@ vis.binds['sonnen'] = {
             '        <path stroke-linecap="round" d="M31.5 22.602V27.5M11.5 22.5v5"/>\n' +
             '    </g>\n' +
             '</svg>\n</div>';
-        text += '<div class="photovoltaics-line"></div>';
-        text += '<div class="house-line"></div>';
-        text += '<div class="battery-line"></div>';
-        text += '<div class="grid-line"></div>';
+        text += '<div class="photovoltaics-line"> <svg height="100%" width="100%">\n' +
+            '  <line class="photovoltaics-line-svg line-svg" x1="0" y1="0" x2="0" y2="5000" />\n' +
+            '</svg> </div>';
+        text += '<div class="house-line"> <svg height="100%" width="100%">\n' +
+            '  <line class="house-line-svg line-svg" x1="0" y1="0" x2="0" y2="5000" />\n' +
+            '</svg> </div>';
+        text += '<div class="battery-line"> <svg height="210" width="100%">\n' +
+            '  <line class="battery-line-svg line-svg" x1="0" y1="0" x2="5000" y2="0" />\n' +
+            '</svg> </div>';
+        text += '<div class="grid-line"> <svg height="210" width="100%">\n' +
+            '  <line class="grid-line-svg line-svg" x1="0" y1="0" x2="5000" y2="0" />\n' +
+            '</svg> </div>';
         text += '<div id="soc"><p class="value" id="soc-value"></p></div>';
         text += '<div id="consumption"><p class="value" id="consumption-value"></p></div>';
         text += '<div id="production"><p class="value" id="production-value"></p></div>';
@@ -106,9 +114,22 @@ vis.binds['sonnen'] = {
                     break;
                 case 'gridFeedIn':
                     $('#grid-value').text(newVal + ' W');
+                    if (parseInt(newVal) > 0) {
+                        // positive means we are feeding in
+                        $('.grid-line-svg').css('animation', 'dash 10s linear reverse infinite');
+                    } else {
+                        $('.grid-line-svg').css('animation', 'dash 10s linear infinite');
+                    }
                     break;
                 case 'pacTotal':
                     $('#pac-value').text(newVal + ' W');
+                    break;
+                case 'batteryCharging':
+                    if (newVal) {
+                        $('.battery-line-svg').css('animation', 'dash 10s linear infinite');
+                    } else {
+                        $('.battery-line-svg').css('animation', 'dash 10s reverse linear infinite');
+                    }
                     break;
                 case 'flowConsumptionBattery':
                 case 'flowGridBattery':
@@ -166,7 +187,8 @@ vis.binds['sonnen'] = {
             'sonnen.0.status.flowConsumptionGrid',
             'sonnen.0.status.flowProductionBattery',
             'sonnen.0.status.flowConsumptionProduction',
-            'sonnen.0.status.flowProductionGrid'
+            'sonnen.0.status.flowProductionGrid',
+            'sonnen.0.status.batteryCharging'
         ];
 
         // Update states and subscribe to changes
@@ -217,6 +239,20 @@ vis.binds['sonnen'] = {
                 states['sonnen.0.status.flowConsumptionGrid'].val)) {
                 // no grid disable photovoltaics-line line
                 $('.grid-line').hide();
+            }
+
+            // now add the animations
+            if (states['sonnen.0.status.batteryCharging'].val) {
+                $('.battery-line-svg').css('animation', 'dash 10s linear infinite');
+            } else {
+                $('.battery-line-svg').css('animation', 'dash 10s reverse linear infinite');
+            }
+
+            if (parseInt(states['sonnen.0.status.gridFeedIn'].val) > 0) {
+                // positive means we are feeding in
+                $('.grid-line-svg').css('animation', 'dash 10s linear reverse infinite');
+            } else {
+                $('.grid-line-svg').css('animation', 'dash 10s linear infinite');
             }
         });
     }

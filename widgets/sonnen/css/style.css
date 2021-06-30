@@ -32,48 +32,71 @@
 }
 
 .photovoltaics-line {
-    border-left: 3px dashed purple;
     height: calc(50% - 62px - 52px - 10px - 5px);
-    position: absolute;
     box-shadow: 0 0 20px purple;
+    width: 4px;
+    position: absolute;
     left: 50%;
-    margin-left: -3px;
     top: 5px;
     margin-top: calc(62px + 52px + 10px);
 }
 
+.photovoltaics-line-svg {
+    stroke: purple;
+    animation: dash 10s reverse linear infinite;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 50;
+    }
+}
+
 .house-line {
-    border-left: 3px dashed red;
     height: calc(50% - 62px - 52px - 10px - 5px);
-    box-shadow: 0 0 20px red;
     position: absolute;
     left: 50%;
-    margin-left: -3px;
     top: 50%;
+    box-shadow: 0 0 20px red;
+    width: 4px;
+}
+
+.house-line-svg {
+    stroke: red;
+    animation: dash 10s reverse linear infinite;
 }
 
 .battery-line {
-    border-bottom: 3px dashed forestgreen;
     width: calc(50% - 62px - 52px - 10px - 5px);
-    height: 0;
+    height: 4px;
+    box-shadow: 0 0 20px forestgreen;
     bottom: 50%;
     left: calc(62px + 52px + 10px);
     position: absolute;
-    box-shadow: 0 0 20px forestgreen;
-    margin-bottom: -3px;
     margin-top: 50%;
 }
 
+.battery-line-svg {
+    stroke: forestgreen;
+}
+
 .grid-line {
-    border-bottom: 3px dashed orange;
     width: calc(50% - 62px - 52px - 10px - 5px);
+    height: 4px;
     box-shadow: 0 0 20px orange;
-    height: 0;
     left: 50%;
     bottom: 50%;
     position: absolute;
-    margin-bottom: -3px;
     margin-top: 50%;
+}
+
+.grid-line-svg {
+    stroke: orange;
+}
+
+.line-svg {
+    stroke-dasharray: 6px;
+    stroke-width: 8px;
 }
 
 .img {
