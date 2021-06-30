@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.8.1",
+        "version": "1.8.2",
         "news": {
+            "1.8.2": {
+                "en": "widget: css classes now have adapter specific names to avoid conflicts",
+                "de": "Widget: CSS-Klassen haben jetzt adapterspezifische Namen, um Konflikte zu vermeiden",
+                "ru": "виджет: классы css теперь имеют имена, специфичные для адаптера, чтобы избежать конфликтов",
+                "pt": "widget: classes css agora têm nomes específicos de adaptadores para evitar conflitos",
+                "nl": "widget: CSS-klassen hebben nu adapterspecifieke namen om conflicten te voorkomen",
+                "fr": "widget : les classes CSS ont désormais des noms spécifiques à l'adaptateur pour éviter les conflits",
+                "it": "widget: le classi CSS ora hanno nomi specifici dell'adattatore per evitare conflitti",
+                "es": "widget: las clases css ahora tienen nombres específicos de adaptadores para evitar conflictos",
+                "pl": "widget: klasy css mają teraz specyficzne nazwy adapterów, aby uniknąć konfliktów",
+                "zh-cn": "小部件：css 类现在具有特定于适配器的名称以避免冲突"
+            },
             "1.8.1": {
                 "en": "widget now has flow directions",
                 "de": "Widget hat jetzt Flussrichtungen",
