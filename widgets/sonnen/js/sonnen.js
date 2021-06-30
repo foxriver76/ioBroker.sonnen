@@ -48,10 +48,34 @@ vis.binds['sonnen'] = {
         }
 
         let text = '';
-        text += '<div class="grid"><img src="widgets/sonnen/img/grid.svg" alt="grid" class="img"/></div>';
-        text += '<div class="house"><img src="widgets/sonnen/img/house.svg" alt="house" class="img"/></div>';
-        text += '<div class="battery"><img src="widgets/sonnen/img/battery.svg" alt="battery" class="img"/></div>';
-        text += '<div class="photovoltaics"><img src="widgets/sonnen/img/photovoltaics.svg" alt="photovoltaics" class="img"/></div>';
+        text += '<div class="grid"><svg class="img" xmlns="http://www.w3.org/2000/svg" width="31" height="33" viewBox="0 0 31 33">\n' +
+            '    <g fill="none" fill-rule="evenodd" stroke="#181A27" stroke-linecap="round" stroke-linejoin="round">\n' +
+            '        <path d="M.5 32.5h30M25 32.5L18.523.5h-5.858L6 32.5M19.379 3.5H26.5M4.5 3.5H12M21 11.5h4.5M5.508 11.5H10"/>\n' +
+            '        <path d="M19.5 6.5l-9.5 9 14 13"/>\n' +
+            '        <path d="M11.5 6.5l9.5 9-14 13"/>\n' +
+            '    </g>\n' +
+            '</svg>\n</div>';
+        text += '<div class="house"><svg class="img" xmlns="http://www.w3.org/2000/svg" width="37" height="31" viewBox="0 0 37 31">\n' +
+            '    <g fill="none" fill-rule="evenodd" stroke="#181A27" stroke-linecap="round" stroke-linejoin="round">\n' +
+            '        <path d="M36.204 12.656L18.602.463 1 12.656"/>\n' +
+            '        <path d="M6.5 9v21.5h4v-12h8v12h12V9"/>\n' +
+            '    </g>\n' +
+            '</svg>\n</div>';
+        text += '<div class="battery"><svg class="img" xmlns="http://www.w3.org/2000/svg" width="29" height="31" viewBox="0 0 29 31">\n' +
+            '    <g fill="none" fill-rule="evenodd" stroke="#181A27">\n' +
+            '        <rect width="28" height="30" x=".5" y=".5" rx="1"/>\n' +
+            '        <path stroke-width=".9" d="M14.5 13.5c1.678 0 3.039-1.343 3.039-3s-1.36-3-3.039-3c-1.678 0-3.039 1.343-3.039 3s1.36 3 3.039 3z"/>\n' +
+            '        <path stroke-linecap="round" d="M10.5 16.5h8"/>\n' +
+            '    </g>\n' +
+            '</svg>\n</div>';
+        text += '<div class="photovoltaics"><svg class="img" xmlns="http://www.w3.org/2000/svg" width="43" height="28" viewBox="0 0 43 28">\n' +
+            '    <g fill="none" fill-rule="evenodd" stroke="#181A27" stroke-linejoin="round">\n' +
+            '        <path d="M36.5.5h-30l-6 22h42z"/>\n' +
+            '        <path stroke-width=".5" d="M21.5.5v22M12.5.5l-3 22M30.5.5l3 22"/>\n' +
+            '        <path stroke-linecap="round" stroke-width=".5" d="M5.496 6h32.008M3.5 13h36"/>\n' +
+            '        <path stroke-linecap="round" d="M31.5 22.602V27.5M11.5 22.5v5"/>\n' +
+            '    </g>\n' +
+            '</svg>\n</div>';
         text += '<div class="photovoltaics-line"></div>';
         text += '<div class="house-line"></div>';
         text += '<div class="battery-line"></div>';
