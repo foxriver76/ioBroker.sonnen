@@ -13,7 +13,7 @@ $.extend(
     systemDictionary,
     {
         // Add your translations here, e.g.:
-        'mainColor': {
+        'sonnenMainColor': {
             'en': 'primary color',
             'de': 'Primärfarbe',
             'ru': 'Основной цвет',
@@ -25,7 +25,7 @@ $.extend(
             'pl': 'kolor podstawowy',
             'zh-cn': '原色'
         },
-        'instance': {
+        'sonnenInstance': {
             'en': 'adapter instance',
             'de': 'Adapterinstanz',
             'ru': 'экземпляр адаптера',
@@ -50,8 +50,8 @@ vis.binds['sonnen'] = {
         }
     },
     createWidget: function (widgetID, view, data, style) {
-        let mainColor = data._data.mainColor || '#181A27';
-        let instance = data._data.instance || 'sonnen.0';
+        let mainColor = data._data.sonnenMainColor || '#181A27';
+        let instance = data._data.sonnenInstance || 'sonnen.0';
         console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: Trying to render widget');
         let $div = $('#' + widgetID);
         // if nothing found => wait

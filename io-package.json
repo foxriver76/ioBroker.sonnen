@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.8.3",
+        "version": "1.8.4",
         "news": {
+            "1.8.4": {
+                "en": "widget: we made ID names more adapter specific to avoid getting wrong translations",
+                "de": "Widget: Wir haben ID-Namen adapterspezifischer gemacht, um falsche Übersetzungen zu vermeiden",
+                "ru": "виджет: мы сделали имена идентификаторов более специфичными для адаптера, чтобы избежать неправильных переводов",
+                "pt": "widget: tornamos os nomes de ID mais específicos para o adaptador para evitar traduções erradas",
+                "nl": "widget: we hebben ID-namen adapterspecifiek gemaakt om te voorkomen dat je verkeerde vertalingen krijgt",
+                "fr": "widget : nous avons rendu les noms d'ID plus spécifiques à l'adaptateur pour éviter les mauvaises traductions",
+                "it": "widget: abbiamo reso i nomi ID più specifici per l'adattatore per evitare di ottenere traduzioni sbagliate",
+                "es": "widget: hicimos los nombres de ID más específicos del adaptador para evitar traducciones incorrectas",
+                "pl": "widget: stworzyliśmy nazwy identyfikatorów bardziej specyficzne dla adapterów, aby uniknąć błędnych tłumaczeń",
+                "zh-cn": "小部件：我们使 ID 名称更加特定于适配器以避免翻译错误"
+            },
             "1.8.3": {
                 "en": "widget: we now allow defining the used adapter instance",
                 "de": "Widget: Wir erlauben jetzt die Definition der verwendeten Adapterinstanz",
@@ -228,10 +240,6 @@
                 "it": "aggiungere la compatibilità in modalità compatta",
                 "es": "añadir compatibilidad de modo compacto",
                 "pl": "dodaj kompatybilność w trybie kompaktowym"
-            },
-            "1.0.2": {
-                "en": "use adapter core",
-                "de": "Nutzung von Adapter-Core"
             }
         },
         "title": "sonnen",
