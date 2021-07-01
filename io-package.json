@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.8.2",
+        "version": "1.8.3",
         "news": {
+            "1.8.3": {
+                "en": "widget: we now allow defining the used adapter instance",
+                "de": "Widget: Wir erlauben jetzt die Definition der verwendeten Adapterinstanz",
+                "ru": "виджет: теперь мы позволяем определять используемый экземпляр адаптера",
+                "pt": "widget: agora permitimos definir a instância do adaptador usado",
+                "nl": "widget: we staan nu toe om de gebruikte adapterinstantie te definiëren",
+                "fr": "widget : nous permettons maintenant de définir l'instance d'adaptateur utilisée",
+                "it": "widget: ora consentiamo di definire l'istanza dell'adattatore utilizzata",
+                "es": "widget: ahora permitimos definir la instancia de adaptador utilizada",
+                "pl": "widget: umożliwiamy teraz zdefiniowanie używanej instancji adaptera",
+                "zh-cn": "小部件：我们现在允许定义使用的适配器实例"
+            },
             "1.8.2": {
                 "en": "widget: css classes now have adapter specific names to avoid conflicts",
                 "de": "Widget: CSS-Klassen haben jetzt adapterspezifische Namen, um Konflikte zu vermeiden",

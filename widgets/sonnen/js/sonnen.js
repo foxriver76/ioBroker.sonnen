@@ -24,6 +24,18 @@ $.extend(
             'es': 'color primario',
             'pl': 'kolor podstawowy',
             'zh-cn': '原色'
+        },
+        'instance': {
+            'en': 'adapter instance',
+            'de': 'Adapterinstanz',
+            'ru': 'экземпляр адаптера',
+            'pt': 'instância do adaptador',
+            'nl': 'adapter instantie',
+            'fr': "instance d'adaptateur",
+            'it': "istanza dell'adattatore",
+            'es': 'instancia de adaptador',
+            'pl': 'instancja adaptera',
+            'zh-cn': '适配器实例'
         }
     }
 );
@@ -39,6 +51,7 @@ vis.binds['sonnen'] = {
     },
     createWidget: function (widgetID, view, data, style) {
         let mainColor = data._data.mainColor || '#181A27';
+        let instance = data._data.instance || 'sonnen.0';
         console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: Trying to render widget');
         let $div = $('#' + widgetID);
         // if nothing found => wait
@@ -138,32 +151,32 @@ vis.binds['sonnen'] = {
                 case 'flowConsumptionProduction':
                 case 'flowProductionGrid':
                     // if one on the flows changed we have to cross check so do it everytime
-                    if (!(vis.states['sonnen.0.status.flowConsumptionBattery.val'] || vis.states['sonnen.0.status.flowGridBattery.val'] ||
-                        vis.states ['sonnen.0.status.flowProductionBattery.val'])) {
+                    if (!(vis.states[instance + '.status.flowConsumptionBattery.val'] || vis.states[instance + '.status.flowGridBattery.val'] ||
+                        vis.states [instance + '.status.flowProductionBattery.val'])) {
                         // no flow to battery disable line
                         $('.sonnen-battery-line').hide();
                     } else {
                         $('.sonnen-battery-line').show();
                     }
 
-                    if (!(vis.states['sonnen.0.status.flowConsumptionBattery.val'] || vis.states['sonnen.0.status.flowConsumptionGrid.val'] ||
-                        vis.states['sonnen.0.status.flowConsumptionProduction.val'])) {
+                    if (!(vis.states[instance + '.status.flowConsumptionBattery.val'] || vis.states[instance + '.status.flowConsumptionGrid.val'] ||
+                        vis.states[instance + '.status.flowConsumptionProduction.val'])) {
                         // no consumption disable house line
                         $('.sonnen-house-line').hide();
                     } else {
                         $('.sonnen-house-line').show();
                     }
 
-                    if (!(vis.states['sonnen.0.status.flowProductionBattery.val'] || vis.states['sonnen.0.status.flowProductionGrid.val'] ||
-                        vis.states['sonnen.0.status.flowConsumptionProduction.val'])) {
+                    if (!(vis.states[instance + '.status.flowProductionBattery.val'] || vis.states[instance + '.status.flowProductionGrid.val'] ||
+                        vis.states[instance + '.status.flowConsumptionProduction.val'])) {
                         // no production disable photovoltaics-line line
                         $('.sonnen-photovoltaics-line').hide();
                     } else {
                         $('.sonnen-photovoltaics-line').show();
                     }
 
-                    if (!(vis.states['sonnen.0.status.flowGridBattery.val'] || vis.states['sonnen.0.status.flowProductionGrid.val'] ||
-                        vis.states['sonnen.0.status.flowConsumptionGrid.val'])) {
+                    if (!(vis.states[instance + '.status.flowGridBattery.val'] || vis.states[instance + '.status.flowProductionGrid.val'] ||
+                        vis.states[instance + '.status.flowConsumptionGrid.val'])) {
                         // no grid disable photovoltaics-line line
                         $('.sonnen-grid-line').hide();
                     } else {
@@ -177,18 +190,18 @@ vis.binds['sonnen'] = {
         }
 
         let dps = [
-            'sonnen.0.status.userSoc',
-            'sonnen.0.status.consumption',
-            'sonnen.0.status.production',
-            'sonnen.0.status.gridFeedIn',
-            'sonnen.0.status.pacTotal',
-            'sonnen.0.status.flowConsumptionBattery',
-            'sonnen.0.status.flowGridBattery',
-            'sonnen.0.status.flowConsumptionGrid',
-            'sonnen.0.status.flowProductionBattery',
-            'sonnen.0.status.flowConsumptionProduction',
-            'sonnen.0.status.flowProductionGrid',
-            'sonnen.0.status.batteryCharging'
+            instance + '.status.userSoc',
+            instance + '.status.consumption',
+            instance + '.status.production',
+            instance + '.status.gridFeedIn',
+            instance + '.status.pacTotal',
+            instance + '.status.flowConsumptionBattery',
+            instance + '.status.flowGridBattery',
+            instance + '.status.flowConsumptionGrid',
+            instance + '.status.flowProductionBattery',
+            instance + '.status.flowConsumptionProduction',
+            instance + '.status.flowProductionGrid',
+            instance + '.status.batteryCharging'
         ];
 
         // Update states and subscribe to changes
@@ -209,46 +222,46 @@ vis.binds['sonnen'] = {
             $div.data('bindHandler', onChange);
 
             // set initial values
-            $('#sonnen-soc-value').text(states['sonnen.0.status.userSoc'].val + ' %');
-            $('#sonnen-consumption-value').text(states['sonnen.0.status.consumption'].val + ' W');
-            $('#sonnen-production-value').text(states['sonnen.0.status.production'].val + ' W');
-            $('#sonnen-grid-value').text(states['sonnen.0.status.gridFeedIn'].val + ' W');
-            $('#sonnen-pac-value').text(states['sonnen.0.status.pacTotal'].val + ' W');
+            $('#sonnen-soc-value').text(states[instance + '.status.userSoc'].val + ' %');
+            $('#sonnen-consumption-value').text(states[instance + '.status.consumption'].val + ' W');
+            $('#sonnen-production-value').text(states[instance + '.status.production'].val + ' W');
+            $('#sonnen-grid-value').text(states[instance + '.status.gridFeedIn'].val + ' W');
+            $('#sonnen-pac-value').text(states[instance + '.status.pacTotal'].val + ' W');
             // change color
             $('.sonnen-value').css('color', mainColor);
 
-            if (!(states['sonnen.0.status.flowConsumptionBattery'].val || states['sonnen.0.status.flowGridBattery'].val ||
-            states ['sonnen.0.status.flowProductionBattery'].val)) {
+            if (!(states[instance + '.status.flowConsumptionBattery'].val || states[instance + '.status.flowGridBattery'].val ||
+            states [instance + '.status.flowProductionBattery'].val)) {
                 // no flow to battery disable line
                 $('.sonnen-battery-line').hide();
             }
 
-            if (!(states['sonnen.0.status.flowConsumptionBattery'].val || states['sonnen.0.status.flowConsumptionGrid'].val ||
-            states['sonnen.0.status.flowConsumptionProduction'].val)) {
+            if (!(states[instance + '.status.flowConsumptionBattery'].val || states[instance + '.status.flowConsumptionGrid'].val ||
+            states[instance + '.status.flowConsumptionProduction'].val)) {
                 // no consumption disable house line
                 $('.sonnen-house-line').hide();
             }
 
-            if (!(states['sonnen.0.status.flowProductionBattery'].val || states['sonnen.0.status.flowProductionGrid'].val ||
-                states['sonnen.0.status.flowConsumptionProduction'].val)) {
+            if (!(states[instance + '.status.flowProductionBattery'].val || states[instance + '.status.flowProductionGrid'].val ||
+                states[instance + '.status.flowConsumptionProduction'].val)) {
                 // no production disable photovoltaics-line line
                 $('.sonnen-photovoltaics-line').hide();
             }
 
-            if (!(states['sonnen.0.status.flowGridBattery'].val || states['sonnen.0.status.flowProductionGrid'].val ||
-                states['sonnen.0.status.flowConsumptionGrid'].val)) {
+            if (!(states[instance + '.status.flowGridBattery'].val || states[instance + '.status.flowProductionGrid'].val ||
+                states[instance + '.status.flowConsumptionGrid'].val)) {
                 // no grid disable photovoltaics-line line
                 $('.sonnen-grid-line').hide();
             }
 
             // now add the animations
-            if (states['sonnen.0.status.batteryCharging'].val) {
+            if (states[instance + '.status.batteryCharging'].val) {
                 $('.sonnen-battery-line-svg').css('animation', 'sonnen-dash 10s linear infinite');
             } else {
                 $('.sonnen-battery-line-svg').css('animation', 'sonnen-dash 10s reverse linear infinite');
             }
 
-            if (parseInt(states['sonnen.0.status.gridFeedIn'].val) > 0) {
+            if (parseInt(states[instance + '.status.gridFeedIn'].val) > 0) {
                 // positive means we are feeding in
                 $('.sonnen-grid-line-svg').css('animation', 'sonnen-dash 10s linear reverse infinite');
             } else {

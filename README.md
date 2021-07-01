@@ -294,6 +294,9 @@ The channel consists of read-only states of type `number`, providing information
 	### __WORK IN PROGRESS__
 -->
 
+### 1.8.3 (2021-07-01)
+* (foxriver76) widget: we now allow defining the used adapter instance
+
 ### 1.8.2 (2021-06-30)
 * (foxriver76) widget: css classes now have adapter specific names to avoid conflicts
 
