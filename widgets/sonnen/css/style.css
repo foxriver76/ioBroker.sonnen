@@ -1,5 +1,5 @@
 /* Style your widget here */
-.sonnen-grid {
+#sonnen-grid {
     position: absolute;
     right: 5px;
     bottom: calc(50% - 31px - 26px);
@@ -7,7 +7,7 @@
     border-radius: 50%;
 }
 
-.sonnen-house {
+#sonnen-house {
     position: absolute;
     bottom: 5px;
     left: calc(50% - 29px - 26px);
@@ -15,7 +15,7 @@
     border-radius: 50%;
 }
 
-.sonnen-battery {
+#sonnen-battery {
     position: absolute;
     bottom: calc(50% - 31px - 26px);
     left: 5px;
@@ -23,7 +23,7 @@
     border-radius: 50%;
 }
 
-.sonnen-photovoltaics {
+#sonnen-photovoltaics {
     position: absolute;
     top: 5px;
     left: calc(50% - 29px - 26px);
@@ -31,17 +31,18 @@
     border-radius: 50%;
 }
 
-.sonnen-photovoltaics-line {
+#sonnen-photovoltaics-line {
     height: calc(50% - 62px - 52px - 10px - 5px);
     box-shadow: 0 0 20px purple;
     width: 4px;
     position: absolute;
-    left: 50%;
+    left: calc(50% - 2px);
     top: 5px;
     margin-top: calc(62px + 52px + 10px);
+    overflow: hidden;
 }
 
-.sonnen-photovoltaics-line-svg {
+#sonnen-photovoltaics-line-svg {
     stroke: purple;
     animation: sonnen-dash 10s reverse linear infinite;
 }
@@ -52,51 +53,54 @@
     }
 }
 
-.sonnen-house-line {
+#sonnen-house-line {
     height: calc(50% - 62px - 52px - 10px - 5px);
     position: absolute;
-    left: 50%;
+    left: calc(50% - 2px);
     top: 50%;
     box-shadow: 0 0 20px red;
     width: 4px;
+    overflow: hidden;
 }
 
-.sonnen-house-line-svg {
+#sonnen-house-line-svg {
     stroke: red;
     animation: sonnen-dash 10s reverse linear infinite;
 }
 
-.sonnen-battery-line {
+#sonnen-battery-line {
     width: calc(50% - 62px - 52px - 10px - 5px);
     height: 4px;
     box-shadow: 0 0 20px forestgreen;
-    bottom: 50%;
+    bottom: calc(50% - 2px);
     left: calc(62px + 52px + 10px);
     position: absolute;
     margin-top: 50%;
+    overflow: hidden;
 }
 
-.sonnen-battery-line-svg {
+#sonnen-battery-line-svg {
     stroke: forestgreen;
 }
 
-.sonnen-grid-line {
+#sonnen-grid-line {
     width: calc(50% - 62px - 52px - 10px - 5px);
     height: 4px;
     box-shadow: 0 0 20px orange;
     left: 50%;
-    bottom: 50%;
+    bottom: calc(50% - 2px);
     position: absolute;
     margin-top: 50%;
+    overflow: hidden;
 }
 
-.sonnen-grid-line-svg {
+#sonnen-grid-line-svg {
     stroke: orange;
 }
 
 .sonnen-line-svg {
     stroke-dasharray: 6px;
-    stroke-width: 8px;
+    stroke-width: 5000px;
 }
 
 .sonnen-img {
@@ -106,7 +110,7 @@
     padding: 26px;
 }
 
-#sonnen-soc {
+.sonnen-soc {
     position: absolute;
     bottom: calc(50% - 31px + 15px + 5px);
     left: calc(29px + 26px - 25px + 5px);
@@ -115,7 +119,7 @@
     text-align: center;
 }
 
-#sonnen-pac {
+.sonnen-pac {
     position: absolute;
     bottom: calc(50% - 31px);
     left: calc(29px + 26px - 25px + 5px);
@@ -124,7 +128,7 @@
     text-align: center;
 }
 
-#sonnen-consumption {
+.sonnen-consumption {
     position: absolute;
     bottom: calc(5px + 26px);
     left: calc(50% - 25px);
@@ -133,19 +137,19 @@
     text-align: center;
 }
 
-#sonnen-production {
+.sonnen-grid {
     position: absolute;
-    top: calc(62px + 5px + 13px);
-    left: calc(50% - 25px);
+    bottom: calc(50% - 31px);
+    left: calc(100% - 50px - 26px - 5px);
     width: 50px;
     height: 15px;
     text-align: center;
 }
 
-#sonnen-grid {
+.sonnen-production {
     position: absolute;
-    bottom: calc(50% - 31px);
-    left: calc(100% - 50px - 26px - 5px);
+    top: calc(62px + 5px + 13px);
+    left: calc(50% - 25px);
     width: 50px;
     height: 15px;
     text-align: center;

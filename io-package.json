@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.8.4",
+        "version": "1.8.5",
         "news": {
+            "1.8.5": {
+                "en": "widget: stroke width can now be configured",
+                "de": "Widget: Strichstärke kann jetzt konfiguriert werden",
+                "ru": "виджет: теперь можно настроить ширину штриха",
+                "pt": "widget: a largura do traço agora pode ser configurada",
+                "nl": "widget: lijnbreedte kan nu worden geconfigureerd",
+                "fr": "widget : la largeur du trait peut maintenant être configurée",
+                "it": "widget: ora è possibile configurare la larghezza del tratto",
+                "es": "widget: ahora se puede configurar el ancho del trazo",
+                "pl": "widget: można teraz skonfigurować szerokość obrysu",
+                "zh-cn": "小部件：现在可以配置笔画宽度"
+            },
             "1.8.4": {
                 "en": "widget: we made ID names more adapter specific to avoid getting wrong translations",
                 "de": "Widget: Wir haben ID-Namen adapterspezifischer gemacht, um falsche Übersetzungen zu vermeiden",
@@ -229,17 +241,6 @@
                 "it": "bugfix per gli stati di controllo",
                 "es": "corrección de errores para los estados de control",
                 "pl": "bugfix dla stanów kontrolnych"
-            },
-            "1.1.1": {
-                "en": "add compact mode compatibility",
-                "de": "Kompatibilität im Kompaktmodus hinzufügen",
-                "ru": "добавить компактный режим совместимости",
-                "pt": "adicionar compatibilidade no modo compacto",
-                "nl": "voeg compatibiliteit in compacte modus toe",
-                "fr": "ajouter une compatibilité en mode compact",
-                "it": "aggiungere la compatibilità in modalità compatta",
-                "es": "añadir compatibilidad de modo compacto",
-                "pl": "dodaj kompatybilność w trybie kompaktowym"
             }
         },
         "title": "sonnen",
