@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.8.5",
+        "version": "1.8.6",
         "news": {
+            "1.8.6": {
+                "en": "widget: we removed debug logging and unnecessary template functions\nwidget: we now cache the jquery selectors to improve the performance",
+                "de": "Widget: Wir haben das Debug-Logging und unnötige Vorlagenfunktionen entfernt\nWidget: Wir cachen jetzt die jquery-Selektoren, um die Leistung zu verbessern",
+                "ru": "виджет: убрали ведение журнала отладки и ненужные функции шаблона\nвиджет: теперь мы кэшируем селекторы jquery для повышения производительности",
+                "pt": "widget: removemos o registro de depuração e funções de modelo desnecessárias\nwidget: agora armazenamos em cache os seletores jquery para melhorar o desempenho",
+                "nl": "widget: we hebben logboekregistratie voor foutopsporing en onnodige sjabloonfuncties verwijderd\nwidget: we cachen nu de jQuery-selectors om de prestaties te verbeteren",
+                "fr": "widget : nous avons supprimé la journalisation de débogage et les fonctions de modèle inutiles\nwidget : nous mettons maintenant en cache les sélecteurs jquery pour améliorer les performances",
+                "it": "widget: abbiamo rimosso la registrazione di debug e le funzioni del modello non necessarie\nwidget: ora mettiamo nella cache i selettori jquery per migliorare le prestazioni",
+                "es": "widget: eliminamos el registro de depuración y las funciones de plantilla innecesarias\nwidget: ahora almacenamos en caché los selectores de jquery para mejorar el rendimiento",
+                "pl": "widget: usunęliśmy logowanie debugowania i niepotrzebne funkcje szablonów\nwidget: teraz buforujemy selektory jquery, aby poprawić wydajność",
+                "zh-cn": "小部件：我们删除了调试日志记录和不必要的模板功能\n小部件：我们现在缓存 jquery 选择器以提高性能"
+            },
             "1.8.5": {
                 "en": "widget: stroke width can now be configured",
                 "de": "Widget: Strichstärke kann jetzt konfiguriert werden",
@@ -230,17 +242,6 @@
                 "es": "apoyar la otra API sonnen",
                 "pl": "obsługuje inne API sonnen",
                 "zh-cn": "支持其他sonnen API"
-            },
-            "1.1.2": {
-                "en": "bugfix for control states",
-                "de": "Bugfix für Kontrollzustände",
-                "ru": "исправление для состояний управления",
-                "pt": "bugfix para estados de controle",
-                "nl": "bugfix voor besturingsstatussen",
-                "fr": "correction de bug pour les états de contrôle",
-                "it": "bugfix per gli stati di controllo",
-                "es": "corrección de errores para los estados de control",
-                "pl": "bugfix dla stanów kontrolnych"
             }
         },
         "title": "sonnen",

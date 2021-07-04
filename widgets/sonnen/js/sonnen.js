@@ -1,9 +1,9 @@
 /*
-    ioBroker.vis template Widget-Set
+    ioBroker.vis sonnen Widget-Set
 
     version: "0.0.1"
 
-    Copyright 2021 Author author@mail.com
+    Copyright 2021 Moritz Heusinger moritz.heusinger@gmail.com
 */
 'use strict';
 
@@ -54,13 +54,6 @@ $.extend(
 
 // this code can be placed directly in sonnen.html
 vis.binds['sonnen'] = {
-    version: '0.0.1',
-    showVersion: function () {
-        if (vis.binds['sonnen'].version) {
-            console.log('Version sonnen: ' + vis.binds['sonnen'].version);
-            vis.binds['sonnen'].version = null;
-        }
-    },
     createWidget: function (widgetID, view, data, style) {
         let mainColor = data._data.sonnenMainColor || '#181A27';
         let instance = data._data.sonnenInstance || 'sonnen.0';
@@ -123,40 +116,51 @@ vis.binds['sonnen'] = {
         text += '<div class="sonnen-grid"><p class="sonnen-value" id="sonnen-grid-value"></p></div>';
         text += '<div class="sonnen-pac"><p class="sonnen-value" id="sonnen-pac-value"></p></div>';
 
-        $('#' + widgetID).html(text);
+        $div.html(text);
 
-        // subscribe on updates of value
-        function onChange(obj, newVal, oldVal) {
-            console.log(new Date().toLocaleTimeString() + ' sonnen[' + widgetID + ']: objectChange ' + obj.type + ' - ' + newVal + ' - ' + oldVal);
-            //$div.find('.template-value').html(newVal);
+        // cache all jQuery selectors
+        let $sonnenGridLineSvg = $('#sonnen-grid-line-svg');
+        let $sonnenBatteryLineSvg = $('#sonnen-battery-line-svg');
+        let $sonnenPhotovoltaicsLine = $('#sonnen-photovoltaics-line');
+        let $sonnenHouseLine = $('#sonnen-house-line');
+        let $sonnenBatteryLine = $('#sonnen-battery-line');
+        let $sonnenGridLine = $('#sonnen-grid-line');
+        let $sonnenSocValue = $('#sonnen-soc-value');
+        let $sonnenConsumptionValue = $('#sonnen-consumption-value');
+        let $sonnenProductionValue = $('#sonnen-production-value');
+        let $sonnenGridValue = $('#sonnen-grid-value');
+        let $sonnenPacValue = $('#sonnen-pac-value');
+
+        // subscribe on updates of value, we can use obj, newVal, oldVal
+        function onChange(obj, newVal) {
             let id = obj.type.split('.')[3];
             switch (id) {
                 case 'userSoc':
-                    $('#sonnen-soc-value').text(newVal + ' %');
+                    $sonnenSocValue.text(newVal + ' %');
                     break;
                 case 'consumption':
-                    $('#sonnen-consumption-value').text(newVal + ' W');
+                    $sonnenConsumptionValue.text(newVal + ' W');
                     break;
                 case 'production':
-                    $('#sonnen-production-value').text(newVal + ' W');
+                    $sonnenProductionValue.text(newVal + ' W');
                     break;
                 case 'gridFeedIn':
-                    $('#sonnen-grid-value').text(newVal + ' W');
+                    $sonnenGridValue.text(newVal + ' W');
                     if (parseInt(newVal) > 0) {
                         // positive means we are feeding in
-                        $('#sonnen-grid-line-svg').css('animation', 'sonnen-dash 10s linear reverse infinite');
+                        $sonnenGridLineSvg.css('animation', 'sonnen-dash 10s linear reverse infinite');
                     } else {
-                        $('#sonnen-grid-line-svg').css('animation', 'sonnen-dash 10s linear infinite');
+                        $sonnenGridLineSvg.css('animation', 'sonnen-dash 10s linear infinite');
                     }
                     break;
                 case 'pacTotal':
-                    $('#sonnen-pac-value').text(newVal + ' W');
+                    $sonnenPacValue.text(newVal + ' W');
                     break;
                 case 'batteryCharging':
                     if (newVal) {
-                        $('#sonnen-battery-line-svg').css('animation', 'sonnen-dash 10s linear infinite');
+                        $sonnenBatteryLineSvg.css('animation', 'sonnen-dash 10s linear infinite');
                     } else {
-                        $('#sonnen-battery-line-svg').css('animation', 'sonnen-dash 10s reverse linear infinite');
+                        $sonnenBatteryLineSvg.css('animation', 'sonnen-dash 10s reverse linear infinite');
                     }
                     break;
                 case 'flowConsumptionBattery':
@@ -169,33 +173,33 @@ vis.binds['sonnen'] = {
                     if (!(vis.states[instance + '.status.flowConsumptionBattery.val'] || vis.states[instance + '.status.flowGridBattery.val'] ||
                         vis.states [instance + '.status.flowProductionBattery.val'])) {
                         // no flow to battery disable line
-                        $('#sonnen-battery-line').hide();
+                        $sonnenBatteryLine.hide();
                     } else {
-                        $('#sonnen-battery-line').show();
+                        $sonnenBatteryLine.show();
                     }
 
                     if (!(vis.states[instance + '.status.flowConsumptionBattery.val'] || vis.states[instance + '.status.flowConsumptionGrid.val'] ||
                         vis.states[instance + '.status.flowConsumptionProduction.val'])) {
                         // no consumption disable house line
-                        $('#sonnen-house-line').hide();
+                        $sonnenHouseLine.hide();
                     } else {
-                        $('#sonnen-house-line').show();
+                        $sonnenHouseLine.show();
                     }
 
                     if (!(vis.states[instance + '.status.flowProductionBattery.val'] || vis.states[instance + '.status.flowProductionGrid.val'] ||
                         vis.states[instance + '.status.flowConsumptionProduction.val'])) {
                         // no production disable photovoltaics-line line
-                        $('#sonnen-photovoltaics-line').hide();
+                        $sonnenPhotovoltaicsLine.hide();
                     } else {
-                        $('#sonnen-photovoltaics-line').show();
+                        $sonnenPhotovoltaicsLine.show();
                     }
 
                     if (!(vis.states[instance + '.status.flowGridBattery.val'] || vis.states[instance + '.status.flowProductionGrid.val'] ||
                         vis.states[instance + '.status.flowConsumptionGrid.val'])) {
                         // no grid disable photovoltaics-line line
-                        $('#sonnen-grid-line').hide();
+                        $sonnenGridLine.hide();
                     } else {
-                        $('#sonnen-grid-line').show();
+                        $sonnenGridLine.show();
                     }
                     break;
                 default:
@@ -232,71 +236,68 @@ vis.binds['sonnen'] = {
             } // endFor
 
             // give vis ability to destroy on change
-            let $div = $('#' + widgetID);
             $div.data('bound', dps);
             $div.data('bindHandler', onChange);
 
             // set configured stroke width
-            $('#sonnen-photovoltaics-line').css('width', strokeWidth);
-            $('#sonnen-photovoltaics-line').css('left', 'calc(50% - '+ halfStrokeWidth + ')');
+            $sonnenPhotovoltaicsLine.css('width', strokeWidth);
+            $sonnenPhotovoltaicsLine.css('left', 'calc(50% - '+ halfStrokeWidth + ')');
 
-            $('#sonnen-house-line').css('width', strokeWidth);
-            $('#sonnen-house-line').css('left', 'calc(50% - '+ halfStrokeWidth + ')');
+            $sonnenHouseLine.css('width', strokeWidth);
+            $sonnenHouseLine.css('left', 'calc(50% - '+ halfStrokeWidth + ')');
 
-            $('#sonnen-battery-line').css('height', strokeWidth);
-            $('#sonnen-battery-line').css('bottom', 'calc(50% - '+ halfStrokeWidth + ')');
+            $sonnenBatteryLine.css('height', strokeWidth);
+            $sonnenBatteryLine.css('bottom', 'calc(50% - '+ halfStrokeWidth + ')');
 
-            $('#sonnen-grid-line').css('height', strokeWidth);
-            $('#sonnen-grid-line').css('bottom', 'calc(50% - '+ halfStrokeWidth + ')');
+            $sonnenGridLine.css('height', strokeWidth);
+            $sonnenGridLine.css('bottom', 'calc(50% - '+ halfStrokeWidth + ')');
 
             // set initial values
-            $('#sonnen-soc-value').text(states[instance + '.status.userSoc'].val + ' %');
-            $('#sonnen-consumption-value').text(states[instance + '.status.consumption'].val + ' W');
-            $('#sonnen-production-value').text(states[instance + '.status.production'].val + ' W');
-            $('#sonnen-grid-value').text(states[instance + '.status.gridFeedIn'].val + ' W');
-            $('#sonnen-pac-value').text(states[instance + '.status.pacTotal'].val + ' W');
+            $sonnenSocValue.text(states[instance + '.status.userSoc'].val + ' %');
+            $sonnenConsumptionValue.text(states[instance + '.status.consumption'].val + ' W');
+            $sonnenProductionValue.text(states[instance + '.status.production'].val + ' W');
+            $sonnenGridValue.text(states[instance + '.status.gridFeedIn'].val + ' W');
+            $sonnenPacValue.text(states[instance + '.status.pacTotal'].val + ' W');
             // change color
             $('.sonnen-value').css('color', mainColor);
 
             if (!(states[instance + '.status.flowConsumptionBattery'].val || states[instance + '.status.flowGridBattery'].val ||
             states [instance + '.status.flowProductionBattery'].val)) {
                 // no flow to battery disable line
-                $('#sonnen-battery-line').hide();
+                $sonnenBatteryLine.hide();
             }
 
             if (!(states[instance + '.status.flowConsumptionBattery'].val || states[instance + '.status.flowConsumptionGrid'].val ||
             states[instance + '.status.flowConsumptionProduction'].val)) {
                 // no consumption disable house line
-                $('#sonnen-house-line').hide();
+                $sonnenHouseLine.hide();
             }
 
             if (!(states[instance + '.status.flowProductionBattery'].val || states[instance + '.status.flowProductionGrid'].val ||
                 states[instance + '.status.flowConsumptionProduction'].val)) {
                 // no production disable photovoltaics-line line
-                $('#sonnen-photovoltaics-line').hide();
+                $sonnenPhotovoltaicsLine.hide();
             }
 
             if (!(states[instance + '.status.flowGridBattery'].val || states[instance + '.status.flowProductionGrid'].val ||
                 states[instance + '.status.flowConsumptionGrid'].val)) {
                 // no grid disable photovoltaics-line line
-                $('#sonnen-grid-line').hide();
+                $sonnenGridLine.hide();
             }
 
             // now add the animations
             if (states[instance + '.status.batteryCharging'].val) {
-                $('#sonnen-battery-line-svg').css('animation', 'sonnen-dash 10s linear infinite');
+                $sonnenBatteryLineSvg.css('animation', 'sonnen-dash 10s linear infinite');
             } else {
-                $('#sonnen-battery-line-svg').css('animation', 'sonnen-dash 10s reverse linear infinite');
+                $sonnenBatteryLineSvg.css('animation', 'sonnen-dash 10s reverse linear infinite');
             }
 
             if (parseInt(states[instance + '.status.gridFeedIn'].val) > 0) {
                 // positive means we are feeding in
-                $('#sonnen-grid-line-svg').css('animation', 'sonnen-dash 10s linear reverse infinite');
+                $sonnenGridLineSvg.css('animation', 'sonnen-dash 10s linear reverse infinite');
             } else {
-                $('#sonnen-grid-line-svg').css('animation', 'sonnen-dash 10s linear infinite');
+                $sonnenGridLineSvg.css('animation', 'sonnen-dash 10s linear infinite');
             }
         });
     }
 };
-
-vis.binds['sonnen'].showVersion();
