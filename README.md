@@ -13,7 +13,7 @@ The developers of this module are in no way endorsed by or affiliated with sonne
 or any associated subsidiaries, logos or trademarks.
 
 ## Widget
-From version 1.8.0 on, the adapter comes with a vis widget.
+From version 1.8.0 on, the adapter comes with a vis widget. The widget only works with the port 8080 API.
 ![Widget](/docs/en/media/widgetPreview.png)
 
 ## Installation
@@ -53,6 +53,7 @@ Here you can find a description of the states and how to use them. The most stat
 Note, that there are two different sonnen API's so if you are missing states, they are probably not supported.
 
 ### States
+Note: The legacy API states (API port 3480) are currently not documented
 
 #### Channel: info
 
@@ -249,6 +250,7 @@ Note, that there are two different sonnen API's so if you are missing states, th
     |boolean|R|
 
    *Read-only boolean which is true if your sonnen battery is online.* 
+
 #### Channel: control
 
 * control.charge
@@ -293,6 +295,9 @@ The channel consists of read-only states of type `number`, providing information
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+
+### __WORK IN PROGRESS__
+* (foxriver76) we now also support the legacy api (port 3480)
 
 ### 1.8.6 (2021-07-04)
 * (foxriver76) widget: we removed debug logging and unnecessary template functions

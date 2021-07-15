@@ -85,6 +85,7 @@ andere ebenfalls beschrieben werden können. Zur Suche nach einem bestimmten Dat
 der Tastenkombination "STRG + F".
 
 ### States
+Hinweis: Die States der Legacy API (Port 3480) sind derzeit nicht dokumentiert
 
 #### Channel: info
 

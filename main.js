@@ -59,21 +59,32 @@ function startAdapter(options) {
                 }
             }
 
-            requestPromise({url: `http://${ip}:8080/api/v1/status`, timeout: 2000}).then(() => {
+            try {
+                await requestPromise({url: `http://${ip}:8080/api/v1/status`, timeout: 2000});
                 adapter.log.debug(`[START] 8080 API detected`);
                 apiVersion = `new`;
-                main();
-            }).catch(e => {
+                return void main();
+            } catch (e) {
                 adapter.log.debug(`[START] It's not 8080, because ${e.message}`);
-                requestPromise(`http://${ip}:7979/rest/devices/battery/M03`).then(() => {
-                    apiVersion = `old`;
-                    adapter.log.debug(`[START] 7979 API detected`);
-                    main();
-                }).catch(e => {
-                    adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e.message}`);
-                    restartTimer = setTimeout(restartAdapter, 30000);
-                });
-            });
+            }
+
+            try {
+                await requestPromise(`http://${ip}:7979/rest/devices/battery/M03`);
+                apiVersion = `old`;
+                adapter.log.debug(`[START] 7979 API detected`);
+                return void main();
+            } catch(e) {
+                adapter.log.debug(`[START] It's not 7979, because ${e.message}`);
+            }
+
+            try {
+                await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
+                apiVersion = 'legacy';
+                return void main();
+            } catch (e) {
+                adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e.message}`);
+                restartTimer = setTimeout(restartAdapter, 30000);
+            }
         } else {
             adapter.log.warn(`[START] No IP-address set`);
         }
@@ -125,7 +136,7 @@ async function main() {
     adapter.subscribeStates(`*`);
 
     // create device namespace
-    adapter.setForeignObjectNotExists(adapter.namespace, {
+    await adapter.setForeignObjectNotExistsAsync(adapter.namespace, {
         type: `device`,
         common: {
             name: `sonnen device`
@@ -135,7 +146,11 @@ async function main() {
     adapter.log.debug(`[START] Started Adapter with: ${ip}`);
 
     if (apiVersion === `old`) {
-        return oldAPImain();
+        return void oldAPImain();
+    }
+
+    if (apiVersion === 'legacy') {
+        return void legacyAPImain();
     }
 
     const statusUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/status` : `http://${ip}:8080/api/v1/status`;
@@ -278,6 +293,90 @@ async function oldAPImain() {
         }, pollingTime);
     } //
 } // endOldAPImain
+
+async function legacyAPImain() {
+    try {
+        let data = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
+        data = JSON.parse(data);
+        let batteryId;
+        for (const device of Object.values(data.devices)) {
+            if (device.parent === 0) {
+                batteryId = device.id;
+                // create channel
+                await adapter.setObjectNotExistsAsync('main', {
+                    type: 'channel',
+                    common: {
+                        name: 'Main information'
+                    },
+                    native: {}
+                });
+
+                // this should be the sonnen battery
+                for (const attr of Object.keys(device)) {
+                    const stateVal = convertLegacyState(device[attr]);
+                    await adapter.setObjectNotExistsAsync(`main.${attr}`, {
+                        type: 'state',
+                        common: {
+                            name: attr,
+                            read: true,
+                            write: false,
+                            type: typeof stateVal,
+                            def: stateVal,
+                            role: 'state'
+                        },
+                        native: {}
+                    });
+                }
+            }
+        }
+
+        for (const device of Object.values(data.devices)) {
+            if (device.parent === batteryId) {
+                await adapter.setObjectNotExistsAsync(device.name.replace(adapter.FORBIDDEN_CHARS, '_'), {
+                    type: 'channel',
+                    common: {
+                        name: device.name
+                    },
+                    native: {}
+                });
+
+                for (const attr of Object.keys(device)) {
+                    // TODO: create the states
+                }
+            }
+        }
+    } catch (e) {
+        adapter.log.error(`Could not get initial data - restarting adapter: ${e.message}`);
+        adapter.restart();
+    }
+
+    if (!polling) {
+        polling = setInterval(() => {
+            // TODO: implement the polling mechanism
+        }, pollingTime);
+    }
+}
+
+/**
+ * Converts a state value to the correct type
+ * @param {any} stateVal - state value to convert
+ */
+function convertLegacyState(stateVal) {
+    if (stateVal === 'TRUE') {
+        return true;
+    }
+
+    if (stateVal === 'FALSE') {
+        return false;
+    }
+
+    if (!isNaN(stateVal)) {
+        // it's a number
+        return parseFloat(stateVal);
+    }
+
+    return stateVal;
+}
 
 async function requestSettings() {
     const data = await requestPromise(`http://${ip}:8080/api/configuration`);
