@@ -69,7 +69,9 @@ function startAdapter(options) {
             }
 
             try {
+                // test if both works, else use legacy, because of incomplete implementation of API
                 await requestPromise(`http://${ip}:7979/rest/devices/battery/M03`);
+                await requestPromise(`http://${ip}:7979/rest/devices/battery/M034`);
                 apiVersion = `old`;
                 adapter.log.debug(`[START] 7979 API detected`);
                 return void main();
@@ -242,11 +244,11 @@ async function oldAPImain() {
     promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
     promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
     promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
-    promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
-    promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
     promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
     promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
     promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
+    promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
+    promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
 
     try {
         await Promise.all(promises);

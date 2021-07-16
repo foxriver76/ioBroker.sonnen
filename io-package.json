@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.9.0",
+        "version": "1.9.1",
         "news": {
+            "1.9.1": {
+                "en": "use legacy API if old API is not completely implemented",
+                "de": "Verwenden Sie die alte API, wenn die alte API nicht vollständig implementiert ist",
+                "ru": "используйте устаревший API, если старый API не реализован полностью",
+                "pt": "use a API legada se a API antiga não estiver completamente implementada",
+                "nl": "gebruik legacy API als oude API niet volledig is geïmplementeerd",
+                "fr": "utiliser l'ancienne API si l'ancienne API n'est pas complètement implémentée",
+                "it": "usa l'API legacy se la vecchia API non è completamente implementata",
+                "es": "use la API heredada si la API anterior no está completamente implementada",
+                "pl": "użyj starszego API, jeśli stare API nie zostało w pełni zaimplementowane",
+                "zh-cn": "如果旧 API 没有完全实现，请使用旧 API"
+            },
             "1.9.0": {
                 "en": "we now also support the legacy API (port 3480)\nswitch from intervals to timeouts to avoid overlapping poll runs",
                 "de": "wir unterstützen jetzt auch die Legacy-API (Port 3480)\nWechseln Sie von Intervallen zu Timeouts, um überlappende Abfrageläufe zu vermeiden",
@@ -230,18 +242,6 @@
                 "es": "soporte mínimo para dos puntos finales nuevos hasta que sepamos qué necesitan los usuarios a partir de ahí",
                 "pl": "minimalna obsługa dwóch nowych punktów końcowych, dopóki nie dowiemy się, czego potrzebują użytkownicy z tego miejsca",
                 "zh-cn": "对两个新端点的最低支持，直到我们知道那里的用户需要什么"
-            },
-            "1.3.0": {
-                "en": "new state with configuration information of you sonnen battery",
-                "de": "neuer State mit Konfigurationsinformationen der sonnenBatterie",
-                "ru": "новое состояние с информацией о конфигурации вашего аккумулятора",
-                "pt": "novo estado com informações de configuração de sua bateria sonnen",
-                "nl": "nieuwe status met configuratie-informatie van uw zonne-batterij",
-                "fr": "nouvel état avec les informations de configuration de votre batterie sonnen",
-                "it": "nuovo stato con le informazioni di configurazione della batteria del tuo sonnen",
-                "es": "Nuevo estado con información de configuración de tu batería sonnen.",
-                "pl": "nowy stan z informacjami o konfiguracji baterii sonnen",
-                "zh-cn": "新的状态，你的配置信息你sonnen电池"
             }
         },
         "title": "sonnen",

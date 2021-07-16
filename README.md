@@ -296,6 +296,9 @@ The channel consists of read-only states of type `number`, providing information
 	### __WORK IN PROGRESS__
 -->
 
+### 1.9.1 (2021-07-16)
+* (foxriver76) use legacy API if old API is not completely implemented
+
 ### 1.9.0 (2021-07-16)
 * (foxriver76) we now also support the legacy API (port 3480)
 * (foxriver76) switch from intervals to timeouts to avoid overlapping poll runs
