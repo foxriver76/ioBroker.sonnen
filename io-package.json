@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.9.1",
+        "version": "1.9.2",
         "news": {
+            "1.9.2": {
+                "en": "fix for legacy API",
+                "de": "Fix für Legacy-API",
+                "ru": "исправление для устаревшего API",
+                "pt": "correção para API legada",
+                "nl": "fix voor verouderde API",
+                "fr": "correctif pour l'ancienne API",
+                "it": "correzione per API legacy",
+                "es": "corrección para API heredada",
+                "pl": "poprawka dla starszego API",
+                "zh-cn": "修复遗留 API"
+            },
             "1.9.1": {
                 "en": "use legacy API if old API is not completely implemented",
                 "de": "Verwenden Sie die alte API, wenn die alte API nicht vollständig implementiert ist",
@@ -230,18 +242,6 @@
                 "es": "agregó más traducciones",
                 "pl": "dodano więcej tłumaczeń",
                 "zh-cn": "添加了更多翻译"
-            },
-            "1.4.0": {
-                "en": "minimum support for two new endpoints until we know what users need from there",
-                "de": "Mindestunterstützung für zwei neue Endpunkte, bis wir wissen, was Benutzer von dort benötigen",
-                "ru": "минимальная поддержка двух новых конечных точек, пока мы не узнаем, что оттуда нужно пользователям",
-                "pt": "suporte mínimo para dois novos pontos de extremidade até sabermos o que os usuários precisam a partir daí",
-                "nl": "minimale ondersteuning voor twee nieuwe eindpunten totdat we weten wat gebruikers daar nodig hebben",
-                "fr": "prise en charge minimale de deux nouveaux points de terminaison jusqu'à ce que nous sachions de quoi les utilisateurs ont besoin",
-                "it": "supporto minimo per due nuovi endpoint fino a quando non sapremo di cosa hanno bisogno gli utenti da lì",
-                "es": "soporte mínimo para dos puntos finales nuevos hasta que sepamos qué necesitan los usuarios a partir de ahí",
-                "pl": "minimalna obsługa dwóch nowych punktów końcowych, dopóki nie dowiemy się, czego potrzebują użytkownicy z tego miejsca",
-                "zh-cn": "对两个新端点的最低支持，直到我们知道那里的用户需要什么"
             }
         },
         "title": "sonnen",

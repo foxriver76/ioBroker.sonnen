@@ -296,6 +296,9 @@ The channel consists of read-only states of type `number`, providing information
 	### __WORK IN PROGRESS__
 -->
 
+### 1.9.2 (2021-07-16)
+* (foxriver76) fix for legacy API
+
 ### 1.9.1 (2021-07-16)
 * (foxriver76) use legacy API if old API is not completely implemented
 

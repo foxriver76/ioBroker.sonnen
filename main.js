@@ -340,7 +340,7 @@ async function legacyAPImain() {
 
         for (const device of Object.values(data.devices)) {
             if (device.parent === batteryId) {
-                await adapter.setObjectNotExistsAsync(device.id, {
+                await adapter.setObjectNotExistsAsync(device.id.toString(), {
                     type: 'channel',
                     common: {
                         name: device.name
