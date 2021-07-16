@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.9.2",
+        "version": "1.9.3",
         "news": {
+            "1.9.3": {
+                "en": "also poll the configuration instead of updating it only once at start (closes #70)",
+                "de": "auch die Konfiguration abfragen, anstatt sie nur einmal beim Start zu aktualisieren (schließt #70)",
+                "ru": "также опросить конфигурацию вместо того, чтобы обновлять ее только один раз при запуске (закрывает # 70)",
+                "pt": "também pesquise a configuração em vez de atualizá-la apenas uma vez no início (fecha # 70)",
+                "nl": "poll ook de configuratie in plaats van deze slechts één keer bij het begin bij te werken (sluit # 70 af)",
+                "fr": "interroge également la configuration au lieu de la mettre à jour une seule fois au démarrage (ferme #70)",
+                "it": "anche interrogare la configurazione invece di aggiornarla solo una volta all'avvio (chiude #70)",
+                "es": "también sondear la configuración en lugar de actualizarla solo una vez al inicio (cierra # 70)",
+                "pl": "również odpytywanie konfiguracji zamiast aktualizowania jej tylko raz na początku (zamyka #70)",
+                "zh-cn": "还要轮询配置，而不是在开始时只更新一次（关闭 #70）"
+            },
             "1.9.2": {
                 "en": "fix for legacy API",
                 "de": "Fix für Legacy-API",
@@ -230,18 +242,6 @@
                 "es": "indicador de estado en línea agregado",
                 "pl": "dodano wskaźnik stanu online",
                 "zh-cn": "增加了在线状态指示器"
-            },
-            "1.4.2": {
-                "en": "added more translations",
-                "de": "Weitere Übersetzungen hinzugefügt",
-                "ru": "добавлено больше переводов",
-                "pt": "adicionou mais traduções",
-                "nl": "meer vertalingen toegevoegd",
-                "fr": "ajouté plus de traductions",
-                "it": "aggiunte altre traduzioni",
-                "es": "agregó más traducciones",
-                "pl": "dodano więcej tłumaczeń",
-                "zh-cn": "添加了更多翻译"
             }
         },
         "title": "sonnen",

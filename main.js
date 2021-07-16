@@ -213,6 +213,12 @@ async function main() {
             } catch (e) {
                 adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
             }
+
+            try {
+                await requestSettings();
+            } catch (e) {
+                adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e.message}`);
+            }
         } catch (e) {
             adapter.log.warn(`[REQUEST] <== ${e.message}`);
             adapter.setState(`info.connection`, false, true);
