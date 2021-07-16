@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.8.6",
+        "version": "1.9.0",
         "news": {
+            "1.9.0": {
+                "en": "we now also support the legacy API (port 3480)\nswitch from intervals to timeouts to avoid overlapping poll runs",
+                "de": "wir unterstützen jetzt auch die Legacy-API (Port 3480)\nWechseln Sie von Intervallen zu Timeouts, um überlappende Abfrageläufe zu vermeiden",
+                "ru": "теперь мы также поддерживаем устаревший API (порт 3480)\nпереключаться с интервалов на тайм-ауты, чтобы избежать дублирования опросов",
+                "pt": "agora também oferecemos suporte à API legada (porta 3480)\nmudar de intervalos para tempos limite para evitar execuções de pesquisas sobrepostas",
+                "nl": "we ondersteunen nu ook de legacy API (poort 3480)\nschakel over van intervallen naar time-outs om overlappende poll-runs te voorkomen",
+                "fr": "nous prenons désormais également en charge l'ancienne API (port 3480)\npasser des intervalles aux délais d'attente pour éviter le chevauchement des exécutions d'interrogation",
+                "it": "ora supportiamo anche l'API legacy (porta 3480)\npassare da intervalli a timeout per evitare esecuzioni di poll sovrapposte",
+                "es": "ahora también admitimos la API heredada (puerto 3480)\ncambiar de intervalos a tiempos de espera para evitar la superposición de ejecuciones de encuestas",
+                "pl": "obsługujemy teraz również starsze API (port 3480)\nprzełącz się z interwałów na limity czasu, aby uniknąć nakładania się przebiegów ankiety",
+                "zh-cn": "我们现在还支持旧 API（端口 3480）\n从间隔切换到超时以避免重叠轮询运行"
+            },
             "1.8.6": {
                 "en": "widget: we removed debug logging and unnecessary template functions\nwidget: we now cache the jquery selectors to improve the performance",
                 "de": "Widget: Wir haben das Debug-Logging und unnötige Vorlagenfunktionen entfernt\nWidget: Wir cachen jetzt die jquery-Selektoren, um die Leistung zu verbessern",
@@ -230,18 +242,6 @@
                 "es": "Nuevo estado con información de configuración de tu batería sonnen.",
                 "pl": "nowy stan z informacjami o konfiguracji baterii sonnen",
                 "zh-cn": "新的状态，你的配置信息你sonnen电池"
-            },
-            "1.2.0": {
-                "en": "support the other sonnen API",
-                "de": "unterstütze die andere sonnen API",
-                "ru": "поддерживать другой sonnen API",
-                "pt": "suporte a outra API sonnen",
-                "nl": "steun de andere sonnen API",
-                "fr": "supporte l'autre API sonnen",
-                "it": "supporta l'altra API sonnen",
-                "es": "apoyar la otra API sonnen",
-                "pl": "obsługuje inne API sonnen",
-                "zh-cn": "支持其他sonnen API"
             }
         },
         "title": "sonnen",

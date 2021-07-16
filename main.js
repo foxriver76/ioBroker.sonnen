@@ -27,14 +27,14 @@ function startAdapter(options) {
 
     adapter = new utils.Adapter(options);
 
-    adapter.on(`unload`, callback => {
+    adapter.on(`unload`, async callback => {
         try {
-            clearInterval(polling);
+            clearTimeout(polling);
             if (restartTimer) {
                 clearTimeout(restartTimer);
             }
             adapter.log.info(`[END] Stopping sonnen adapter...`);
-            adapter.setState(`info.connection`, false, true);
+            await adapter.setStateAsync(`info.connection`, false, true);
             callback();
         } catch (e) {
             callback();
@@ -83,7 +83,7 @@ function startAdapter(options) {
                 return void main();
             } catch (e) {
                 adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e.message}`);
-                restartTimer = setTimeout(restartAdapter, 30000);
+                restartTimer = setTimeout(adapter.restart, 30000);
             }
         } else {
             adapter.log.warn(`[START] No IP-address set`);
@@ -171,7 +171,7 @@ async function main() {
         const state = await adapter.getStateAsync(`info.connection`);
         if (!state || !state.val) {
             adapter.setState(`info.connection`, true, true);
-            adapter.log.debug(`[CONNECT] Connection successful established`);
+            adapter.log.debug(`[CONNECT] Connection successfuly established`);
         } // endIf
         adapter.log.debug(`[DATA] <== ${data}`);
         setBatteryStates(JSON.parse(data));
@@ -195,31 +195,32 @@ async function main() {
         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
     }
 
-    if (!polling) {
-        polling = setInterval(async () => { // poll states every [30] seconds
+    const pollStates = (async () => { // poll states every [30] seconds
+        try {
+            const data = await requestPromise(statusUrl);
+            const state  = await adapter.getStateAsync(`info.connection`);
+            if (!state || !state.val) {
+                adapter.setState(`info.connection`, true, true);
+                adapter.log.debug(`[CONNECT] Connection successfuly established`);
+            } // endIf
+            setBatteryStates(JSON.parse(data));
             try {
-                const data = await requestPromise(statusUrl);
-                adapter.getState(`info.connection`, (err, state) => {
-                    if (!state || !state.val) {
-                        adapter.setState(`info.connection`, true, true);
-                        adapter.log.debug(`[CONNECT] Connection successful established`);
-                    } // endIf
-                });
-                setBatteryStates(JSON.parse(data));
-                try {
-                    await requestInverterEndpoint();
-                    await requestPowermeterEndpoint();
-                    await requestOnlineStatus();
-                } catch (e) {
-                    adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
-                }
+                await requestInverterEndpoint();
+                await requestPowermeterEndpoint();
+                await requestOnlineStatus();
             } catch (e) {
-                adapter.log.warn(`[REQUEST] <== ${e.message}`);
-                adapter.setState(`info.connection`, false, true);
-                adapter.log.warn(`[CONNECT] Connection failed`);
+                adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
             }
-        }, pollingTime);
-    } // endIf
+        } catch (e) {
+            adapter.log.warn(`[REQUEST] <== ${e.message}`);
+            adapter.setState(`info.connection`, false, true);
+            adapter.log.warn(`[CONNECT] Connection failed`);
+        }
+
+        polling = setTimeout(pollStates, pollingTime);
+    });
+
+    pollStates();
 } // endMain
 
 /*
@@ -247,58 +248,63 @@ async function oldAPImain() {
     promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
     promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
 
-    Promise.all(promises).then(() => {
+    try {
+        await Promise.all(promises);
         const lastSync = new Date();
         adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
-        adapter.getStateAsync(`info.connection`).then(state => {
+        const state = await adapter.getStateAsync(`info.connection`);
+        if (!state.val) {
+            adapter.setState(`info.connection`, true, true);
+        }
+    } catch (e) {
+        adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
+    }
+
+    const pollStates = (async () => { // poll states every configured seconds
+        const promises = [];
+        promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
+        promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
+        promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
+        promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
+        promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
+        promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
+        promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
+        promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
+        promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
+
+        try {
+            await Promise.all(promises);
+            const lastSync = new Date();
+            adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+            const state = await adapter.getStateAsync(`info.connection`);
             if (!state.val) {
                 adapter.setState(`info.connection`, true, true);
             }
-        }).catch(() => {
-            adapter.setState(`info.connection`, true, true);
-        });
-    }).catch(e => {
-        adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
+        } catch (e) {
+            const state = await adapter.getStateAsync(`info.connection`);
+            if (state.val === true) {
+                adapter.setState(`info.connection`, false, true);
+            }
+            adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
+        }
+
+        polling = setTimeout(pollStates, pollingTime);
     });
 
-    if (!polling) {
-        polling = setInterval(() => { // poll states every configured seconds
-            const promises = [];
-            promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
-            promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
-            promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
-            promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
-            promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
-            promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
-            promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
-            promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
-            promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
-
-            Promise.all(promises).then(() => {
-                const lastSync = new Date();
-                adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
-                adapter.getStateAsync(`info.connection`).then(state => {
-                    if (!state.val) {
-                        adapter.setState(`info.connection`, true, true);
-                    }
-                });
-            }).catch(e => {
-                adapter.getStateAsync(`info.connection`).then(state => {
-                    if (state.val === true) {
-                        adapter.setState(`info.connection`, false, true);
-                    }
-                    adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
-                });
-            });
-        }, pollingTime);
-    } //
+    pollStates();
 } // endOldAPImain
 
 async function legacyAPImain() {
+    // here we store the id of the battery
+    let batteryId;
     try {
         let data = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
         data = JSON.parse(data);
-        let batteryId;
+
+        // we got data successfully -> mark as connected
+        adapter.setState(`info.connection`, true, true);
+        adapter.log.debug(`[CONNECT] Connection successfuly established`);
+
         for (const device of Object.values(data.devices)) {
             if (device.parent === 0) {
                 batteryId = device.id;
@@ -332,7 +338,7 @@ async function legacyAPImain() {
 
         for (const device of Object.values(data.devices)) {
             if (device.parent === batteryId) {
-                await adapter.setObjectNotExistsAsync(device.name.replace(adapter.FORBIDDEN_CHARS, '_'), {
+                await adapter.setObjectNotExistsAsync(device.id, {
                     type: 'channel',
                     common: {
                         name: device.name
@@ -341,20 +347,65 @@ async function legacyAPImain() {
                 });
 
                 for (const attr of Object.keys(device)) {
-                    // TODO: create the states
+                    const stateVal = convertLegacyState(device[attr]);
+                    await adapter.setObjectNotExistsAsync(`${device.id}.${attr}`, {
+                        type: 'state',
+                        common: {
+                            read: true,
+                            write: false,
+                            name: attr,
+                            type: typeof stateVal,
+                            def: stateVal,
+                            role: 'state'
+                        }
+                    });
                 }
             }
         }
     } catch (e) {
         adapter.log.error(`Could not get initial data - restarting adapter: ${e.message}`);
-        adapter.restart();
+        return void adapter.restart();
     }
 
-    if (!polling) {
-        polling = setInterval(() => {
-            // TODO: implement the polling mechanism
-        }, pollingTime);
-    }
+    const pollStates = (async () => {
+        try {
+            let data = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
+            data = JSON.parse(data);
+
+            for (const device of Object.values(data.devices)) {
+                if (device.id === batteryId) {
+                    for (const attr of Object.keys(device)) {
+                        const stateVal = convertLegacyState(device[attr]);
+                        await adapter.setStateAsync(`main.${attr}`, stateVal, true);
+                    }
+                } else if (device.parent === batteryId) {
+                    for (const attr of Object.keys(device)) {
+                        const stateVal = convertLegacyState(device[attr]);
+                        await adapter.setStateAsync(`${device.id}.${attr}`, stateVal, true);
+                    }
+                }
+            }
+
+            // update the lastSync manually
+            const lastSync = new Date();
+            adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+
+            // update the info connection state
+            const state = await adapter.getStateAsync(`info.connection`);
+            if (!state || !state.val) {
+                adapter.setState(`info.connection`, true, true);
+                adapter.log.debug(`[CONNECT] Connection successfuly established`);
+            } // endIf
+        } catch (e) {
+            adapter.log.warn(`[REQUEST] <== ${e.message}`);
+            adapter.setState(`info.connection`, false, true);
+            adapter.log.warn(`[CONNECT] Connection failed`);
+        }
+
+        setTimeout(pollStates, pollingTime);
+    });
+
+    pollStates();
 }
 
 /**
@@ -528,13 +579,6 @@ function setBatteryStates(json) {
     adapter.setState(`status.flowProductionBattery`, json.FlowProductionBattery, true);
     adapter.setState(`status.flowProductionGrid`, json.FlowProductionGrid, true);
 } // endSetBatteryStates
-
-async function restartAdapter() {
-    const obj = await adapter.getForeignObjectAsync(`system.adapter.${adapter.namespace}`);
-    if (obj) {
-        adapter.setForeignObject(`system.adapter.${adapter.namespace}`, obj);
-    }
-} // endFunctionRestartAdapter
 
 async function requestStateAndSetOldAPI(code, state) {
     let res = await requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`);
