@@ -98,9 +98,13 @@
     stroke: orange;
 }
 
+.sonnen-svg {
+    display: flex
+}
+
 .sonnen-line-svg {
     stroke-dasharray: 6px;
-    stroke-width: 5000px;
+    stroke-width: 3000px;
 }
 
 .sonnen-img {

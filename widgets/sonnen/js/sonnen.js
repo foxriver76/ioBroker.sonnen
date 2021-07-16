@@ -98,17 +98,17 @@ vis.binds['sonnen'] = {
             '        <path stroke-linecap="round" d="M31.5 22.602V27.5M11.5 22.5v5"/>\n' +
             '    </g>\n' +
             '</svg>\n</div>';
-        text += '<div id="sonnen-photovoltaics-line"> <svg height="100%" width="5000">\n' +
-            '  <line id="sonnen-photovoltaics-line-svg" class="sonnen-line-svg" x1="0" y1="0" x2="0" y2="5000" />\n' +
+        text += '<div id="sonnen-photovoltaics-line"> <svg class="sonnen-svg" height="100%" width="100%">\n' +
+            '  <line id="sonnen-photovoltaics-line-svg" class="sonnen-line-svg" x1="0" y1="0" x2="0" y2="100%" />\n' +
             '</svg> </div>';
-        text += '<div id="sonnen-house-line"> <svg height="100%" width="5000">\n' +
-            '  <line id="sonnen-house-line-svg" class="sonnen-line-svg" x1="0" y1="0" x2="0" y2="5000" />\n' +
+        text += '<div id="sonnen-house-line"> <svg class="sonnen-svg" height="100%" width="100%">\n' +
+            '  <line id="sonnen-house-line-svg" class="sonnen-line-svg" x1="0" y1="0" x2="0" y2="100%" />\n' +
             '</svg> </div>';
-        text += '<div id="sonnen-battery-line"> <svg height="5000" width="100%">\n' +
-            '  <line id="sonnen-battery-line-svg" class="sonnen-line-svg" x1="0" y1="0" x2="5000" y2="0" />\n' +
+        text += '<div id="sonnen-battery-line"> <svg class="sonnen-svg" height="100%" width="100%">\n' +
+            '  <line id="sonnen-battery-line-svg" class="sonnen-line-svg" x1="0" y1="0" x2="100%" y2="0" />\n' +
             '</svg> </div>';
-        text += '<div id="sonnen-grid-line"> <svg height="5000" width="100%">\n' +
-            '  <line id="sonnen-grid-line-svg" class="sonnen-line-svg" x1="0" y1="0" x2="5000" y2="0" />\n' +
+        text += '<div id="sonnen-grid-line"> <svg class="sonnen-svg" height="100%" width="100%">\n' +
+            '  <line id="sonnen-grid-line-svg" class="sonnen-line-svg" x1="0" y1="0" x2="100%" y2="0" />\n' +
             '</svg> </div>';
         text += '<div class="sonnen-soc"><p class="sonnen-value" id="sonnen-soc-value"></p></div>';
         text += '<div class="sonnen-consumption"><p class="sonnen-value" id="sonnen-consumption-value"></p></div>';
