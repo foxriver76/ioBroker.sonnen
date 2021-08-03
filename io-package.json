@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.9.4",
+        "version": "1.9.5",
         "news": {
+            "1.9.5": {
+                "en": "fix for horizontal flow animations in Safari (broken with 1.9.4)",
+                "de": "Fix für horizontale Flussanimationen in Safari (mit 1.9.4 defekt)",
+                "ru": "исправление для анимации горизонтального потока в Safari (сломано в 1.9.4)",
+                "pt": "correção para animações de fluxo horizontal no Safari (quebrado com 1.9.4)",
+                "nl": "fix voor horizontale stroomanimaties in Safari (gebroken met 1.9.4)",
+                "fr": "correctif pour les animations de flux horizontal dans Safari (cassé avec 1.9.4)",
+                "it": "correzione per le animazioni del flusso orizzontale in Safari (interrotto con 1.9.4)",
+                "es": "corrección para animaciones de flujo horizontal en Safari (roto con 1.9.4)",
+                "pl": "naprawiono animacje przepływu poziomego w Safari (zepsute z 1.9.4)",
+                "zh-cn": "修复 Safari 中的水平流动画（1.9.4 损坏）"
+            },
             "1.9.4": {
                 "en": "widget: make the svg smaller by using a flexbox to center the svg correctly inside the div",
                 "de": "Widget: Verkleinern Sie das SVG, indem Sie eine Flexbox verwenden, um das SVG korrekt im Div correctly zu zentrieren",
@@ -230,18 +242,6 @@
                 "es": "sondee el estado en línea siempre de nuevo si no se confirma que hay diferencias en la API, manejo de errores más específico",
                 "pl": "sonduj status online zawsze, jeśli nie potwierdzono, że istnieją różnice w interfejsie API, bardziej szczegółowa obsługa błędów",
                 "zh-cn": "如果未确认api的差异（更具体的错误处理），则始终再次轮询在线状态"
-            },
-            "1.5.2": {
-                "en": "we check if online status is supported else we do not poll it",
-                "de": "Wir prüfen, ob der Online-Status unterstützt wird. Andernfalls wird er nicht abgefragt",
-                "ru": "мы проверяем, поддерживается ли онлайн-статус, иначе мы не опрашиваем его",
-                "pt": "verificamos se o status online é suportado, caso contrário, não o pesquisamos",
-                "nl": "we controleren of de online status wordt ondersteund, anders peilen we deze niet",
-                "fr": "nous vérifions si le statut en ligne est pris en charge sinon nous ne le sondons pas",
-                "it": "controlliamo se lo stato online è supportato altrimenti non lo sondiamo",
-                "es": "comprobamos si el estado en línea es compatible; de lo contrario, no lo encuestamos",
-                "pl": "sprawdzamy, czy status online jest obsługiwany, w przeciwnym razie nie sondujemy go",
-                "zh-cn": "我们检查是否支持在线状态，否则我们不对其进行轮询"
             }
         },
         "title": "sonnen",

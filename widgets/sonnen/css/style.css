@@ -99,7 +99,8 @@
 }
 
 .sonnen-svg {
-    display: flex
+    display: flex;
+    vertical-align: text-top;
 }
 
 .sonnen-line-svg {
