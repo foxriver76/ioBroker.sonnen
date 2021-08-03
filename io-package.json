@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.9.5",
+        "version": "1.9.6",
         "news": {
-            "1.9.5": {
+            "1.9.6": {
                 "en": "fix for horizontal flow animations in Safari (broken with 1.9.4)",
                 "de": "Fix für horizontale Flussanimationen in Safari (mit 1.9.4 defekt)",
                 "ru": "исправление для анимации горизонтального потока в Safari (сломано в 1.9.4)",

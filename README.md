@@ -296,7 +296,7 @@ The channel consists of read-only states of type `number`, providing information
 	### __WORK IN PROGRESS__
 -->
 
-### 1.9.5 (2021-08-03)
+### 1.9.6 (2021-08-03)
 * (foxriver76) fix for horizontal flow animations in Safari (broken with 1.9.4)
 
 ### 1.9.4 (2021-07-17)
