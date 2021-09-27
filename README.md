@@ -297,7 +297,7 @@ The channel consists of read-only states of type `number`, providing information
 	### __WORK IN PROGRESS__
 -->
 
-### 1.9.7 (2021-09-27)
+### 1.9.8 (2021-09-27)
 * (foxriver76) make requesting online status optional for 8080 api (closes #76)
 
 ### 1.9.6 (2021-08-03)

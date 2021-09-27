@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.9.7",
+        "version": "1.9.8",
         "news": {
+            "1.9.8": {
+                "en": "make requesting online status optional for 8080 api (closes #76)",
+                "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
+                "ru": "сделать запрос онлайн-статуса необязательным для API 8080 (закрывает # 76)",
+                "pt": "tornar a solicitação de status online opcional para 8080 api (fecha # 76)",
+                "nl": "maak het aanvragen van online status optioneel voor 8080 api (sluit # 76)",
+                "fr": "rendre la demande de statut en ligne facultative pour 8080 api (ferme #76)",
+                "it": "rendere facoltativa la richiesta dello stato online per l'API 8080 (chiude #76)",
+                "es": "hacer que solicitar el estado en línea sea opcional para 8080 api (cierra # 76)",
+                "pl": "spraw, aby żądanie statusu online było opcjonalne dla 8080 api (zamyka #76)",
+                "zh-cn": "使 8080 api 的在线状态请求成为可选（关闭 #76）"
+            },
             "1.9.7": {
                 "en": "make requesting online status optional for 8080 api (closes #76)",
                 "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
@@ -230,18 +242,6 @@
                 "es": "error fijo con carga y descarga para api v2",
                 "pl": "naprawiono błąd z ładowaniem i rozładowywaniem dla api v2",
                 "zh-cn": "修复了api v2的充放电错误"
-            },
-            "1.6.0": {
-                "en": "added support for official api",
-                "de": "Unterstützung für offizielle API hinzugefügt",
-                "ru": "добавлена поддержка официального API",
-                "pt": "adicionado suporte para API oficial",
-                "nl": "ondersteuning toegevoegd voor officiële api",
-                "fr": "ajout de la prise en charge de l'API officielle",
-                "it": "aggiunto il supporto per l'API ufficiale",
-                "es": "soporte agregado para api oficial",
-                "pl": "dodano obsługę oficjalnego interfejsu API",
-                "zh-cn": "增加了对官方api的支持"
             }
         },
         "title": "sonnen",

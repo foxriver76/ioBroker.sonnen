@@ -232,7 +232,8 @@ async function main() {
                 await requestPowermeterEndpoint();
                 if (adapter.config.pollOnlineStatus) {
                     await requestOnlineStatus();
-                }            } catch (e) {
+                }
+            } catch (e) {
                 adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
             }
 
