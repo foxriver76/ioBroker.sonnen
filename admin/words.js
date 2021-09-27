@@ -73,5 +73,17 @@ systemDictionary = {
         'es': 'Auth-Token de la API oficial',
         'pl': 'Auth-Token oficjalnego API',
         'zh-cn': '官方API的Auth-Token'
+    },
+    'Show online status': {
+        'en': 'Poll online status',
+        'de': 'Online-Status abfragen',
+        'ru': 'Опрос онлайн-статуса',
+        'pt': 'Status da pesquisa online',
+        'nl': 'Online status poll',
+        'fr': 'État du sondage en ligne',
+        'it': 'Stato del sondaggio online',
+        'es': 'Encuesta de estado en línea',
+        'pl': 'Ankieta online',
+        'zh-cn': '在线投票状态'
     }
 };

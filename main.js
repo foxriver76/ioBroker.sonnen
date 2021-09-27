@@ -166,6 +166,25 @@ async function main() {
         promises.push(adapter.extendObjectAsync(id, obj, {preserve: {common: ['name']}}));
     }
 
+    if (adapter.config.pollOnlineStatus) {
+        promises.push(adapter.extendObjectAsync('status.onlineStatus', {
+            _id: 'status.onlineStatus',
+            type: `state`,
+            common: {
+                name: `Battery Online Status`,
+                type: `boolean`,
+                role: `indicator`,
+                read: true,
+                write: false,
+                desc: `Online status of your sonnen battery`
+            },
+            native: {}
+        }));
+    } else {
+        // make sure to delete the object
+        promises.push(adapter.delObjectAsync('status.onlineStatus'));
+    }
+
     await Promise.all(promises);
 
     try {
@@ -192,7 +211,9 @@ async function main() {
     try {
         await requestInverterEndpoint();
         await requestPowermeterEndpoint();
-        await requestOnlineStatus();
+        if (adapter.config.pollOnlineStatus) {
+            await requestOnlineStatus();
+        }
     } catch (e) {
         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
     }
@@ -209,8 +230,9 @@ async function main() {
             try {
                 await requestInverterEndpoint();
                 await requestPowermeterEndpoint();
-                await requestOnlineStatus();
-            } catch (e) {
+                if (adapter.config.pollOnlineStatus) {
+                    await requestOnlineStatus();
+                }            } catch (e) {
                 adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
             }
 

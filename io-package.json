@@ -287,7 +287,8 @@
     },
     "native": {
         "ip": "",
-        "token": ""
+        "token": "",
+        "pollOnlineStatus": true
     },
     "objects": [],
     "instanceObjects": [
