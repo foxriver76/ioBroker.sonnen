@@ -307,8 +307,7 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
-
-### __WORK IN PROGRESS__
+### 1.10.0 (2022-04-18)
 * (rivengh) added battery discrete io states
 
 ### 1.9.8 (2021-09-27)
@@ -375,7 +374,7 @@ The channel consists of read-only states of type `boolean`, providing informatio
 
 ### 1.5.3 (2020-05-18)
 * (foxriver76) poll online status always again if not confirmed that there are differences in api (old solution could lead to false negative)
-* (foxriver76) more specific error handling 
+* (foxriver76) more specific error handling
 
 ### 1.5.2 (2020-05-16)
 * (foxriver76) check if onlineStatus is supported at adapter start - else do not poll it

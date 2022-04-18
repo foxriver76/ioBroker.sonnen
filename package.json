@@ -1,6 +1,6 @@
 {
   "name": "iobroker.sonnen",
-  "version": "1.9.9",
+  "version": "1.10.0",
   "engines": {
     "node": ">=10.0"
   },

@@ -1,371 +1,227 @@
 {
-    "common": {
-        "name": "sonnen",
-        "version": "1.9.9",
-        "news": {
-            "1.9.8": {
-                "en": "make requesting online status optional for 8080 api (closes #76)",
-                "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
-                "ru": "сделать запрос онлайн-статуса необязательным для API 8080 (закрывает # 76)",
-                "pt": "tornar a solicitação de status online opcional para 8080 api (fecha # 76)",
-                "nl": "maak het aanvragen van online status optioneel voor 8080 api (sluit # 76)",
-                "fr": "rendre la demande de statut en ligne facultative pour 8080 api (ferme #76)",
-                "it": "rendere facoltativa la richiesta dello stato online per l'API 8080 (chiude #76)",
-                "es": "hacer que solicitar el estado en línea sea opcional para 8080 api (cierra # 76)",
-                "pl": "spraw, aby żądanie statusu online było opcjonalne dla 8080 api (zamyka #76)",
-                "zh-cn": "使 8080 api 的在线状态请求成为可选（关闭 #76）"
-            },
-            "1.9.7": {
-                "en": "make requesting online status optional for 8080 api (closes #76)",
-                "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
-                "ru": "сделать запрос онлайн-статуса необязательным для API 8080 (закрывает # 76)",
-                "pt": "tornar a solicitação de status online opcional para 8080 api (fecha # 76)",
-                "nl": "maak het aanvragen van online status optioneel voor 8080 api (sluit # 76)",
-                "fr": "rendre la demande de statut en ligne facultative pour 8080 api (ferme #76)",
-                "it": "rendere facoltativa la richiesta dello stato online per l'API 8080 (chiude #76)",
-                "es": "hacer que solicitar el estado en línea sea opcional para 8080 api (cierra # 76)",
-                "pl": "spraw, aby żądanie statusu online było opcjonalne dla 8080 api (zamyka #76)",
-                "zh-cn": "使 8080 api 的在线状态请求成为可选（关闭 #76）"
-            },
-            "1.9.6": {
-                "en": "fix for horizontal flow animations in Safari (broken with 1.9.4)",
-                "de": "Fix für horizontale Flussanimationen in Safari (mit 1.9.4 defekt)",
-                "ru": "исправление для анимации горизонтального потока в Safari (сломано в 1.9.4)",
-                "pt": "correção para animações de fluxo horizontal no Safari (quebrado com 1.9.4)",
-                "nl": "fix voor horizontale stroomanimaties in Safari (gebroken met 1.9.4)",
-                "fr": "correctif pour les animations de flux horizontal dans Safari (cassé avec 1.9.4)",
-                "it": "correzione per le animazioni del flusso orizzontale in Safari (interrotto con 1.9.4)",
-                "es": "corrección para animaciones de flujo horizontal en Safari (roto con 1.9.4)",
-                "pl": "naprawiono animacje przepływu poziomego w Safari (zepsute z 1.9.4)",
-                "zh-cn": "修复 Safari 中的水平流动画（1.9.4 损坏）"
-            },
-            "1.9.4": {
-                "en": "widget: make the svg smaller by using a flexbox to center the svg correctly inside the div",
-                "de": "Widget: Verkleinern Sie das SVG, indem Sie eine Flexbox verwenden, um das SVG korrekt im Div correctly zu zentrieren",
-                "ru": "виджет: уменьшите svg, используя flexbox для правильного центрирования svg внутри div",
-                "pt": "widget: torne o svg menor usando uma flexbox para centralizar o svg corretamente dentro do div",
-                "nl": "widget: maak de svg kleiner door een flexbox te gebruiken om de svg correct in de div . te centreren",
-                "fr": "widget : rendre le svg plus petit en utilisant une flexbox pour centrer correctement le svg à l'intérieur du div",
-                "it": "widget: rimpicciolisci l'SVG utilizzando un flexbox per centrare correttamente l'SVG all'interno del div",
-                "es": "widget: haz el svg más pequeño usando un flexbox para centrar el svg correctamente dentro del div",
-                "pl": "widget: zmniejsz svg za pomocą flexboxa, aby prawidłowo wyśrodkować svg w div",
-                "zh-cn": "小部件：通过使用 flexbox 使 svg 在 div 内正确居中，从而使 svg 变小"
-            },
-            "1.9.3": {
-                "en": "also poll the configuration instead of updating it only once at start (closes #70)",
-                "de": "auch die Konfiguration abfragen, anstatt sie nur einmal beim Start zu aktualisieren (schließt #70)",
-                "ru": "также опросить конфигурацию вместо того, чтобы обновлять ее только один раз при запуске (закрывает # 70)",
-                "pt": "também pesquise a configuração em vez de atualizá-la apenas uma vez no início (fecha # 70)",
-                "nl": "poll ook de configuratie in plaats van deze slechts één keer bij het begin bij te werken (sluit # 70 af)",
-                "fr": "interroge également la configuration au lieu de la mettre à jour une seule fois au démarrage (ferme #70)",
-                "it": "anche interrogare la configurazione invece di aggiornarla solo una volta all'avvio (chiude #70)",
-                "es": "también sondear la configuración en lugar de actualizarla solo una vez al inicio (cierra # 70)",
-                "pl": "również odpytywanie konfiguracji zamiast aktualizowania jej tylko raz na początku (zamyka #70)",
-                "zh-cn": "还要轮询配置，而不是在开始时只更新一次（关闭 #70）"
-            },
-            "1.9.2": {
-                "en": "fix for legacy API",
-                "de": "Fix für Legacy-API",
-                "ru": "исправление для устаревшего API",
-                "pt": "correção para API legada",
-                "nl": "fix voor verouderde API",
-                "fr": "correctif pour l'ancienne API",
-                "it": "correzione per API legacy",
-                "es": "corrección para API heredada",
-                "pl": "poprawka dla starszego API",
-                "zh-cn": "修复遗留 API"
-            },
-            "1.9.1": {
-                "en": "use legacy API if old API is not completely implemented",
-                "de": "Verwenden Sie die alte API, wenn die alte API nicht vollständig implementiert ist",
-                "ru": "используйте устаревший API, если старый API не реализован полностью",
-                "pt": "use a API legada se a API antiga não estiver completamente implementada",
-                "nl": "gebruik legacy API als oude API niet volledig is geïmplementeerd",
-                "fr": "utiliser l'ancienne API si l'ancienne API n'est pas complètement implémentée",
-                "it": "usa l'API legacy se la vecchia API non è completamente implementata",
-                "es": "use la API heredada si la API anterior no está completamente implementada",
-                "pl": "użyj starszego API, jeśli stare API nie zostało w pełni zaimplementowane",
-                "zh-cn": "如果旧 API 没有完全实现，请使用旧 API"
-            },
-            "1.9.0": {
-                "en": "we now also support the legacy API (port 3480)\nswitch from intervals to timeouts to avoid overlapping poll runs",
-                "de": "wir unterstützen jetzt auch die Legacy-API (Port 3480)\nWechseln Sie von Intervallen zu Timeouts, um überlappende Abfrageläufe zu vermeiden",
-                "ru": "теперь мы также поддерживаем устаревший API (порт 3480)\nпереключаться с интервалов на тайм-ауты, чтобы избежать дублирования опросов",
-                "pt": "agora também oferecemos suporte à API legada (porta 3480)\nmudar de intervalos para tempos limite para evitar execuções de pesquisas sobrepostas",
-                "nl": "we ondersteunen nu ook de legacy API (poort 3480)\nschakel over van intervallen naar time-outs om overlappende poll-runs te voorkomen",
-                "fr": "nous prenons désormais également en charge l'ancienne API (port 3480)\npasser des intervalles aux délais d'attente pour éviter le chevauchement des exécutions d'interrogation",
-                "it": "ora supportiamo anche l'API legacy (porta 3480)\npassare da intervalli a timeout per evitare esecuzioni di poll sovrapposte",
-                "es": "ahora también admitimos la API heredada (puerto 3480)\ncambiar de intervalos a tiempos de espera para evitar la superposición de ejecuciones de encuestas",
-                "pl": "obsługujemy teraz również starsze API (port 3480)\nprzełącz się z interwałów na limity czasu, aby uniknąć nakładania się przebiegów ankiety",
-                "zh-cn": "我们现在还支持旧 API（端口 3480）\n从间隔切换到超时以避免重叠轮询运行"
-            },
-            "1.8.6": {
-                "en": "widget: we removed debug logging and unnecessary template functions\nwidget: we now cache the jquery selectors to improve the performance",
-                "de": "Widget: Wir haben das Debug-Logging und unnötige Vorlagenfunktionen entfernt\nWidget: Wir cachen jetzt die jquery-Selektoren, um die Leistung zu verbessern",
-                "ru": "виджет: убрали ведение журнала отладки и ненужные функции шаблона\nвиджет: теперь мы кэшируем селекторы jquery для повышения производительности",
-                "pt": "widget: removemos o registro de depuração e funções de modelo desnecessárias\nwidget: agora armazenamos em cache os seletores jquery para melhorar o desempenho",
-                "nl": "widget: we hebben logboekregistratie voor foutopsporing en onnodige sjabloonfuncties verwijderd\nwidget: we cachen nu de jQuery-selectors om de prestaties te verbeteren",
-                "fr": "widget : nous avons supprimé la journalisation de débogage et les fonctions de modèle inutiles\nwidget : nous mettons maintenant en cache les sélecteurs jquery pour améliorer les performances",
-                "it": "widget: abbiamo rimosso la registrazione di debug e le funzioni del modello non necessarie\nwidget: ora mettiamo nella cache i selettori jquery per migliorare le prestazioni",
-                "es": "widget: eliminamos el registro de depuración y las funciones de plantilla innecesarias\nwidget: ahora almacenamos en caché los selectores de jquery para mejorar el rendimiento",
-                "pl": "widget: usunęliśmy logowanie debugowania i niepotrzebne funkcje szablonów\nwidget: teraz buforujemy selektory jquery, aby poprawić wydajność",
-                "zh-cn": "小部件：我们删除了调试日志记录和不必要的模板功能\n小部件：我们现在缓存 jquery 选择器以提高性能"
-            },
-            "1.8.5": {
-                "en": "widget: stroke width can now be configured",
-                "de": "Widget: Strichstärke kann jetzt konfiguriert werden",
-                "ru": "виджет: теперь можно настроить ширину штриха",
-                "pt": "widget: a largura do traço agora pode ser configurada",
-                "nl": "widget: lijnbreedte kan nu worden geconfigureerd",
-                "fr": "widget : la largeur du trait peut maintenant être configurée",
-                "it": "widget: ora è possibile configurare la larghezza del tratto",
-                "es": "widget: ahora se puede configurar el ancho del trazo",
-                "pl": "widget: można teraz skonfigurować szerokość obrysu",
-                "zh-cn": "小部件：现在可以配置笔画宽度"
-            },
-            "1.8.4": {
-                "en": "widget: we made ID names more adapter specific to avoid getting wrong translations",
-                "de": "Widget: Wir haben ID-Namen adapterspezifischer gemacht, um falsche Übersetzungen zu vermeiden",
-                "ru": "виджет: мы сделали имена идентификаторов более специфичными для адаптера, чтобы избежать неправильных переводов",
-                "pt": "widget: tornamos os nomes de ID mais específicos para o adaptador para evitar traduções erradas",
-                "nl": "widget: we hebben ID-namen adapterspecifiek gemaakt om te voorkomen dat je verkeerde vertalingen krijgt",
-                "fr": "widget : nous avons rendu les noms d'ID plus spécifiques à l'adaptateur pour éviter les mauvaises traductions",
-                "it": "widget: abbiamo reso i nomi ID più specifici per l'adattatore per evitare di ottenere traduzioni sbagliate",
-                "es": "widget: hicimos los nombres de ID más específicos del adaptador para evitar traducciones incorrectas",
-                "pl": "widget: stworzyliśmy nazwy identyfikatorów bardziej specyficzne dla adapterów, aby uniknąć błędnych tłumaczeń",
-                "zh-cn": "小部件：我们使 ID 名称更加特定于适配器以避免翻译错误"
-            },
-            "1.8.3": {
-                "en": "widget: we now allow defining the used adapter instance",
-                "de": "Widget: Wir erlauben jetzt die Definition der verwendeten Adapterinstanz",
-                "ru": "виджет: теперь мы позволяем определять используемый экземпляр адаптера",
-                "pt": "widget: agora permitimos definir a instância do adaptador usado",
-                "nl": "widget: we staan nu toe om de gebruikte adapterinstantie te definiëren",
-                "fr": "widget : nous permettons maintenant de définir l'instance d'adaptateur utilisée",
-                "it": "widget: ora consentiamo di definire l'istanza dell'adattatore utilizzata",
-                "es": "widget: ahora permitimos definir la instancia de adaptador utilizada",
-                "pl": "widget: umożliwiamy teraz zdefiniowanie używanej instancji adaptera",
-                "zh-cn": "小部件：我们现在允许定义使用的适配器实例"
-            },
-            "1.8.2": {
-                "en": "widget: css classes now have adapter specific names to avoid conflicts",
-                "de": "Widget: CSS-Klassen haben jetzt adapterspezifische Namen, um Konflikte zu vermeiden",
-                "ru": "виджет: классы css теперь имеют имена, специфичные для адаптера, чтобы избежать конфликтов",
-                "pt": "widget: classes css agora têm nomes específicos de adaptadores para evitar conflitos",
-                "nl": "widget: CSS-klassen hebben nu adapterspecifieke namen om conflicten te voorkomen",
-                "fr": "widget : les classes CSS ont désormais des noms spécifiques à l'adaptateur pour éviter les conflits",
-                "it": "widget: le classi CSS ora hanno nomi specifici dell'adattatore per evitare conflitti",
-                "es": "widget: las clases css ahora tienen nombres específicos de adaptadores para evitar conflictos",
-                "pl": "widget: klasy css mają teraz specyficzne nazwy adapterów, aby uniknąć konfliktów",
-                "zh-cn": "小部件：css 类现在具有特定于适配器的名称以避免冲突"
-            },
-            "1.8.1": {
-                "en": "widget now has flow directions",
-                "de": "Widget hat jetzt Flussrichtungen",
-                "ru": "виджет теперь имеет направления потока",
-                "pt": "widget agora tem direções de fluxo",
-                "nl": "widget heeft nu stroomrichtingen",
-                "fr": "le widget a maintenant des directions de flux",
-                "it": "il widget ora ha le direzioni di flusso",
-                "es": "el widget ahora tiene direcciones de flujo",
-                "pl": "widget ma teraz wskazówki przepływu",
-                "zh-cn": "小部件现在有流向"
-            },
-            "1.8.0": {
-                "en": "added widget",
-                "de": "Widget hinzugefügt",
-                "ru": "добавлен виджет",
-                "pt": "widget adicionado",
-                "nl": "toegevoegde widget",
-                "fr": "widget ajouté",
-                "it": "widget aggiunto",
-                "es": "widget añadido",
-                "pl": "dodano widżet",
-                "zh-cn": "添加小部件"
-            },
-            "1.7.3": {
-                "en": "we now update objects if attributes are updated, but preserve common.name attribute",
-                "de": "Wir aktualisieren jetzt Objekte, wenn Attribute aktualisiert werden, behalten jedoch das Attribut common.name bei",
-                "ru": "теперь мы обновляем объекты, если атрибуты обновлены, но сохраняем атрибут common.name",
-                "pt": "agora atualizamos objetos se os atributos são atualizados, mas preservamos o atributo common.name",
-                "nl": "we werken nu objecten bij als attributen worden bijgewerkt, maar behouden het kenmerk common.name",
-                "fr": "nous mettons maintenant à jour les objets si les attributs sont mis à jour, mais conservons l'attribut common.name",
-                "it": "ora aggiorniamo gli oggetti se gli attributi vengono aggiornati, ma preserviamo l'attributo common.name",
-                "es": "ahora actualizamos los objetos si se actualizan los atributos, pero preservamos el atributo common.name",
-                "pl": "teraz aktualizujemy obiekty, jeśli atrybuty są aktualizowane, ale zachowujemy atrybut common.name",
-                "zh-cn": "现在，如果属性已更新，我们将更新对象，但保留common.name属性"
-            },
-            "1.7.2": {
-                "en": "we fixed some type issues (fixes #58)",
-                "de": "Wir haben einige Typprobleme behoben (Fixes # 58).",
-                "ru": "мы исправили некоторые проблемы с типом (исправления # 58)",
-                "pt": "corrigimos alguns problemas de tipo (correções # 58)",
-                "nl": "we hebben enkele typeproblemen opgelost (fix # 58)",
-                "fr": "nous avons corrigé quelques problèmes de type (corrections # 58)",
-                "it": "abbiamo risolto alcuni problemi di tipo (correzioni # 58)",
-                "es": "arreglamos algunos problemas de tipo (arreglos # 58)",
-                "pl": "naprawiliśmy niektóre problemy z typami (poprawki # 58)",
-                "zh-cn": "我们修复了一些类型问题（修复＃58）"
-            },
-            "1.7.1": {
-                "en": "do not log warnings on inverter endpoint if battery does not support it (closes #55)",
-                "de": "Protokollieren Sie keine Warnungen am Endpunkt des Wechselrichters, wenn die Batterie dies nicht unterstützt (schließt # 55).",
-                "ru": "не регистрировать предупреждения на конечной точке инвертора, если батарея не поддерживает его (закрывается # 55)",
-                "pt": "não registre avisos no ponto final do inversor se a bateria não o suportar (fecha # 55)",
-                "nl": "log geen waarschuwingen op het eindpunt van de omvormer als de batterij dit niet ondersteunt (sluit # 55)",
-                "fr": "ne consignez pas les avertissements sur le point final de l'onduleur si la batterie ne le prend pas en charge (ferme # 55)",
-                "it": "non registrare gli avvisi sull'endpoint dell'inverter se la batteria non lo supporta (chiude # 55)",
-                "es": "no registre advertencias en el punto final del inversor si la batería no lo admite (cierra # 55)",
-                "pl": "nie rejestruj ostrzeżeń na punkcie końcowym falownika, jeśli bateria go nie obsługuje (zamyka # 55)",
-                "zh-cn": "如果电池不支持，请不要在逆变器端点上记录警告（关闭＃55）"
-            },
-            "1.7.0": {
-                "en": "new channels for inverter and powermeter",
-                "de": "neue Kanäle für Wechselrichter und Leistungsmesser",
-                "ru": "новые каналы для инвертора и измерителя мощности",
-                "pt": "novos canais para inversor e medidor de potência",
-                "nl": "nieuwe kanalen voor omvormer en vermogensmeter",
-                "fr": "nouveaux canaux pour onduleur et wattmètre",
-                "it": "nuovi canali per inverter e misuratore di potenza",
-                "es": "nuevos canales para inversor y medidor de potencia",
-                "pl": "nowe kanały dla falownika i miernika mocy",
-                "zh-cn": "逆变器和功率计的新渠道"
-            }
-        },
-        "title": "sonnen",
-        "titleLang": {
-            "en": "sonnenBattery",
-            "de": "sonnenBatterie"
-        },
-        "desc": {
-            "en": "Monitor your sonnen battery",
-            "de": "Überwache deine sonnen Batterie"
-        },
-        "authors": [
-            "Moritz Heusinger <moritz.heusinger@gmail.com>"
-        ],
-        "docs": {
-            "en": "README.md",
-            "de": "docs/de/README.md"
-        },
-        "platform": "Javascript/Node.js",
-        "mode": "daemon",
-        "icon": "sonnen.png",
-        "materialize": true,
-        "enabled": true,
-        "compact": true,
-        "extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
-        "keywords": [
-            "sonnen",
-            "photovoltaics",
-            "solar",
-            "energy",
-            "sun"
-        ],
-        "readme": "https://github.com/foxriver76/ioBroker.sonnen/blob/master/README.md",
-        "loglevel": "info",
-        "type": "energy",
-        "connectionType": "local",
-        "dataSource": "poll",
-        "license": "MIT",
-        "messagebox": false,
-        "restartAdapters": [
-            "vis"
-        ]
+  "common": {
+    "name": "sonnen",
+    "version": "1.10.0",
+    "news": {
+      "1.10.0": {
+        "en": "added battery discrete io states",
+        "de": "Batterie diskrete io-Zustände hinzugefügt",
+        "ru": "добавлены состояния дискретного ввода-вывода батареи",
+        "pt": "estados io discretos de bateria adicionados",
+        "nl": "toegevoegde batterij discrete io-statussen",
+        "fr": "ajout d'états io discrets de la batterie",
+        "it": "aggiunti stati io discreti della batteria",
+        "es": "estados io discretos de la batería añadida",
+        "pl": "dodano dyskretne stany io baterii;",
+        "zh-cn": "添加了电池离散 io 状态"
+      },
+      "1.9.8": {
+        "en": "make requesting online status optional for 8080 api (closes #76)",
+        "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
+        "ru": "сделать запрос онлайн-статуса необязательным для API 8080 (закрывает # 76)",
+        "pt": "tornar a solicitação de status online opcional para 8080 api (fecha # 76)",
+        "nl": "maak het aanvragen van online status optioneel voor 8080 api (sluit # 76)",
+        "fr": "rendre la demande de statut en ligne facultative pour 8080 api (ferme #76)",
+        "it": "rendere facoltativa la richiesta dello stato online per l'API 8080 (chiude #76)",
+        "es": "hacer que solicitar el estado en línea sea opcional para 8080 api (cierra # 76)",
+        "pl": "spraw, aby żądanie statusu online było opcjonalne dla 8080 api (zamyka #76)",
+        "zh-cn": "使 8080 api 的在线状态请求成为可选（关闭 #76）"
+      },
+      "1.9.7": {
+        "en": "make requesting online status optional for 8080 api (closes #76)",
+        "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
+        "ru": "сделать запрос онлайн-статуса необязательным для API 8080 (закрывает # 76)",
+        "pt": "tornar a solicitação de status online opcional para 8080 api (fecha # 76)",
+        "nl": "maak het aanvragen van online status optioneel voor 8080 api (sluit # 76)",
+        "fr": "rendre la demande de statut en ligne facultative pour 8080 api (ferme #76)",
+        "it": "rendere facoltativa la richiesta dello stato online per l'API 8080 (chiude #76)",
+        "es": "hacer que solicitar el estado en línea sea opcional para 8080 api (cierra # 76)",
+        "pl": "spraw, aby żądanie statusu online było opcjonalne dla 8080 api (zamyka #76)",
+        "zh-cn": "使 8080 api 的在线状态请求成为可选（关闭 #76）"
+      },
+      "1.9.6": {
+        "en": "fix for horizontal flow animations in Safari (broken with 1.9.4)",
+        "de": "Fix für horizontale Flussanimationen in Safari (mit 1.9.4 defekt)",
+        "ru": "исправление для анимации горизонтального потока в Safari (сломано в 1.9.4)",
+        "pt": "correção para animações de fluxo horizontal no Safari (quebrado com 1.9.4)",
+        "nl": "fix voor horizontale stroomanimaties in Safari (gebroken met 1.9.4)",
+        "fr": "correctif pour les animations de flux horizontal dans Safari (cassé avec 1.9.4)",
+        "it": "correzione per le animazioni del flusso orizzontale in Safari (interrotto con 1.9.4)",
+        "es": "corrección para animaciones de flujo horizontal en Safari (roto con 1.9.4)",
+        "pl": "naprawiono animacje przepływu poziomego w Safari (zepsute z 1.9.4)",
+        "zh-cn": "修复 Safari 中的水平流动画（1.9.4 损坏）"
+      },
+      "1.9.4": {
+        "en": "widget: make the svg smaller by using a flexbox to center the svg correctly inside the div",
+        "de": "Widget: Verkleinern Sie das SVG, indem Sie eine Flexbox verwenden, um das SVG korrekt im Div correctly zu zentrieren",
+        "ru": "виджет: уменьшите svg, используя flexbox для правильного центрирования svg внутри div",
+        "pt": "widget: torne o svg menor usando uma flexbox para centralizar o svg corretamente dentro do div",
+        "nl": "widget: maak de svg kleiner door een flexbox te gebruiken om de svg correct in de div . te centreren",
+        "fr": "widget : rendre le svg plus petit en utilisant une flexbox pour centrer correctement le svg à l'intérieur du div",
+        "it": "widget: rimpicciolisci l'SVG utilizzando un flexbox per centrare correttamente l'SVG all'interno del div",
+        "es": "widget: haz el svg más pequeño usando un flexbox para centrar el svg correctamente dentro del div",
+        "pl": "widget: zmniejsz svg za pomocą flexboxa, aby prawidłowo wyśrodkować svg w div",
+        "zh-cn": "小部件：通过使用 flexbox 使 svg 在 div 内正确居中，从而使 svg 变小"
+      },
+      "1.9.3": {
+        "en": "also poll the configuration instead of updating it only once at start (closes #70)",
+        "de": "auch die Konfiguration abfragen, anstatt sie nur einmal beim Start zu aktualisieren (schließt #70)",
+        "ru": "также опросить конфигурацию вместо того, чтобы обновлять ее только один раз при запуске (закрывает # 70)",
+        "pt": "também pesquise a configuração em vez de atualizá-la apenas uma vez no início (fecha # 70)",
+        "nl": "poll ook de configuratie in plaats van deze slechts één keer bij het begin bij te werken (sluit # 70 af)",
+        "fr": "interroge également la configuration au lieu de la mettre à jour une seule fois au démarrage (ferme #70)",
+        "it": "anche interrogare la configurazione invece di aggiornarla solo una volta all'avvio (chiude #70)",
+        "es": "también sondear la configuración en lugar de actualizarla solo una vez al inicio (cierra # 70)",
+        "pl": "również odpytywanie konfiguracji zamiast aktualizowania jej tylko raz na początku (zamyka #70)",
+        "zh-cn": "还要轮询配置，而不是在开始时只更新一次（关闭 #70）"
+      },
+      "1.9.2": {
+        "en": "fix for legacy API",
+        "de": "Fix für Legacy-API",
+        "ru": "исправление для устаревшего API",
+        "pt": "correção para API legada",
+        "nl": "fix voor verouderde API",
+        "fr": "correctif pour l'ancienne API",
+        "it": "correzione per API legacy",
+        "es": "corrección para API heredada",
+        "pl": "poprawka dla starszego API",
+        "zh-cn": "修复遗留 API"
+      }
     },
-    "native": {
-        "ip": "",
-        "token": "",
-        "pollOnlineStatus": true
+    "title": "sonnen",
+    "titleLang": {
+      "en": "sonnenBattery",
+      "de": "sonnenBatterie"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.lastSync",
-            "type": "state",
-            "common": {
-                "name": "Last successful sync",
-                "type": "string",
-                "role": "value.datetime",
-                "read": true,
-                "write": false,
-                "desc": "Last successful synchronization"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "name": "sonnen connected",
-                "type": "boolean",
-                "role": "indicator.connected",
-                "read": true,
-                "write": false,
-                "def": false,
-                "desc": "Is sonnen battery connected?"
-            },
-            "native": {}
-        },
-        {
-            "_id": "status",
-            "type": "channel",
-            "common": {
-                "name": "Status"
-            },
-            "native": {}
-        },
-        {
-            "_id": "status.consumption",
-            "type": "state",
-            "common": {
-                "name": "Consumption",
-                "type": "number",
-                "role": "value.consumption",
-                "read": true,
-                "write": false,
-                "desc": "House comsumption in watts",
-                "unit": "watts"
-            },
-            "native": {}
-        },
-        {
-            "_id": "status.production",
-            "type": "state",
-            "common": {
-                "name": "Production",
-                "type": "number",
-                "role": "value.production",
-                "read": true,
-                "write": false,
-                "desc": "Production in watts",
-                "unit": "watts"
-            },
-            "native": {}
-        },
-        {
-            "_id": "status.relativeSoc",
-            "type": "state",
-            "common": {
-                "name": "Relative State of Charge",
-                "type": "number",
-                "role": "value.rsoc",
-                "read": true,
-                "min": 0,
-                "max": 100,
-                "write": false,
-                "desc": "State of charge in percent",
-                "unit": "%"
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "Monitor your sonnen battery",
+      "de": "Überwache deine sonnen Batterie"
+    },
+    "authors": [
+      "Moritz Heusinger <moritz.heusinger@gmail.com>"
+    ],
+    "docs": {
+      "en": "README.md",
+      "de": "docs/de/README.md"
+    },
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "icon": "sonnen.png",
+    "materialize": true,
+    "enabled": true,
+    "compact": true,
+    "extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
+    "keywords": [
+      "sonnen",
+      "photovoltaics",
+      "solar",
+      "energy",
+      "sun"
+    ],
+    "readme": "https://github.com/foxriver76/ioBroker.sonnen/blob/master/README.md",
+    "loglevel": "info",
+    "type": "energy",
+    "connectionType": "local",
+    "dataSource": "poll",
+    "license": "MIT",
+    "messagebox": false,
+    "restartAdapters": [
+      "vis"
     ]
+  },
+  "native": {
+    "ip": "",
+    "token": "",
+    "pollOnlineStatus": true
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastSync",
+      "type": "state",
+      "common": {
+        "name": "Last successful sync",
+        "type": "string",
+        "role": "value.datetime",
+        "read": true,
+        "write": false,
+        "desc": "Last successful synchronization"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "name": "sonnen connected",
+        "type": "boolean",
+        "role": "indicator.connected",
+        "read": true,
+        "write": false,
+        "def": false,
+        "desc": "Is sonnen battery connected?"
+      },
+      "native": {}
+    },
+    {
+      "_id": "status",
+      "type": "channel",
+      "common": {
+        "name": "Status"
+      },
+      "native": {}
+    },
+    {
+      "_id": "status.consumption",
+      "type": "state",
+      "common": {
+        "name": "Consumption",
+        "type": "number",
+        "role": "value.consumption",
+        "read": true,
+        "write": false,
+        "desc": "House comsumption in watts",
+        "unit": "watts"
+      },
+      "native": {}
+    },
+    {
+      "_id": "status.production",
+      "type": "state",
+      "common": {
+        "name": "Production",
+        "type": "number",
+        "role": "value.production",
+        "read": true,
+        "write": false,
+        "desc": "Production in watts",
+        "unit": "watts"
+      },
+      "native": {}
+    },
+    {
+      "_id": "status.relativeSoc",
+      "type": "state",
+      "common": {
+        "name": "Relative State of Charge",
+        "type": "number",
+        "role": "value.rsoc",
+        "read": true,
+        "min": 0,
+        "max": 100,
+        "write": false,
+        "desc": "State of charge in percent",
+        "unit": "%"
+      },
+      "native": {}
+    }
+  ]
 }
