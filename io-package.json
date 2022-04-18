@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "sonnen",
-        "version": "1.9.8",
+        "version": "1.9.9",
         "news": {
+            "1.9.9": {
+                "en": "added battery discrete io states",
+                "de": "Batterie diskrete io-Zustände hinzugefügt",
+                "ru": "добавлены состояния дискретного ввода-вывода батареи",
+                "pt": "estados io discretos de bateria adicionados",
+                "nl": "toegevoegde batterij discrete io-statussen",
+                "fr": "ajout d'états io discrets de la batterie",
+                "it": "aggiunti stati io discreti della batteria",
+                "es": "estados io discretos de la batería añadida",
+                "pl": "dodano dyskretne stany io baterii;",
+                "zh-cn": "添加了电池离散 io 状态"
+            },
             "1.9.8": {
                 "en": "make requesting online status optional for 8080 api (closes #76)",
                 "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
@@ -230,18 +242,6 @@
                 "es": "nuevos canales para inversor y medidor de potencia",
                 "pl": "nowe kanały dla falownika i miernika mocy",
                 "zh-cn": "逆变器和功率计的新渠道"
-            },
-            "1.6.1": {
-                "en": "fixed error with charge and discharge for api v2",
-                "de": "Fehler beim Laden und Entladen für API v2 behoben",
-                "ru": "исправлена ошибка с зарядкой и разрядкой для api v2",
-                "pt": "Erro corrigido com carga e descarga para API v2",
-                "nl": "vaste fout met laden en ontladen voor api v2",
-                "fr": "erreur fixe avec charge et décharge pour api v2",
-                "it": "corretto errore con carica e scarica per api v2",
-                "es": "error fijo con carga y descarga para api v2",
-                "pl": "naprawiono błąd z ładowaniem i rozładowywaniem dla api v2",
-                "zh-cn": "修复了api v2的充放电错误"
             }
         },
         "title": "sonnen",

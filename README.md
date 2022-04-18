@@ -90,21 +90,21 @@ Note: The old and legacy API states (API port 3480/7979) are currently not or on
 
    *Read-only JSON string, which contains power metering information of your battery.*
    
-* info.inverter
+* info.inverter.*
 
     |Data type|Permission|                                                                       
     |:---:|:---:|
-    |string|R|
+    |number|R|
 
-   *Read-only JSON string, which contains inverter information of your battery.*
+   *Read-only number, which contains inverter information of your battery.*
 
-* info.ios
+* info.ios.*
 
     |Data type|Permission|
     |:---:|:---:|
-    |string|R|
+    |boolean|R|
 
-   *Read-only JSON string, which contains discrete IO information of your battery.*
+   *Read-only boolean which contains discrete IO information of your battery.*
 
 #### Channel: status
    
@@ -307,6 +307,9 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+
+### 1.9.9 (2022-04-18)
+* (rivengh) added battery discrete io states
 
 ### 1.9.8 (2021-09-27)
 * (foxriver76) make requesting online status optional for 8080 api (closes #76)

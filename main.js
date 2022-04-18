@@ -481,11 +481,11 @@ async function requestIosEndpoint() {
         const relevantIOs = [
             'DO_12',
             'DO_13',
-            'DO_14',
+            'DO_14'
         ];
 
         for (const io of relevantIOs) {
-            promises.push(adapter.setStateAsync(`ios.${io}`, Boolean(data[io].status), true));
+            promises.push(adapter.setStateAsync(`ios.${io}`, !!data[io].status, true));
         }
     } catch (e) {
         throw new Error(`Could not request ios endpoint: ${e.message}`);

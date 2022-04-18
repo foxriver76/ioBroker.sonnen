@@ -130,17 +130,17 @@ Hinweis: Die States der Legacy API (Port 3480) und der alten API (Port 7979) sin
 
     |Datentyp|Berechtigung|                                                                       
     |:---:|:---:|
-    |string|R|
+    |number|R|
 
-   *Nur lesbarer JSON String, mit Wechselrichter Informationen der sonnenBatterie.*
+   *Nur lesbarer nummerischer Wert, mit Wechselrichter Informationen der sonnenBatterie.*
 
 * info.ios
 
     |Data type|Permission|
     |:---:|:---:|
-    |string|R|
+    |boolean|R|
 
-   *Nur lesbarer JSON String, mit discrete IO Informationen der sonnenBatterie.*
+   *Nur lesbarer boolscher Wert, mit "discrete IO Informationen" der sonnenBatterie.*
 
 #### Channel: status
    
