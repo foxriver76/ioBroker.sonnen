@@ -127,6 +127,11 @@
     "messagebox": false,
     "restartAdapters": [
       "vis"
+    ],
+    "dependencies": [
+      {
+        "js-controller": ">=3.0.0"
+      }
     ]
   },
   "native": {
