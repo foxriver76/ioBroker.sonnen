@@ -97,7 +97,15 @@ Note: The old and legacy API states (API port 3480/7979) are currently not or on
     |string|R|
 
    *Read-only JSON string, which contains inverter information of your battery.*
-   
+
+* info.ios
+
+    |Data type|Permission|
+    |:---:|:---:|
+    |string|R|
+
+   *Read-only JSON string, which contains discrete IO information of your battery.*
+
 #### Channel: status
    
 * status.consumption
@@ -290,6 +298,9 @@ The both channels have the identical states. All states are read-only numbers.
 
 ### Channel: inverter
 The channel consists of read-only states of type `number`, providing information about the inverter of your battery.
+
+### Channel: ios
+The channel consists of read-only states of type `boolean`, providing information about the discrete IO states of your battery.
 
 ## Changelog
 <!--

@@ -133,7 +133,15 @@ Hinweis: Die States der Legacy API (Port 3480) und der alten API (Port 7979) sin
     |string|R|
 
    *Nur lesbarer JSON String, mit Wechselrichter Informationen der sonnenBatterie.*
-   
+
+* info.ios
+
+    |Data type|Permission|
+    |:---:|:---:|
+    |string|R|
+
+   *Nur lesbarer JSON String, mit discrete IO Informationen der sonnenBatterie.*
+
 #### Channel: status
    
 * status.consumption
@@ -339,3 +347,6 @@ Die beiden Kanäle haben die identischen Zustände. Alle Zustände sind schreibg
 
 ### Channel: inverter
 Der Kanal besteht aus schreibgeschützten Zuständen vom Typ `number`, die Informationen über den Wechselrichter der sonnenBatterie liefern.
+
+### Channel: ios
+Der Kanal besteht aus schreibgeschützten Zuständen vom Typ `boolean`, die Informationen über die discrete IO Status der sonnenBatterie liefern.
