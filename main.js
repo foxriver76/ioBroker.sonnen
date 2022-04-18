@@ -209,6 +209,7 @@ async function main() {
     }
 
     try {
+        await requestIosEndpoint();
         await requestInverterEndpoint();
         await requestPowermeterEndpoint();
         if (adapter.config.pollOnlineStatus) {
@@ -228,6 +229,7 @@ async function main() {
             } // endIf
             setBatteryStates(JSON.parse(data));
             try {
+                await requestIosEndpoint();
                 await requestInverterEndpoint();
                 await requestPowermeterEndpoint();
                 if (adapter.config.pollOnlineStatus) {
@@ -465,6 +467,30 @@ async function requestSettings() {
     adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
     await adapter.setStateAsync(`info.configuration`, data, true);
 } // endRequestSettings
+
+async function requestIosEndpoint() {
+    try {
+        let data = await requestPromise(`http://${ip}:8080/api/ios`);
+        const promises = [];
+
+        promises.push(adapter.setStateAsync(`info.ios`, data, true));
+        data = JSON.parse(data);
+
+        adapter.log.debug(`io json: ${data}`);
+
+        const relevantIOs = [
+            'DO_12',
+            'DO_13',
+            'DO_14',
+        ];
+
+        for (const io of relevantIOs) {
+            promises.push(adapter.setStateAsync(`ios.${io}`, Boolean(data[io].status), true));
+        }
+    } catch (e) {
+        throw new Error(`Could not request ios endpoint: ${e.message}`);
+    }
+} // requestIosEndpoint
 
 async function requestInverterEndpoint() {
     try {
