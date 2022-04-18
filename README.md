@@ -308,7 +308,7 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	### __WORK IN PROGRESS__
 -->
 
-### 1.9.9 (2022-04-18)
+### __WORK IN PROGRESS__
 * (rivengh) added battery discrete io states
 
 ### 1.9.8 (2021-09-27)

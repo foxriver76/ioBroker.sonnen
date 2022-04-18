@@ -3,18 +3,6 @@
         "name": "sonnen",
         "version": "1.9.9",
         "news": {
-            "1.9.9": {
-                "en": "added battery discrete io states",
-                "de": "Batterie diskrete io-Zustände hinzugefügt",
-                "ru": "добавлены состояния дискретного ввода-вывода батареи",
-                "pt": "estados io discretos de bateria adicionados",
-                "nl": "toegevoegde batterij discrete io-statussen",
-                "fr": "ajout d'états io discrets de la batterie",
-                "it": "aggiunti stati io discreti della batteria",
-                "es": "estados io discretos de la batería añadida",
-                "pl": "dodano dyskretne stany io baterii;",
-                "zh-cn": "添加了电池离散 io 状态"
-            },
             "1.9.8": {
                 "en": "make requesting online status optional for 8080 api (closes #76)",
                 "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
