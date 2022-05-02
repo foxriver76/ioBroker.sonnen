@@ -293,6 +293,7 @@ Note: The old and legacy API states (API port 3480/7979) are currently not or on
     ```
 #### Channel: powermeter
 This channel has two subchannels, e.g. `4_1` and `4_2` where one represents consumption and the other one production.
+E.g. `4_1.kwh_imported` represents the overall production since installation of the battery.
  
 The both channels have the identical states. All states are read-only numbers.
 

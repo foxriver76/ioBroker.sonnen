@@ -342,6 +342,7 @@ Hinweis: Die States der Legacy API (Port 3480) und der alten API (Port 7979) sin
   
 #### Channel: powermeter
 Dieser Kanal hat zwei Unterkanäle, z.B. `4_1` und `4_2`, wobei einer den Konsum und der andere die Produktion repräsentiert.
+Z. b. `4_1.kwh_imported` stellt die Gesamtproduktion seit Installation der Batterie dar.
  
 Die beiden Kanäle haben die identischen Zustände. Alle Zustände sind schreibgeschützt und vom Typ `number`.
 
