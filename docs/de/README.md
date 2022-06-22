@@ -299,6 +299,14 @@ Hinweis: Die States der Legacy API (Port 3480) und der alten API (Port 7979) sin
     |boolean|R|
 
    *Nur lesbarer boolscher Wert, welcher true ist, die sonnenBatterie online ist.*
+
+* status.systemStatus
+
+  |Datentyp|Berechtigung|                                                                       
+  |:---:|:---:|
+  |string|R|
+
+  *Nur lesbare Zeichenkette, welcher angibt, ob die Batterie mit dem Netz verbunden ist.*
    
 #### Channel: control
 

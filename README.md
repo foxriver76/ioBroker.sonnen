@@ -260,6 +260,14 @@ Note: The old and legacy API states (API port 3480/7979) are currently not or on
 
    *Read-only boolean which is true if your sonnen battery is online.* 
 
+* status.systemStatus
+
+  |Data type|Permission|                                                                       
+  |:---:|:---:|
+  |string|R|
+
+  *Read-only string, which indicates if the battery is connected to the grid.*
+
 #### Channel: control
 
 * control.charge
@@ -308,6 +316,9 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### 1.11.0 (2022-06-22)
+* (foxriver76) added `status.systemStatus` to indicate if the battery is connected to the grid (closes #139)
+
 ### 1.10.0 (2022-04-18)
 * (rivengh) added battery discrete io states
 

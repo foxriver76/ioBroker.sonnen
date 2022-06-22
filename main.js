@@ -2,7 +2,7 @@
  * sonnen adapter
  */
 
-/* jshint -W097 */// jshint strict:false
+/* jshint -W097 */ // jshint strict:false
 /*jslint node: true */
 'use strict';
 
@@ -16,7 +16,7 @@ let pollingTime;
 let apiVersion;
 let restartTimer;
 let powermeterCreated = false;
-const requestOptions = {headers: {}};
+const requestOptions = { headers: {} };
 let inverterEndpoint = false;
 
 function startAdapter(options) {
@@ -50,7 +50,7 @@ function startAdapter(options) {
                 adapter.log.debug('[START] Auth-Token provided... trying official API');
                 requestOptions.headers['Auth-Token'] = adapter.config.token;
                 try {
-                    await requestPromise({url: `http://${ip}/api/v2/latestdata`, ...requestOptions});
+                    await requestPromise({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
                     apiVersion = `v2`;
                     adapter.log.debug('[START] Check ok, using official API');
                     return void main();
@@ -60,7 +60,7 @@ function startAdapter(options) {
             }
 
             try {
-                await requestPromise({url: `http://${ip}:8080/api/v1/status`, timeout: 2000});
+                await requestPromise({ url: `http://${ip}:8080/api/v1/status`, timeout: 2000 });
                 adapter.log.debug(`[START] 8080 API detected`);
                 apiVersion = `new`;
                 return void main();
@@ -75,7 +75,7 @@ function startAdapter(options) {
                 apiVersion = `old`;
                 adapter.log.debug(`[START] 7979 API detected`);
                 return void main();
-            } catch(e) {
+            } catch (e) {
                 adapter.log.debug(`[START] It's not 7979, because ${e.message}`);
             }
 
@@ -104,9 +104,12 @@ function startAdapter(options) {
         if (id === `control.charge`) {
             try {
                 if (apiVersion === 'v2') {
-                    await requestPromise.post({url: `http://${ip}/api/v2/setpoint/charge/${state}`, ...requestOptions});
+                    await requestPromise.post({
+                        url: `http://${ip}/api/v2/setpoint/charge/${state}`,
+                        ...requestOptions
+                    });
                 } else {
-                    await requestPromise.put({url: `http://${ip}:8080/api/v1/setpoint/charge/${state}`});
+                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/charge/${state}` });
                 }
                 adapter.setState(`control.charge`, state, true);
                 adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
@@ -116,20 +119,23 @@ function startAdapter(options) {
         } else if (id === `control.discharge`) {
             try {
                 if (apiVersion === 'v2') {
-                    await requestPromise.post({url: `http://${ip}/api/v2/setpoint/discharge/${state}`, ...requestOptions});
+                    await requestPromise.post({
+                        url: `http://${ip}/api/v2/setpoint/discharge/${state}`,
+                        ...requestOptions
+                    });
                 } else {
-                    await requestPromise.put({url: `http://${ip}:8080/api/v1/setpoint/discharge/${state}`});
+                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/discharge/${state}` });
                 }
                 adapter.setState(`control.discharge`, state, true);
                 adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
             } catch (e) {
                 adapter.log.warn(`[PUT] Error ${e.message}`);
             }
-        } // endElseIf
+        }
     });
 
     return adapter;
-} // endStartAdapter
+}
 
 async function main() {
     pollingTime = adapter.config.pollInterval || 7000;
@@ -163,23 +169,25 @@ async function main() {
         const id = obj._id;
         delete obj._id;
         // use extend to update stuff like types if they were wrong, but preserve name
-        promises.push(adapter.extendObjectAsync(id, obj, {preserve: {common: ['name']}}));
+        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
     }
 
     if (adapter.config.pollOnlineStatus) {
-        promises.push(adapter.extendObjectAsync('status.onlineStatus', {
-            _id: 'status.onlineStatus',
-            type: `state`,
-            common: {
-                name: `Battery Online Status`,
-                type: `boolean`,
-                role: `indicator`,
-                read: true,
-                write: false,
-                desc: `Online status of your sonnen battery`
-            },
-            native: {}
-        }));
+        promises.push(
+            adapter.extendObjectAsync('status.onlineStatus', {
+                _id: 'status.onlineStatus',
+                type: `state`,
+                common: {
+                    name: `Battery Online Status`,
+                    type: `boolean`,
+                    role: `indicator`,
+                    read: true,
+                    write: false,
+                    desc: `Online status of your sonnen battery`
+                },
+                native: {}
+            })
+        );
     } else {
         // make sure to delete the object
         promises.push(adapter.delObjectAsync('status.onlineStatus'));
@@ -193,7 +201,7 @@ async function main() {
         if (!state || !state.val) {
             adapter.setState(`info.connection`, true, true);
             adapter.log.debug(`[CONNECT] Connection successfuly established`);
-        } // endIf
+        }
         adapter.log.debug(`[DATA] <== ${data}`);
         setBatteryStates(JSON.parse(data));
     } catch (e) {
@@ -219,14 +227,15 @@ async function main() {
         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
     }
 
-    const pollStates = (async () => { // poll states every [30] seconds
+    const pollStates = async () => {
+        // poll states every [30] seconds
         try {
             const data = await requestPromise(statusUrl);
-            const state  = await adapter.getStateAsync(`info.connection`);
+            const state = await adapter.getStateAsync(`info.connection`);
             if (!state || !state.val) {
                 adapter.setState(`info.connection`, true, true);
                 adapter.log.debug(`[CONNECT] Connection successfuly established`);
-            } // endIf
+            }
             setBatteryStates(JSON.parse(data));
             try {
                 await requestIosEndpoint();
@@ -251,10 +260,10 @@ async function main() {
         }
 
         polling = setTimeout(pollStates, pollingTime);
-    });
+    };
 
     pollStates();
-} // endMain
+}
 
 /*
  * Internals
@@ -266,7 +275,7 @@ async function oldAPImain() {
         const id = obj._id;
         delete obj._id;
         // use extend to update stuff like types if they were wrong, but preserve name
-        promises.push(adapter.extendObjectAsync(id, obj, {preserve: {common: ['name']}}));
+        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
     }
 
     await Promise.all(promises);
@@ -284,7 +293,11 @@ async function oldAPImain() {
     try {
         await Promise.all(promises);
         const lastSync = new Date();
-        adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+        adapter.setState(
+            `info.lastSync`,
+            new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(),
+            true
+        );
         const state = await adapter.getStateAsync(`info.connection`);
         if (!state.val) {
             adapter.setState(`info.connection`, true, true);
@@ -293,7 +306,8 @@ async function oldAPImain() {
         adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
     }
 
-    const pollStates = (async () => { // poll states every configured seconds
+    const pollStates = async () => {
+        // poll states every configured seconds
         const promises = [];
         promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
         promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
@@ -308,7 +322,11 @@ async function oldAPImain() {
         try {
             await Promise.all(promises);
             const lastSync = new Date();
-            adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+            adapter.setState(
+                `info.lastSync`,
+                new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(),
+                true
+            );
             const state = await adapter.getStateAsync(`info.connection`);
             if (!state.val) {
                 adapter.setState(`info.connection`, true, true);
@@ -322,10 +340,10 @@ async function oldAPImain() {
         }
 
         polling = setTimeout(pollStates, pollingTime);
-    });
+    };
 
     pollStates();
-} // endOldAPImain
+}
 
 async function legacyAPImain() {
     // here we store the id of the battery
@@ -400,7 +418,7 @@ async function legacyAPImain() {
         return void adapter.restart();
     }
 
-    const pollStates = (async () => {
+    const pollStates = async () => {
         try {
             let data = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
             data = JSON.parse(data);
@@ -421,14 +439,18 @@ async function legacyAPImain() {
 
             // update the lastSync manually
             const lastSync = new Date();
-            adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+            adapter.setState(
+                `info.lastSync`,
+                new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(),
+                true
+            );
 
             // update the info connection state
             const state = await adapter.getStateAsync(`info.connection`);
             if (!state || !state.val) {
                 adapter.setState(`info.connection`, true, true);
                 adapter.log.debug(`[CONNECT] Connection successfuly established`);
-            } // endIf
+            }
         } catch (e) {
             adapter.log.warn(`[REQUEST] <== ${e.message}`);
             adapter.setState(`info.connection`, false, true);
@@ -436,7 +458,7 @@ async function legacyAPImain() {
         }
 
         setTimeout(pollStates, pollingTime);
-    });
+    };
 
     pollStates();
 }
@@ -466,7 +488,7 @@ async function requestSettings() {
     const data = await requestPromise(`http://${ip}:8080/api/configuration`);
     adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
     await adapter.setStateAsync(`info.configuration`, data, true);
-} // endRequestSettings
+}
 
 async function requestIosEndpoint() {
     try {
@@ -478,15 +500,13 @@ async function requestIosEndpoint() {
 
         adapter.log.debug(`io json: ${data}`);
 
-        const relevantIOs = [
-            'DO_12',
-            'DO_13',
-            'DO_14'
-        ];
+        const relevantIOs = ['DO_12', 'DO_13', 'DO_14'];
 
         for (const io of relevantIOs) {
             promises.push(adapter.setStateAsync(`ios.${io}`, !!data[io].status, true));
         }
+
+        await Promise.all(promises);
     } catch (e) {
         throw new Error(`Could not request ios endpoint: ${e.message}`);
     }
@@ -532,7 +552,7 @@ async function requestInverterEndpoint() {
             adapter.log.debug(`Could not request inverter endpoint: ${e.message}`);
         }
     }
-} // endRequestInverterEndpoint
+}
 
 /**
  * request online status of the battery
@@ -603,13 +623,13 @@ async function requestPowermeterEndpoint() {
     } catch (e) {
         throw new Error(`Could not request powermeter endpoint: ${e.message}`);
     }
-} // endRequestPowermeterEndpoint
+}
 
 function setBatteryStates(json) {
     if (json.ReturnCode) {
         adapter.log.warn(`[DATA] <== Return Code ${json.ReturnCode}`);
         return;
-    } // endIf
+    }
     const lastSync = new Date();
     adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
     adapter.setState(`status.consumption`, json.Consumption_W, true);
@@ -622,7 +642,11 @@ function setBatteryStates(json) {
     adapter.setState(`status.acVoltage`, json.Uac, true);
     adapter.setState(`status.batteryVoltage`, json.Ubat, true);
     const systemTime = new Date(json.Timestamp);
-    adapter.setState(`status.systemTime`, new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
+    adapter.setState(
+        `status.systemTime`,
+        new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(),
+        true
+    );
     if (json.IsSystemInstalled === 1) {
         adapter.setState(`status.systemInstalled`, true, true);
     } else {
@@ -635,14 +659,15 @@ function setBatteryStates(json) {
     adapter.setState(`status.flowGridBattery`, json.FlowGridBattery, true);
     adapter.setState(`status.flowProductionBattery`, json.FlowProductionBattery, true);
     adapter.setState(`status.flowProductionGrid`, json.FlowProductionGrid, true);
-} // endSetBatteryStates
+    adapter.setState('status.systemStatus', json.SystemStatus, true);
+}
 
 async function requestStateAndSetOldAPI(code, state) {
     let res = await requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`);
     res = res.trim();
     adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${state}`);
     adapter.setState(state, parseFloat(res), true);
-} // endRequestStateAndSetOldAPI
+}
 
 // If started as allInOne/compact mode => return function to create instance
 if (require.main === module) {
@@ -650,4 +675,4 @@ if (require.main === module) {
     startAdapter();
 } else {
     module.exports = startAdapter;
-} // endElse
+}

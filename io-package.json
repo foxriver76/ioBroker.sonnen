@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.10.0",
+    "version": "1.11.0",
     "news": {
+      "1.11.0": {
+        "en": "added `status.systemStatus` to indicate if the battery is connected to the grid (closes #139)",
+        "de": "status hinzugefügt. systemStatus, um anzuzeigen, ob die Batterie mit dem Netz verbunden ist (schließt #139)",
+        "ru": "добавлен статус. systemStatus указать, подключен ли аккумулятор к сети (closes #139)",
+        "pt": "status adicionado. systemStatus para indicar se a bateria está conectada à grade (fecha #139)",
+        "nl": "toegevoegde status. Systeemstatus om aan te geven of de accu verbonden is met het netwerk",
+        "fr": "statut ajouté. systemStatus pour indiquer si la batterie est connectée au réseau (ferme #139)",
+        "it": "stato aggiunto. systemStatus per indicare se la batteria è collegata alla griglia (chiude #139)",
+        "es": "estado añadido. sistemaEstatus para indicar si la batería está conectada a la cuadrícula (cerca #139)",
+        "pl": "dodano status. SystemStatus wskazuje, że bateria jest połączona z siatką (okrąża 139)",
+        "zh-cn": "附加地位。 系统说明电池是否与电网连接(第139号)"
+      },
       "1.10.0": {
         "en": "added battery discrete io states",
         "de": "Batterie diskrete io-Zustände hinzugefügt",
@@ -74,18 +86,6 @@
         "es": "también sondear la configuración en lugar de actualizarla solo una vez al inicio (cierra # 70)",
         "pl": "również odpytywanie konfiguracji zamiast aktualizowania jej tylko raz na początku (zamyka #70)",
         "zh-cn": "还要轮询配置，而不是在开始时只更新一次（关闭 #70）"
-      },
-      "1.9.2": {
-        "en": "fix for legacy API",
-        "de": "Fix für Legacy-API",
-        "ru": "исправление для устаревшего API",
-        "pt": "correção para API legada",
-        "nl": "fix voor verouderde API",
-        "fr": "correctif pour l'ancienne API",
-        "it": "correzione per API legacy",
-        "es": "corrección para API heredada",
-        "pl": "poprawka dla starszego API",
-        "zh-cn": "修复遗留 API"
       }
     },
     "title": "sonnen",
