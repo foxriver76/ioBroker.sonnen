@@ -13,3 +13,7 @@ admin/i18n/*/flat.txt
 *.launch
 .settings/
 *.sublime-workspace
+
+
+# ioBroker dev-server
+.dev-server/

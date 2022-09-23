@@ -1,6 +1,7 @@
-'use strict';
-
-const newAPIStates = [
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.oldAPIStates = exports.getPowermeterStates = exports.newAPIStates = void 0;
+exports.newAPIStates = [
     {
         _id: `status.userSoc`,
         type: `state`,
@@ -553,13 +554,11 @@ const newAPIStates = [
         native: {}
     }
 ];
-
 /**
  * Returns the powermeter states objects in an array
  *
- * @param {string} id - powermeter id
- * @param {string} direction - used as name of channel
- * @returns {({common: {name: string}, native: {}, _id: string, type: string}|{common: {role: string, read: boolean, name: string, type: string, write: boolean, desc: string}, native: {}, _id: string, type: string})[]}
+ * @param id - powermeter id
+ * @param direction - used as name of channel
  */
 const getPowermeterStates = (id, direction) => {
     return [
@@ -769,8 +768,8 @@ const getPowermeterStates = (id, direction) => {
         }
     ];
 };
-
-const oldAPIStates = [
+exports.getPowermeterStates = getPowermeterStates;
+exports.oldAPIStates = [
     {
         _id: `status.pacCharge`,
         type: `state`,
@@ -861,9 +860,4 @@ const oldAPIStates = [
         native: {}
     }
 ];
-
-module.exports = {
-    newAPIStates,
-    oldAPIStates,
-    getPowermeterStates
-};
+//# sourceMappingURL=utils.js.map
