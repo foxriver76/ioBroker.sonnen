@@ -1,8 +1,9 @@
-import utils from '@iobroker/adapter-core';
+import * as utils from '@iobroker/adapter-core';
 import { newAPIStates, oldAPIStates, getPowermeterStates } from './lib/utils';
 import requestPromise, { RequestPromiseOptions } from 'request-promise-native';
 
 type ApiVersion = 'old' | 'new' | 'v2' | 'legacy';
+type OnlineStatus = 'true' | 'false';
 
 interface StatusData {
     SystemStatus: string;
@@ -582,21 +583,16 @@ async function requestInverterEndpoint() {
 
 /**
  * request online status of the battery
- *
- * @return {Promise<void>}
  */
-async function requestOnlineStatus() {
+async function requestOnlineStatus(): Promise<void> {
     try {
-        let data = await requestPromise(`http://${ip}/api/online_status`);
-        if (data === `true`) {
-            data = true;
-        } else if (data === `false`) {
-            data = false;
-        } else {
-            throw new Error(`Expected string with "true" or "false" as onlineStatus, got "${data}"`);
+        const data: OnlineStatus = await requestPromise(`http://${ip}/api/online_status`);
+
+        if (data !== 'true' && data !== 'false') {
+            throw new Error(`Expected string with "true" or "false" as onlineStatus, got "${data as any}"`);
         }
 
-        await adapter.setStateAsync(`status.onlineStatus`, data, true);
+        await adapter.setStateAsync(`status.onlineStatus`, data === 'true', true);
     } catch (e: any) {
         throw new Error(`Could not request online status: ${e.message}`);
     }
