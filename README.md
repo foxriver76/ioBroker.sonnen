@@ -316,6 +316,10 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+
+### __WORK IN PROGRESS__
+* (foxriver76) we have ported the code to TypeScript
+
 ### 1.11.0 (2022-06-22)
 * (foxriver76) added `status.systemStatus` to indicate if the battery is connected to the grid (closes #139)
 

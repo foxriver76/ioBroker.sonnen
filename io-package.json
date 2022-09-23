@@ -137,7 +137,8 @@
   "native": {
     "ip": "",
     "token": "",
-    "pollOnlineStatus": true
+    "pollOnlineStatus": true,
+    "pollInterval": 7000
   },
   "objects": [],
   "instanceObjects": [

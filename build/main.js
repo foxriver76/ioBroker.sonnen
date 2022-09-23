@@ -1,7 +1,11 @@
-'use strict';
-const utils = require(`@iobroker/adapter-core`); // Get common adapter utils
-const helper = require(`${__dirname}/lib/utils`);
-const requestPromise = require(`request-promise-native`);
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const adapter_core_1 = __importDefault(require("@iobroker/adapter-core"));
+const utils_1 = require("./lib/utils");
+const request_promise_native_1 = __importDefault(require("request-promise-native"));
 let polling;
 let ip;
 let adapter;
@@ -11,12 +15,8 @@ let restartTimer;
 let powermeterCreated = false;
 const requestOptions = { headers: {} };
 let inverterEndpoint = false;
-function startAdapter(options) {
-    options = options || {};
-    Object.assign(options, {
-        name: `sonnen`
-    });
-    adapter = new utils.Adapter(options);
+function startAdapter(options = {}) {
+    adapter = new adapter_core_1.default.Adapter({ ...options, name: 'sonnen' });
     adapter.on(`unload`, async (callback) => {
         try {
             clearTimeout(polling);
@@ -40,7 +40,7 @@ function startAdapter(options) {
                 adapter.log.debug('[START] Auth-Token provided... trying official API');
                 requestOptions.headers['Auth-Token'] = adapter.config.token;
                 try {
-                    await requestPromise({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
+                    await (0, request_promise_native_1.default)({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
                     apiVersion = `v2`;
                     adapter.log.debug('[START] Check ok, using official API');
                     return void main();
@@ -50,7 +50,7 @@ function startAdapter(options) {
                 }
             }
             try {
-                await requestPromise({ url: `http://${ip}:8080/api/v1/status`, timeout: 2000 });
+                await (0, request_promise_native_1.default)({ url: `http://${ip}:8080/api/v1/status`, timeout: 2000 });
                 adapter.log.debug(`[START] 8080 API detected`);
                 apiVersion = `new`;
                 return void main();
@@ -60,8 +60,8 @@ function startAdapter(options) {
             }
             try {
                 // test if both works, else use legacy, because of incomplete implementation of API
-                await requestPromise(`http://${ip}:7979/rest/devices/battery/M03`);
-                await requestPromise(`http://${ip}:7979/rest/devices/battery/M034`);
+                await (0, request_promise_native_1.default)(`http://${ip}:7979/rest/devices/battery/M03`);
+                await (0, request_promise_native_1.default)(`http://${ip}:7979/rest/devices/battery/M034`);
                 apiVersion = `old`;
                 adapter.log.debug(`[START] 7979 API detected`);
                 return void main();
@@ -70,7 +70,7 @@ function startAdapter(options) {
                 adapter.log.debug(`[START] It's not 7979, because ${e.message}`);
             }
             try {
-                await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
+                await (0, request_promise_native_1.default)(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
                 apiVersion = 'legacy';
                 return void main();
             }
@@ -88,21 +88,21 @@ function startAdapter(options) {
             return;
         } // Ignore acknowledged state changes or error states
         id = id.substring(adapter.namespace.length + 1); // remove instance name and id
-        state = state.val;
-        adapter.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${state}`);
+        const stateVal = state.val;
+        adapter.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${stateVal}`);
         if (id === `control.charge`) {
             try {
                 if (apiVersion === 'v2') {
-                    await requestPromise.post({
-                        url: `http://${ip}/api/v2/setpoint/charge/${state}`,
+                    await request_promise_native_1.default.post({
+                        url: `http://${ip}/api/v2/setpoint/charge/${stateVal}`,
                         ...requestOptions
                     });
                 }
                 else {
-                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/charge/${state}` });
+                    await request_promise_native_1.default.put({ url: `http://${ip}:8080/api/v1/setpoint/charge/${stateVal}` });
                 }
                 adapter.setState(`control.charge`, state, true);
-                adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
+                adapter.log.debug(`[PUT] ==> Sent ${stateVal} to charge`);
             }
             catch (e) {
                 adapter.log.warn(`[PUT] Error ${e.message}`);
@@ -111,16 +111,16 @@ function startAdapter(options) {
         else if (id === `control.discharge`) {
             try {
                 if (apiVersion === 'v2') {
-                    await requestPromise.post({
-                        url: `http://${ip}/api/v2/setpoint/discharge/${state}`,
+                    await request_promise_native_1.default.post({
+                        url: `http://${ip}/api/v2/setpoint/discharge/${stateVal}`,
                         ...requestOptions
                     });
                 }
                 else {
-                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/discharge/${state}` });
+                    await request_promise_native_1.default.put({ url: `http://${ip}:8080/api/v1/setpoint/discharge/${stateVal}` });
                 }
                 adapter.setState(`control.discharge`, state, true);
-                adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
+                adapter.log.debug(`[PUT] ==> Sent ${stateVal} to discharge`);
             }
             catch (e) {
                 adapter.log.warn(`[PUT] Error ${e.message}`);
@@ -136,9 +136,11 @@ async function main() {
     adapter.subscribeStates(`*`);
     // create device namespace
     await adapter.setForeignObjectNotExistsAsync(adapter.namespace, {
-        type: `device`,
+        // @ts-expect-error issue already opened it is allowed
+        type: 'device',
+        // @ts-expect-error issue already opened it is allowed
         common: {
-            name: `sonnen device`
+            name: 'sonnen device'
         }
     });
     adapter.log.debug(`[START] Started Adapter with: ${ip}`);
@@ -151,8 +153,9 @@ async function main() {
     const statusUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/status` : `http://${ip}:8080/api/v1/status`;
     // create objects
     const promises = [];
-    for (const obj of helper.newAPIStates) {
+    for (const obj of utils_1.newAPIStates) {
         const id = obj._id;
+        // @ts-expect-error non-optional prop delete
         delete obj._id;
         // use extend to update stuff like types if they were wrong, but preserve name
         promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
@@ -178,7 +181,7 @@ async function main() {
     }
     await Promise.all(promises);
     try {
-        const data = await requestPromise(statusUrl); // poll states on start
+        const data = await (0, request_promise_native_1.default)(statusUrl); // poll states on start
         const state = await adapter.getStateAsync(`info.connection`);
         if (!state || !state.val) {
             adapter.setState(`info.connection`, true, true);
@@ -212,7 +215,7 @@ async function main() {
     const pollStates = async () => {
         // poll states every [30] seconds
         try {
-            const data = await requestPromise(statusUrl);
+            const data = await (0, request_promise_native_1.default)(statusUrl);
             const state = await adapter.getStateAsync(`info.connection`);
             if (!state || !state.val) {
                 adapter.setState(`info.connection`, true, true);
@@ -252,8 +255,9 @@ async function main() {
 async function oldAPImain() {
     // create objects
     let promises = [];
-    for (const obj of helper.oldAPIStates) {
+    for (const obj of utils_1.oldAPIStates) {
         const id = obj._id;
+        // @ts-expect-error non-optional prop delete
         delete obj._id;
         // use extend to update stuff like types if they were wrong, but preserve name
         promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
@@ -272,9 +276,9 @@ async function oldAPImain() {
     try {
         await Promise.all(promises);
         const lastSync = new Date();
-        adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+        adapter.setState(`info.lastSync`, new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
         const state = await adapter.getStateAsync(`info.connection`);
-        if (!state.val) {
+        if (!(state === null || state === void 0 ? void 0 : state.val)) {
             adapter.setState(`info.connection`, true, true);
         }
     }
@@ -296,17 +300,11 @@ async function oldAPImain() {
         try {
             await Promise.all(promises);
             const lastSync = new Date();
-            adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
-            const state = await adapter.getStateAsync(`info.connection`);
-            if (!state.val) {
-                adapter.setState(`info.connection`, true, true);
-            }
+            adapter.setState(`info.lastSync`, new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+            adapter.setStateChanged(`info.connection`, true, true);
         }
         catch (e) {
-            const state = await adapter.getStateAsync(`info.connection`);
-            if (state.val === true) {
-                adapter.setState(`info.connection`, false, true);
-            }
+            await adapter.setStateChangedAsync(`info.connection`, false, true);
             adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
         }
         polling = setTimeout(pollStates, pollingTime);
@@ -317,8 +315,8 @@ async function legacyAPImain() {
     // here we store the id of the battery
     let batteryId;
     try {
-        let data = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
-        data = JSON.parse(data);
+        const res = await (0, request_promise_native_1.default)(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
+        const data = JSON.parse(res);
         // we got data successfully -> mark as connected
         adapter.setState(`info.connection`, true, true);
         adapter.log.debug(`[CONNECT] Connection successfuly established`);
@@ -340,6 +338,7 @@ async function legacyAPImain() {
                         type: 'state',
                         common: {
                             name: attr,
+                            // @ts-expect-error investigate later
                             read: true,
                             write: false,
                             type: typeof stateVal,
@@ -365,6 +364,7 @@ async function legacyAPImain() {
                     await adapter.setObjectNotExistsAsync(`${device.id}.${attr}`, {
                         type: 'state',
                         common: {
+                            // @ts-expect-error investigate later
                             read: true,
                             write: false,
                             name: attr,
@@ -383,8 +383,8 @@ async function legacyAPImain() {
     }
     const pollStates = async () => {
         try {
-            let data = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
-            data = JSON.parse(data);
+            const res = await (0, request_promise_native_1.default)(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
+            const data = JSON.parse(res);
             for (const device of Object.values(data.devices)) {
                 if (device.id === batteryId) {
                     for (const attr of Object.keys(device)) {
@@ -401,7 +401,7 @@ async function legacyAPImain() {
             }
             // update the lastSync manually
             const lastSync = new Date();
-            adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+            adapter.setState(`info.lastSync`, new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
             // update the info connection state
             const state = await adapter.getStateAsync(`info.connection`);
             if (!state || !state.val) {
@@ -420,7 +420,7 @@ async function legacyAPImain() {
 }
 /**
  * Converts a state value to the correct type
- * @param {any} stateVal - state value to convert
+ * @param stateVal - state value to convert
  */
 function convertLegacyState(stateVal) {
     if (stateVal === 'TRUE') {
@@ -429,20 +429,20 @@ function convertLegacyState(stateVal) {
     if (stateVal === 'FALSE') {
         return false;
     }
-    if (!isNaN(stateVal)) {
+    if (!isNaN(Number(stateVal))) {
         // it's a number
         return parseFloat(stateVal);
     }
     return stateVal;
 }
 async function requestSettings() {
-    const data = await requestPromise(`http://${ip}:8080/api/configuration`);
+    const data = await (0, request_promise_native_1.default)(`http://${ip}:8080/api/configuration`);
     adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
     await adapter.setStateAsync(`info.configuration`, data, true);
 }
 async function requestIosEndpoint() {
     try {
-        let data = await requestPromise(`http://${ip}:8080/api/ios`);
+        let data = await (0, request_promise_native_1.default)(`http://${ip}:8080/api/ios`);
         const promises = [];
         promises.push(adapter.setStateAsync(`info.ios`, data, true));
         data = JSON.parse(data);
@@ -459,7 +459,7 @@ async function requestIosEndpoint() {
 } // requestIosEndpoint
 async function requestInverterEndpoint() {
     try {
-        let data = await requestPromise(`http://${ip}:8080/api/inverter`);
+        let data = await (0, request_promise_native_1.default)(`http://${ip}:8080/api/inverter`);
         const promises = [];
         promises.push(adapter.setStateAsync(`info.inverter`, data, true));
         data = JSON.parse(data);
@@ -503,7 +503,7 @@ async function requestInverterEndpoint() {
  */
 async function requestOnlineStatus() {
     try {
-        let data = await requestPromise(`http://${ip}/api/online_status`);
+        let data = await (0, request_promise_native_1.default)(`http://${ip}/api/online_status`);
         if (data === `true`) {
             data = true;
         }
@@ -521,7 +521,7 @@ async function requestOnlineStatus() {
 }
 async function requestPowermeterEndpoint() {
     try {
-        let data = await requestPromise(`http://${ip}:8080/api/powermeter`);
+        let data = await (0, request_promise_native_1.default)(`http://${ip}:8080/api/powermeter`);
         const promises = [];
         promises.push(adapter.setStateAsync(`info.powerMeter`, data, true));
         data = JSON.parse(data);
@@ -545,9 +545,10 @@ async function requestPowermeterEndpoint() {
         for (const pm of Object.keys(data)) {
             for (const state of relevantStates) {
                 if (!powermeterCreated) {
-                    const objs = helper.getPowermeterStates(pm, data[pm].direction);
+                    const objs = (0, utils_1.getPowermeterStates)(pm, data[pm].direction);
                     for (const obj of objs) {
                         const id = obj._id;
+                        // @ts-expect-error non-optional prop deleted
                         delete obj._id;
                         await adapter.extendObjectAsync(id, obj);
                     }
@@ -569,7 +570,7 @@ function setBatteryStates(json) {
         return;
     }
     const lastSync = new Date();
-    adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+    adapter.setState(`info.lastSync`, new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
     adapter.setState(`status.consumption`, json.Consumption_W, true);
     adapter.setState(`status.batteryCharging`, json.BatteryCharging, true);
     adapter.setState(`status.production`, json.Production_W, true);
@@ -580,7 +581,7 @@ function setBatteryStates(json) {
     adapter.setState(`status.acVoltage`, json.Uac, true);
     adapter.setState(`status.batteryVoltage`, json.Ubat, true);
     const systemTime = new Date(json.Timestamp);
-    adapter.setState(`status.systemTime`, new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
+    adapter.setState(`status.systemTime`, new Date(systemTime.getTime() - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
     if (json.IsSystemInstalled === 1) {
         adapter.setState(`status.systemInstalled`, true, true);
     }
@@ -596,11 +597,11 @@ function setBatteryStates(json) {
     adapter.setState(`status.flowProductionGrid`, json.FlowProductionGrid, true);
     adapter.setState('status.systemStatus', json.SystemStatus, true);
 }
-async function requestStateAndSetOldAPI(code, state) {
-    let res = await requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`);
+async function requestStateAndSetOldAPI(code, stateId) {
+    let res = await (0, request_promise_native_1.default)(`http://${ip}:7979/rest/devices/battery/${code}`);
     res = res.trim();
-    adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${state}`);
-    adapter.setState(state, parseFloat(res), true);
+    adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${stateId}`);
+    adapter.setState(stateId, parseFloat(res), true);
 }
 // If started as allInOne/compact mode => return function to create instance
 if (require.main === module) {

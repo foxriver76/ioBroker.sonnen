@@ -1,25 +1,56 @@
-'use strict';
+import utils from '@iobroker/adapter-core';
+import { newAPIStates, oldAPIStates, getPowermeterStates } from './lib/utils';
+import requestPromise, { RequestPromiseOptions } from 'request-promise-native';
 
-const utils = require(`@iobroker/adapter-core`); // Get common adapter utils
-const helper = require(`${__dirname}/lib/utils`);
-const requestPromise = require(`request-promise-native`);
-let polling;
-let ip;
-let adapter;
-let pollingTime;
-let apiVersion;
-let restartTimer;
+type ApiVersion = 'old' | 'new' | 'v2' | 'legacy';
+
+interface StatusData {
+    SystemStatus: string;
+    FlowConsumptionProduction: number;
+    FlowProductionGrid: number;
+    FlowProductionBattery: number;
+    FlowGridBattery: number;
+    FlowConsumptionGrid: number;
+    FlowConsumptionBattery: number;
+    GridFeedIn_W: number;
+    IsSystemInstalled: number;
+    Consumption_W: number;
+    BatteryCharging: boolean;
+    Production_W: number;
+    Pac_total_W: number;
+    /** relative state of charge */
+    RSOC: number;
+    /** user state of charge */
+    USOC: number;
+    Fac: number;
+    Uac: number;
+    Ubat: number;
+    Timestamp: string;
+    ReturnCode: number;
+}
+
+interface LegacyResponse {
+    devices: Record<string, LegacyDevice>;
+}
+
+interface LegacyDevice {
+    id: number;
+    parent: number;
+    [other: string]: any;
+}
+
+let polling: NodeJS.Timeout;
+let ip: string;
+let adapter: ioBroker.Adapter;
+let pollingTime: number;
+let apiVersion: ApiVersion;
+let restartTimer: NodeJS.Timeout;
 let powermeterCreated = false;
-const requestOptions = { headers: {} };
+const requestOptions: RequestPromiseOptions = { headers: {} };
 let inverterEndpoint = false;
 
-function startAdapter(options) {
-    options = options || {};
-    Object.assign(options, {
-        name: `sonnen`
-    });
-
-    adapter = new utils.Adapter(options);
+function startAdapter(options: Partial<utils.AdapterOptions> = {}) {
+    adapter = new utils.Adapter({ ...options, name: 'sonnen' });
 
     adapter.on(`unload`, async callback => {
         try {
@@ -42,13 +73,13 @@ function startAdapter(options) {
             adapter.log.debug(`[START] Check API`);
             if (adapter.config.token) {
                 adapter.log.debug('[START] Auth-Token provided... trying official API');
-                requestOptions.headers['Auth-Token'] = adapter.config.token;
+                requestOptions.headers!['Auth-Token'] = adapter.config.token;
                 try {
                     await requestPromise({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
                     apiVersion = `v2`;
                     adapter.log.debug('[START] Check ok, using official API');
                     return void main();
-                } catch (e) {
+                } catch (e: any) {
                     adapter.log.error(`Auth-Token provided, but could not use official API: ${e.message}`);
                 }
             }
@@ -58,7 +89,7 @@ function startAdapter(options) {
                 adapter.log.debug(`[START] 8080 API detected`);
                 apiVersion = `new`;
                 return void main();
-            } catch (e) {
+            } catch (e: any) {
                 adapter.log.debug(`[START] It's not 8080, because ${e.message}`);
             }
 
@@ -69,7 +100,7 @@ function startAdapter(options) {
                 apiVersion = `old`;
                 adapter.log.debug(`[START] 7979 API detected`);
                 return void main();
-            } catch (e) {
+            } catch (e: any) {
                 adapter.log.debug(`[START] It's not 7979, because ${e.message}`);
             }
 
@@ -77,7 +108,7 @@ function startAdapter(options) {
                 await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
                 apiVersion = 'legacy';
                 return void main();
-            } catch (e) {
+            } catch (e: any) {
                 adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e.message}`);
                 restartTimer = setTimeout(adapter.restart, 30000);
             }
@@ -91,38 +122,38 @@ function startAdapter(options) {
             return;
         } // Ignore acknowledged state changes or error states
         id = id.substring(adapter.namespace.length + 1); // remove instance name and id
-        state = state.val;
+        const stateVal = state.val;
 
-        adapter.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${state}`);
+        adapter.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${stateVal}`);
 
         if (id === `control.charge`) {
             try {
                 if (apiVersion === 'v2') {
                     await requestPromise.post({
-                        url: `http://${ip}/api/v2/setpoint/charge/${state}`,
+                        url: `http://${ip}/api/v2/setpoint/charge/${stateVal}`,
                         ...requestOptions
                     });
                 } else {
-                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/charge/${state}` });
+                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/charge/${stateVal}` });
                 }
                 adapter.setState(`control.charge`, state, true);
-                adapter.log.debug(`[PUT] ==> Sent ${state} to charge`);
-            } catch (e) {
+                adapter.log.debug(`[PUT] ==> Sent ${stateVal} to charge`);
+            } catch (e: any) {
                 adapter.log.warn(`[PUT] Error ${e.message}`);
             }
         } else if (id === `control.discharge`) {
             try {
                 if (apiVersion === 'v2') {
                     await requestPromise.post({
-                        url: `http://${ip}/api/v2/setpoint/discharge/${state}`,
+                        url: `http://${ip}/api/v2/setpoint/discharge/${stateVal}`,
                         ...requestOptions
                     });
                 } else {
-                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/discharge/${state}` });
+                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/discharge/${stateVal}` });
                 }
                 adapter.setState(`control.discharge`, state, true);
-                adapter.log.debug(`[PUT] ==> Sent ${state} to discharge`);
-            } catch (e) {
+                adapter.log.debug(`[PUT] ==> Sent ${stateVal} to discharge`);
+            } catch (e: any) {
                 adapter.log.warn(`[PUT] Error ${e.message}`);
             }
         }
@@ -139,9 +170,11 @@ async function main() {
 
     // create device namespace
     await adapter.setForeignObjectNotExistsAsync(adapter.namespace, {
-        type: `device`,
+        // @ts-expect-error issue already opened it is allowed
+        type: 'device',
+        // @ts-expect-error issue already opened it is allowed
         common: {
-            name: `sonnen device`
+            name: 'sonnen device'
         }
     });
 
@@ -159,8 +192,9 @@ async function main() {
 
     // create objects
     const promises = [];
-    for (const obj of helper.newAPIStates) {
+    for (const obj of newAPIStates) {
         const id = obj._id;
+        // @ts-expect-error non-optional prop delete
         delete obj._id;
         // use extend to update stuff like types if they were wrong, but preserve name
         promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
@@ -198,7 +232,7 @@ async function main() {
         }
         adapter.log.debug(`[DATA] <== ${data}`);
         setBatteryStates(JSON.parse(data));
-    } catch (e) {
+    } catch (e: any) {
         adapter.log.warn(`[REQUEST] <== ${e.message}`);
         adapter.setState(`info.connection`, false, true);
         adapter.log.warn(`[CONNECT] Connection failed`);
@@ -206,7 +240,7 @@ async function main() {
 
     try {
         await requestSettings();
-    } catch (e) {
+    } catch (e: any) {
         adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e.message}`);
     }
 
@@ -217,7 +251,7 @@ async function main() {
         if (adapter.config.pollOnlineStatus) {
             await requestOnlineStatus();
         }
-    } catch (e) {
+    } catch (e: any) {
         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
     }
 
@@ -238,16 +272,16 @@ async function main() {
                 if (adapter.config.pollOnlineStatus) {
                     await requestOnlineStatus();
                 }
-            } catch (e) {
+            } catch (e: any) {
                 adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
             }
 
             try {
                 await requestSettings();
-            } catch (e) {
+            } catch (e: any) {
                 adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e.message}`);
             }
-        } catch (e) {
+        } catch (e: any) {
             adapter.log.warn(`[REQUEST] <== ${e.message}`);
             adapter.setState(`info.connection`, false, true);
             adapter.log.warn(`[CONNECT] Connection failed`);
@@ -262,11 +296,12 @@ async function main() {
 /*
  * Internals
  */
-async function oldAPImain() {
+async function oldAPImain(): Promise<void> {
     // create objects
     let promises = [];
-    for (const obj of helper.oldAPIStates) {
+    for (const obj of oldAPIStates) {
         const id = obj._id;
+        // @ts-expect-error non-optional prop delete
         delete obj._id;
         // use extend to update stuff like types if they were wrong, but preserve name
         promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
@@ -289,14 +324,14 @@ async function oldAPImain() {
         const lastSync = new Date();
         adapter.setState(
             `info.lastSync`,
-            new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(),
+            new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(),
             true
         );
         const state = await adapter.getStateAsync(`info.connection`);
-        if (!state.val) {
+        if (!state?.val) {
             adapter.setState(`info.connection`, true, true);
         }
-    } catch (e) {
+    } catch (e: any) {
         adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
     }
 
@@ -318,18 +353,13 @@ async function oldAPImain() {
             const lastSync = new Date();
             adapter.setState(
                 `info.lastSync`,
-                new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(),
+                new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(),
                 true
             );
-            const state = await adapter.getStateAsync(`info.connection`);
-            if (!state.val) {
-                adapter.setState(`info.connection`, true, true);
-            }
-        } catch (e) {
-            const state = await adapter.getStateAsync(`info.connection`);
-            if (state.val === true) {
-                adapter.setState(`info.connection`, false, true);
-            }
+
+            adapter.setStateChanged(`info.connection`, true, true);
+        } catch (e: any) {
+            await adapter.setStateChangedAsync(`info.connection`, false, true);
             adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
         }
 
@@ -341,10 +371,10 @@ async function oldAPImain() {
 
 async function legacyAPImain() {
     // here we store the id of the battery
-    let batteryId;
+    let batteryId: number | undefined;
     try {
-        let data = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
-        data = JSON.parse(data);
+        const res = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
+        const data: LegacyResponse = JSON.parse(res);
 
         // we got data successfully -> mark as connected
         adapter.setState(`info.connection`, true, true);
@@ -369,6 +399,7 @@ async function legacyAPImain() {
                         type: 'state',
                         common: {
                             name: attr,
+                            // @ts-expect-error investigate later
                             read: true,
                             write: false,
                             type: typeof stateVal,
@@ -396,6 +427,7 @@ async function legacyAPImain() {
                     await adapter.setObjectNotExistsAsync(`${device.id}.${attr}`, {
                         type: 'state',
                         common: {
+                            // @ts-expect-error investigate later
                             read: true,
                             write: false,
                             name: attr,
@@ -407,15 +439,15 @@ async function legacyAPImain() {
                 }
             }
         }
-    } catch (e) {
+    } catch (e: any) {
         adapter.log.error(`Could not get initial data - restarting adapter: ${e.message}`);
         return void adapter.restart();
     }
 
     const pollStates = async () => {
         try {
-            let data = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
-            data = JSON.parse(data);
+            const res = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
+            const data: LegacyResponse = JSON.parse(res);
 
             for (const device of Object.values(data.devices)) {
                 if (device.id === batteryId) {
@@ -435,7 +467,7 @@ async function legacyAPImain() {
             const lastSync = new Date();
             adapter.setState(
                 `info.lastSync`,
-                new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(),
+                new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(),
                 true
             );
 
@@ -445,7 +477,7 @@ async function legacyAPImain() {
                 adapter.setState(`info.connection`, true, true);
                 adapter.log.debug(`[CONNECT] Connection successfuly established`);
             }
-        } catch (e) {
+        } catch (e: any) {
             adapter.log.warn(`[REQUEST] <== ${e.message}`);
             adapter.setState(`info.connection`, false, true);
             adapter.log.warn(`[CONNECT] Connection failed`);
@@ -459,9 +491,9 @@ async function legacyAPImain() {
 
 /**
  * Converts a state value to the correct type
- * @param {any} stateVal - state value to convert
+ * @param stateVal - state value to convert
  */
-function convertLegacyState(stateVal) {
+function convertLegacyState(stateVal: string): number | boolean | string {
     if (stateVal === 'TRUE') {
         return true;
     }
@@ -470,7 +502,7 @@ function convertLegacyState(stateVal) {
         return false;
     }
 
-    if (!isNaN(stateVal)) {
+    if (!isNaN(Number(stateVal))) {
         // it's a number
         return parseFloat(stateVal);
     }
@@ -501,7 +533,7 @@ async function requestIosEndpoint() {
         }
 
         await Promise.all(promises);
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(`Could not request ios endpoint: ${e.message}`);
     }
 } // requestIosEndpoint
@@ -538,7 +570,7 @@ async function requestInverterEndpoint() {
         await Promise.all(promises);
         // inverter endpoint exists
         inverterEndpoint = true;
-    } catch (e) {
+    } catch (e: any) {
         if (inverterEndpoint) {
             throw new Error(`Could not request inverter endpoint: ${e.message}`);
         } else {
@@ -565,7 +597,7 @@ async function requestOnlineStatus() {
         }
 
         await adapter.setStateAsync(`status.onlineStatus`, data, true);
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(`Could not request online status: ${e.message}`);
     }
 }
@@ -598,9 +630,10 @@ async function requestPowermeterEndpoint() {
         for (const pm of Object.keys(data)) {
             for (const state of relevantStates) {
                 if (!powermeterCreated) {
-                    const objs = helper.getPowermeterStates(pm, data[pm].direction);
+                    const objs = getPowermeterStates(pm, data[pm].direction);
                     for (const obj of objs) {
                         const id = obj._id;
+                        // @ts-expect-error non-optional prop deleted
                         delete obj._id;
                         await adapter.extendObjectAsync(id, obj);
                     }
@@ -614,18 +647,22 @@ async function requestPowermeterEndpoint() {
         powermeterCreated = true;
 
         await Promise.all(promises);
-    } catch (e) {
+    } catch (e: any) {
         throw new Error(`Could not request powermeter endpoint: ${e.message}`);
     }
 }
 
-function setBatteryStates(json) {
+function setBatteryStates(json: StatusData) {
     if (json.ReturnCode) {
         adapter.log.warn(`[DATA] <== Return Code ${json.ReturnCode}`);
         return;
     }
     const lastSync = new Date();
-    adapter.setState(`info.lastSync`, new Date(lastSync - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+    adapter.setState(
+        `info.lastSync`,
+        new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(),
+        true
+    );
     adapter.setState(`status.consumption`, json.Consumption_W, true);
     adapter.setState(`status.batteryCharging`, json.BatteryCharging, true);
     adapter.setState(`status.production`, json.Production_W, true);
@@ -638,7 +675,7 @@ function setBatteryStates(json) {
     const systemTime = new Date(json.Timestamp);
     adapter.setState(
         `status.systemTime`,
-        new Date(systemTime - systemTime.getTimezoneOffset() * 60000).toISOString(),
+        new Date(systemTime.getTime() - systemTime.getTimezoneOffset() * 60000).toISOString(),
         true
     );
     if (json.IsSystemInstalled === 1) {
@@ -656,11 +693,11 @@ function setBatteryStates(json) {
     adapter.setState('status.systemStatus', json.SystemStatus, true);
 }
 
-async function requestStateAndSetOldAPI(code, state) {
+async function requestStateAndSetOldAPI(code: string, stateId: string): Promise<void> {
     let res = await requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`);
     res = res.trim();
-    adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${state}`);
-    adapter.setState(state, parseFloat(res), true);
+    adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${stateId}`);
+    adapter.setState(stateId, parseFloat(res), true);
 }
 
 // If started as allInOne/compact mode => return function to create instance
