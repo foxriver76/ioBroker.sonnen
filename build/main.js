@@ -29,6 +29,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(require("@iobroker/adapter-core"));
 const utils_1 = require("./lib/utils");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const ENDPOINTS_CONFIG_V2 = [
+    'CM_MarketingModuleCapacity',
+    'DE_Software',
+    'EM_OperatingMode',
+    'EM_ToU_Schedule',
+    'EM_USOC',
+    'EM_US_CHP_Max_SOC',
+    'EM_US_CHP_Min_SOC',
+    'EM_US_GENRATOR_TYPE',
+    'EM_US_GEN_POWER_SET_POINT',
+    'EM_US_RE_ENABLE_MICROGRID',
+    'EM_US_USER_INPUT_TIME_ONE',
+    'EM_US_USER_INPUT_TIME_THREE',
+    'EM_US_USER_INPUT_TIME_TWO',
+    'IC_BatteryModules',
+    'IC_InverterMaxPower_w',
+    'NVM_PfcFixedCosPhi',
+    'NVM_PfcIsFixedCosPhiActive',
+    'NVM_PfcIsFixedCosPhiLagging'
+];
 let polling;
 let ip;
 let adapter;
@@ -64,7 +84,7 @@ function startAdapter(options = {}) {
                 requestOptions.headers['Auth-Token'] = adapter.config.token;
                 try {
                     await (0, request_promise_native_1.default)({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
-                    apiVersion = `v2`;
+                    apiVersion = 'v2';
                     adapter.log.debug('[START] Check ok, using official API');
                     return void main();
                 }
@@ -75,7 +95,7 @@ function startAdapter(options = {}) {
             try {
                 await (0, request_promise_native_1.default)({ url: `http://${ip}:8080/api/v1/status`, timeout: 2000 });
                 adapter.log.debug(`[START] 8080 API detected`);
-                apiVersion = `new`;
+                apiVersion = 'v1';
                 return void main();
             }
             catch (e) {
@@ -128,7 +148,7 @@ function startAdapter(options = {}) {
                 adapter.log.debug(`[PUT] ==> Sent ${stateVal} to charge`);
             }
             catch (e) {
-                adapter.log.warn(`[PUT] Error ${e.message}`);
+                adapter.log.warn(`Error changing charge: ${e.message}`);
             }
         }
         else if (id === `control.discharge`) {
@@ -146,7 +166,20 @@ function startAdapter(options = {}) {
                 adapter.log.debug(`[PUT] ==> Sent ${stateVal} to discharge`);
             }
             catch (e) {
-                adapter.log.warn(`[PUT] Error ${e.message}`);
+                adapter.log.warn(`Error changing discharge: ${e.message}`);
+            }
+        }
+        else if (id.startsWith('configurations.')) {
+            const command = id.split('.')[1];
+            const data = {};
+            const val = typeof stateVal === 'number' ? stateVal.toString() : stateVal;
+            data[command] = val;
+            adapter.log.debug(`[PUT] ==> Sent ${JSON.stringify(data)} to configurations`);
+            try {
+                await request_promise_native_1.default.put({ url: `http://${ip}/api/v2/configurations`, ...requestOptions, json: data });
+            }
+            catch (e) {
+                adapter.log.error(`Could not change configuration "${command}": ${e.message}`);
             }
         }
     });
@@ -167,7 +200,7 @@ async function main() {
         }
     });
     adapter.log.debug(`[START] Started Adapter with: ${ip}`);
-    if (apiVersion === `old`) {
+    if (apiVersion === 'old') {
         return void oldAPImain();
     }
     if (apiVersion === 'legacy') {
@@ -176,12 +209,22 @@ async function main() {
     const statusUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/status` : `http://${ip}:8080/api/v1/status`;
     // create objects
     const promises = [];
-    for (const obj of utils_1.newAPIStates) {
+    for (const obj of utils_1.generalAPIStates) {
         const id = obj._id;
-        // @ts-expect-error non-optional prop delete
-        delete obj._id;
         // use extend to update stuff like types if they were wrong, but preserve name
         promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
+    }
+    const specificStates = apiVersion === 'v2' ? utils_1.apiStatesV2 : utils_1.apiStatesV1;
+    for (const obj of specificStates) {
+        const id = obj._id;
+        // use extend to update stuff like types if they were wrong, but preserve name
+        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
+    }
+    if (apiVersion === 'v2') {
+        // cleanup old states
+        for (const obj of utils_1.apiStatesV1) {
+            promises.push(adapter.delObjectAsync(obj._id));
+        }
     }
     if (adapter.config.pollOnlineStatus) {
         promises.push(adapter.extendObjectAsync('status.onlineStatus', {
@@ -280,8 +323,6 @@ async function oldAPImain() {
     let promises = [];
     for (const obj of utils_1.oldAPIStates) {
         const id = obj._id;
-        // @ts-expect-error non-optional prop delete
-        delete obj._id;
         // use extend to update stuff like types if they were wrong, but preserve name
         promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
     }
@@ -459,6 +500,10 @@ function convertLegacyState(stateVal) {
     return stateVal;
 }
 async function requestSettings() {
+    if (apiVersion === 'v2') {
+        requestSettingsV2();
+        return;
+    }
     const data = await (0, request_promise_native_1.default)(`http://${ip}:8080/api/configuration`);
     adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
     await adapter.setStateAsync(`info.configuration`, data, true);
@@ -565,8 +610,6 @@ async function requestPowermeterEndpoint() {
                     const objs = (0, utils_1.getPowermeterStates)(pm, data[pm].direction);
                     for (const obj of objs) {
                         const id = obj._id;
-                        // @ts-expect-error non-optional prop deleted
-                        delete obj._id;
                         await adapter.extendObjectAsync(id, obj);
                     }
                 }
@@ -619,6 +662,20 @@ async function requestStateAndSetOldAPI(code, stateId) {
     res = res.trim();
     adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${stateId}`);
     adapter.setState(stateId, parseFloat(res), true);
+}
+/**
+ * Requests settings for V2 endpoint
+ */
+async function requestSettingsV2() {
+    for (const id of ENDPOINTS_CONFIG_V2) {
+        const data = await (0, request_promise_native_1.default)({ url: `http://${ip}/api/v2/configurations/${id}`, ...requestOptions });
+        adapter.log.debug(`Configuration for "${id}" received: ${data}`);
+        let value = JSON.parse(data)[id];
+        if (value && !isNaN(Number(value))) {
+            value = parseFloat(value);
+        }
+        await adapter.setState(`configurations.${id}`, JSON.parse(data)[id], true);
+    }
 }
 // If started as allInOne/compact mode => return function to create instance
 if (require.main === module) {

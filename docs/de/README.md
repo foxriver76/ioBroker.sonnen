@@ -91,6 +91,10 @@ der Tastenkombination "STRG + F".
 ### States
 Hinweis: Die States der Legacy API (Port 3480) und der alten API (Port 7979) sind derzeit nicht oder nur partiell dokumentiert
 
+#### Channel: configurations
+Mit API v2 kann hier die Konfiguration der Batterie in verschiedenen States eingesehen werden. Beschreibbare States können
+genutzt werden, um die Konfiguration zu ändern.
+
 #### Channel: info
 
 * info.connection
@@ -116,6 +120,7 @@ Hinweis: Die States der Legacy API (Port 3480) und der alten API (Port 7979) sin
     |string|R|
 
    *Nur lesbarer JSON String, mit Konfigurationsinformationen der sonnenBatterie.*
+   *Nur in API v1, v2 hat hierfür den channel `configurations`*
    
    
 * info.powerMeter

@@ -1,5 +1,13 @@
 /// <reference types="iobroker" />
-export declare const newAPIStates: ioBroker.AnyObject[];
+export declare const generalAPIStates: ioBroker.AnyObject[];
+/**
+ * API states which are not in general and are exlusive for v1
+ */
+export declare const apiStatesV1: ioBroker.AnyObject[];
+/**
+ * API states which are not in general and are exlusive for v1
+ */
+export declare const apiStatesV2: ioBroker.AnyObject[];
 /**
  * Returns the powermeter states objects in an array
  *
