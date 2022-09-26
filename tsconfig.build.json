@@ -8,8 +8,7 @@
     "declaration": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.js" // js too now
+    "src/**/*.ts"
   ],
   "exclude": [
     "src/**/*.test.ts"

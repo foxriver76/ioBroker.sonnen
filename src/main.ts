@@ -523,9 +523,10 @@ async function requestIosEndpoint() {
         const promises = [];
 
         promises.push(adapter.setStateAsync(`info.ios`, data, true));
-        data = JSON.parse(data);
 
         adapter.log.debug(`io json: ${data}`);
+
+        data = JSON.parse(data);
 
         const relevantIOs = ['DO_12', 'DO_13', 'DO_14'];
 
@@ -600,7 +601,11 @@ async function requestOnlineStatus(): Promise<void> {
 
 async function requestPowermeterEndpoint() {
     try {
-        let data = await requestPromise(`http://${ip}:8080/api/powermeter`);
+        const powermeterUrl =
+            apiVersion === 'v2' ? `http://${ip}/api/v2/powermeter` : `http://${ip}:8080/api/powermeter`;
+        let data = await requestPromise({ url: powermeterUrl, ...requestOptions });
+
+        adapter.log.debug(`Powermeter: ${data}`);
         const promises = [];
         promises.push(adapter.setStateAsync(`info.powerMeter`, data, true));
         data = JSON.parse(data);
