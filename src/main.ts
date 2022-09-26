@@ -290,12 +290,12 @@ async function main() {
     }
 
     try {
-        await requestIosEndpoint();
-        await requestInverterEndpoint();
         await requestPowermeterEndpoint();
         if (adapter.config.pollOnlineStatus) {
             await requestOnlineStatus();
         }
+        await requestIosEndpoint();
+        await requestInverterEndpoint();
     } catch (e: any) {
         adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
     }
@@ -311,12 +311,12 @@ async function main() {
             }
             setBatteryStates(JSON.parse(data));
             try {
-                await requestIosEndpoint();
-                await requestInverterEndpoint();
                 await requestPowermeterEndpoint();
                 if (adapter.config.pollOnlineStatus) {
                     await requestOnlineStatus();
                 }
+                await requestIosEndpoint();
+                await requestInverterEndpoint();
             } catch (e: any) {
                 adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
             }

@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.12.0",
+    "version": "1.12.1",
     "news": {
+      "1.12.1": {
+        "en": "we now use the V2 API for the powermeter endpoint\nwe have ported the code to TypeScript\nadded configuration for V2 API, including ability to change it via adapter",
+        "de": "wir nutzen jetzt die V2 API für den Endpunkt Powermeter\nwir haben den Code zu TypeScript portiert\nzusätzliche Konfiguration für V2 API, einschließlich der Möglichkeit, es über Adapter zu ändern",
+        "ru": "теперь мы используем V2 API для endpoint Powermeter\nмы портировали код для TypeScript\nдобавлена конфигурация для V2 API, включая возможность его изменить через адаптер",
+        "pt": "agora usamos a API V2 para o powermeter endpoint\nnós temos portado o código para TypeScript\nconfiguração adicionada para a API V2, incluindo a capacidade de alterá-la através do adaptador",
+        "nl": "we gebruiken nu de V2 API voor de centrale\nwe hebben de code aan TypeScript gegeven\nvoegde configuratie toe voor V2 API, inclusief vermogen om het te veranderen via adapter",
+        "fr": "nous utilisons maintenant l'API V2 pour le paramètre de puissance\nnous avons porté le code à TypeScript\nconfiguration ajoutée pour l'API V2, y compris la possibilité de le changer via l'adaptateur",
+        "it": "usiamo ora l'API V2 per l'endpoint del powermeter\nabbiamo inviato il codice a TypeScript\nconfigurazione aggiuntiva per API V2, compresa la possibilità di modificarlo tramite adattatore",
+        "es": "ahora utilizamos la API V2 para el punto final del medidor de potencia\nhemos portado el código a TipoScript\nconfiguración agregada para V2 API, incluyendo la capacidad de cambiarlo a través del adaptador",
+        "pl": "obecnie używamy API V2 do końcowego punktu końcowego\nposiadamy kod do TypeScriptu\ndodano konfigurację V2 API, w tym możliwość zmiany jej przez adapter",
+        "zh-cn": "我们现在使用维权参数的五二类阿联普办法\n我们把守则放到各种类型的产品。\n备选案文2"
+      },
       "1.12.0": {
         "en": "we now use the V2 API for the powermeter endpoint\nwe have ported the code to TypeScript\nadded configuration for V2 API, including ability to change it via adapter",
         "de": "wir nutzen jetzt die V2 API für den Endpunkt Powermeter\nwir haben den Code zu TypeScript portiert\nzusätzliche Konfiguration für V2 API, einschließlich der Möglichkeit, es über Adapter zu ändern",
@@ -74,18 +86,6 @@
         "es": "corrección para animaciones de flujo horizontal en Safari (roto con 1.9.4)",
         "pl": "naprawiono animacje przepływu poziomego w Safari (zepsute z 1.9.4)",
         "zh-cn": "修复 Safari 中的水平流动画（1.9.4 损坏）"
-      },
-      "1.9.4": {
-        "en": "widget: make the svg smaller by using a flexbox to center the svg correctly inside the div",
-        "de": "Widget: Verkleinern Sie das SVG, indem Sie eine Flexbox verwenden, um das SVG korrekt im Div correctly zu zentrieren",
-        "ru": "виджет: уменьшите svg, используя flexbox для правильного центрирования svg внутри div",
-        "pt": "widget: torne o svg menor usando uma flexbox para centralizar o svg corretamente dentro do div",
-        "nl": "widget: maak de svg kleiner door een flexbox te gebruiken om de svg correct in de div . te centreren",
-        "fr": "widget : rendre le svg plus petit en utilisant une flexbox pour centrer correctement le svg à l'intérieur du div",
-        "it": "widget: rimpicciolisci l'SVG utilizzando un flexbox per centrare correttamente l'SVG all'interno del div",
-        "es": "widget: haz el svg más pequeño usando un flexbox para centrar el svg correctamente dentro del div",
-        "pl": "widget: zmniejsz svg za pomocą flexboxa, aby prawidłowo wyśrodkować svg w div",
-        "zh-cn": "小部件：通过使用 flexbox 使 svg 在 div 内正确居中，从而使 svg 变小"
       }
     },
     "title": "sonnen",
