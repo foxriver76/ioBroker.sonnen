@@ -757,7 +757,7 @@ async function requestSettingsV2(): Promise<void> {
         if (value && !isNaN(Number(value))) {
             value = parseFloat(value);
         }
-        await adapter.setState(`configurations.${id}`, JSON.parse(data)[id], true);
+        await adapter.setState(`configurations.${id}`, value, true);
     }
 }
 

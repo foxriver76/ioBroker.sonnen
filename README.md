@@ -320,6 +320,9 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### 1.12.2 (2022-10-27)
+* (foxriver76) fixed issue with data types of configuration
+
 ### 1.12.1 (2022-09-26)
 * (foxriver76) we now use the V2 API for the powermeter endpoint
 * (foxriver76) we have ported the code to TypeScript

@@ -674,7 +674,7 @@ async function requestSettingsV2() {
         if (value && !isNaN(Number(value))) {
             value = parseFloat(value);
         }
-        await adapter.setState(`configurations.${id}`, JSON.parse(data)[id], true);
+        await adapter.setState(`configurations.${id}`, value, true);
     }
 }
 // If started as allInOne/compact mode => return function to create instance
