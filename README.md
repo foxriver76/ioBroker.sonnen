@@ -320,6 +320,9 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### 1.12.3 (2022-10-27)
+* (foxriver76) readded widget (closes #189)
+
 ### 1.12.2 (2022-10-27)
 * (foxriver76) fixed issue with data types of configuration
 
