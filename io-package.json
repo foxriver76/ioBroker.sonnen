@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.12.3",
+    "version": "1.13.0",
     "news": {
+      "1.13.0": {
+        "en": "added `latestData` endpoint providing eclipse LED status and time since last full charge",
+        "de": "neuheit Datenendpunkt Bereitstellung Eclipse LED Status und Zeit seit letzte volle Ladung",
+        "ru": "добавлены последние Конечная точка данных, предоставляющая eclipse LED статус и время с последнего полного заряда",
+        "pt": "mais recente Data endpoint fornecendo status e tempo do eclipse LED desde a última carga completa",
+        "nl": "vertaling: Vertaling:",
+        "fr": "le dernier Point d'extrémité de données fournissant l'état LED éclipse et le temps depuis la dernière charge complète",
+        "it": "aggiunto Data endpoint che fornisce lo stato eclissi LED e il tempo dall'ultima carica completa",
+        "es": "más recientes Punto final de datos que proporciona el estado y tiempo del eclipse LED desde la última carga completa",
+        "pl": "dodać Dane końcowe zapewniają zaćmienie LED i czas od ostatniego pełnego zapotrzebowania",
+        "uk": "додано останні Кінцева точка даних забезпечує світлодіодний статус і час з останнього повного заряду",
+        "zh-cn": "最新增加 数据最后点:自上次全额收费以来提供微不足道的LED地位和时间"
+      },
       "1.12.3": {
         "en": "readded widget (closes #189)",
         "de": "widget (schließt #189)",
@@ -76,18 +89,6 @@
         "es": "estados io discretos de la batería añadida",
         "pl": "dodano dyskretne stany io baterii;",
         "zh-cn": "添加了电池离散 io 状态"
-      },
-      "1.9.8": {
-        "en": "make requesting online status optional for 8080 api (closes #76)",
-        "de": "Machen Sie das Anfordern des Online-Status optional für die 8080-API (schließt #76)",
-        "ru": "сделать запрос онлайн-статуса необязательным для API 8080 (закрывает # 76)",
-        "pt": "tornar a solicitação de status online opcional para 8080 api (fecha # 76)",
-        "nl": "maak het aanvragen van online status optioneel voor 8080 api (sluit # 76)",
-        "fr": "rendre la demande de statut en ligne facultative pour 8080 api (ferme #76)",
-        "it": "rendere facoltativa la richiesta dello stato online per l'API 8080 (chiude #76)",
-        "es": "hacer que solicitar el estado en línea sea opcional para 8080 api (cierra # 76)",
-        "pl": "spraw, aby żądanie statusu online było opcjonalne dla 8080 api (zamyka #76)",
-        "zh-cn": "使 8080 api 的在线状态请求成为可选（关闭 #76）"
       }
     },
     "title": "sonnen",

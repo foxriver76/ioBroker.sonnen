@@ -219,9 +219,8 @@ function startAdapter(options: Partial<utils.AdapterOptions> = {}) {
                 adapter.log.debug('[START] Auth-Token provided... trying official API');
                 requestOptions.headers!['Auth-Token'] = adapter.config.token;
                 try {
-                    const data = await requestPromise({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const latestData: LatestData = JSON.parse(data);
+                    await requestPromise({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
+
                     apiVersion = 'v2';
                     adapter.log.debug('[START] Check ok, using official API');
                     return void main();
@@ -392,38 +391,6 @@ async function main() {
 
     await Promise.all(promises);
 
-    try {
-        const data = await requestPromise(statusUrl); // poll states on start
-        const state = await adapter.getStateAsync(`info.connection`);
-        if (!state || !state.val) {
-            adapter.setState(`info.connection`, true, true);
-            adapter.log.debug(`[CONNECT] Connection successfuly established`);
-        }
-        adapter.log.debug(`[DATA] <== ${data}`);
-        setBatteryStates(JSON.parse(data));
-    } catch (e: any) {
-        adapter.log.warn(`[REQUEST] <== ${e.message}`);
-        adapter.setState(`info.connection`, false, true);
-        adapter.log.warn(`[CONNECT] Connection failed`);
-    }
-
-    try {
-        await requestSettings();
-    } catch (e: any) {
-        adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e.message}`);
-    }
-
-    try {
-        await requestPowermeterEndpoint();
-        if (adapter.config.pollOnlineStatus) {
-            await requestOnlineStatus();
-        }
-        await requestIosEndpoint();
-        await requestInverterEndpoint();
-    } catch (e: any) {
-        adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
-    }
-
     const pollStates = async () => {
         // poll states every [30] seconds
         try {
@@ -454,6 +421,12 @@ async function main() {
             adapter.log.warn(`[REQUEST] <== ${e.message}`);
             adapter.setState(`info.connection`, false, true);
             adapter.log.warn(`[CONNECT] Connection failed`);
+        }
+
+        try {
+            await requestLatestData();
+        } catch (e: any) {
+            adapter.log.warn(`[LATEST] Error receiving latest data: ${e.message}`);
         }
 
         polling = setTimeout(pollStates, pollingTime);
@@ -769,7 +742,25 @@ async function requestOnlineStatus(): Promise<void> {
     }
 }
 
-async function requestPowermeterEndpoint() {
+/**
+ * Requests the latest data endpoint and syncs states accordignly
+ */
+async function requestLatestData(): Promise<void> {
+    const latestDataUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/latestdata` : `http://${ip}:8080/api/latestdata`;
+
+    const data = await requestPromise({ url: latestDataUrl, ...requestOptions });
+
+    adapter.log.debug(`Latest data: ${data}`);
+
+    const latestData: LatestData = JSON.parse(data);
+
+    const eclipseStatus = Object.entries(latestData.ic_status['Eclipse Led']).find(value => value[1])![0];
+
+    await adapter.setStateAsync('latestData.eclipseLed', eclipseStatus, true);
+    await adapter.setStateAsync('latestData.secondsSinceFullCharge', latestData.ic_status.secondssincefullcharge, true);
+}
+
+async function requestPowermeterEndpoint(): Promise<void> {
     try {
         const powermeterUrl =
             apiVersion === 'v2' ? `http://${ip}/api/v2/powermeter` : `http://${ip}:8080/api/powermeter`;

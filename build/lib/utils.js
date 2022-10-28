@@ -539,6 +539,42 @@ exports.generalAPIStates = [
             unit: 'W'
         },
         native: {}
+    },
+    {
+        _id: 'latestData',
+        type: 'channel',
+        common: {
+            name: 'Latest Data'
+        },
+        native: {}
+    },
+    {
+        _id: 'latestData.eclipseLed',
+        type: 'state',
+        common: {
+            name: 'Eclipse LED Status',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
+            desc: 'Eclipse LED Status of the Battery',
+            states: ['Blinking Red', 'Pulsing Green', 'Pulsing Orange', 'Pulsing White', 'Solid Red']
+        },
+        native: {}
+    },
+    {
+        _id: 'latestData.secondsSinceFullCharge',
+        type: 'state',
+        common: {
+            name: 'Seconds since full charge',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+            desc: 'Seconds since last time fully charged',
+            unit: 's'
+        },
+        native: {}
     }
 ];
 /**
@@ -666,8 +702,8 @@ exports.apiStatesV2 = [
         type: 'state',
         common: {
             name: 'EM US Generator Type',
-            type: 'number',
-            role: 'value',
+            type: 'string',
+            role: 'text',
             read: true,
             write: true,
             desc: 'EM US Generator Type'
