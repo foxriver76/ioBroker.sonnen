@@ -83,7 +83,9 @@ function startAdapter(options = {}) {
                 adapter.log.debug('[START] Auth-Token provided... trying official API');
                 requestOptions.headers['Auth-Token'] = adapter.config.token;
                 try {
-                    await (0, request_promise_native_1.default)({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
+                    const data = await (0, request_promise_native_1.default)({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const latestData = JSON.parse(data);
                     apiVersion = 'v2';
                     adapter.log.debug('[START] Check ok, using official API');
                     return void main();
@@ -582,11 +584,11 @@ async function requestOnlineStatus() {
 async function requestPowermeterEndpoint() {
     try {
         const powermeterUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/powermeter` : `http://${ip}:8080/api/powermeter`;
-        let data = await (0, request_promise_native_1.default)({ url: powermeterUrl, ...requestOptions });
+        const data = await (0, request_promise_native_1.default)({ url: powermeterUrl, ...requestOptions });
         adapter.log.debug(`Powermeter: ${data}`);
         const promises = [];
         promises.push(adapter.setStateAsync(`info.powerMeter`, data, true));
-        data = JSON.parse(data);
+        const powerMeterData = JSON.parse(data);
         const relevantStates = [
             'a_l1',
             'a_l2',
@@ -604,16 +606,16 @@ async function requestPowermeterEndpoint() {
             'w_l3'
         ];
         // we have multiple powermeters
-        for (const pm of Object.keys(data)) {
+        for (const pm in powerMeterData) {
             for (const state of relevantStates) {
                 if (!powermeterCreated) {
-                    const objs = (0, utils_1.getPowermeterStates)(pm, data[pm].direction);
+                    const objs = (0, utils_1.getPowermeterStates)(pm, powerMeterData[pm].direction);
                     for (const obj of objs) {
                         const id = obj._id;
                         await adapter.extendObjectAsync(id, obj);
                     }
                 }
-                promises.push(adapter.setStateAsync(`powermeter.${pm}.${state}`, data[pm][state], true));
+                promises.push(adapter.setStateAsync(`powermeter.${pm}.${state}`, powerMeterData[pm][state], true));
             }
         }
         // all powermeters created

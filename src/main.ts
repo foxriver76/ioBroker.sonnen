@@ -5,6 +5,128 @@ import requestPromise, { RequestPromiseOptions } from 'request-promise-native';
 type ApiVersion = 'old' | 'v1' | 'v2' | 'legacy';
 type OnlineStatus = 'true' | 'false';
 
+interface LatestData {
+    Consumption_W: number;
+    FullChargeCapacity: number;
+    GridFeedIn_W: number;
+    Pac_total_W: number;
+    Production_W: number;
+    RSOC: number;
+    SetPoint_W: number;
+    Timestamp: string;
+    USOC: number;
+    UTC_Offet: number;
+    ic_status: {
+        'DC Shutdown Reason': {
+            'Critical BMS Alarm': boolean;
+            'Electrolyte Leakage': boolean;
+            'Error condition in BMS initialization': boolean;
+            HW_Shutdown: boolean;
+            'HardWire Over Voltage': boolean;
+            'HardWired Dry Signal A': boolean;
+            'HardWired Under Voltage': boolean;
+            'Holding Circuit Error': boolean;
+            'Initialization Timeout': boolean;
+            'Initialization of AC contactor failed': boolean;
+            'Initialization of BMS hardware failed': boolean;
+            'Initialization of DC contactor failed': boolean;
+            'Initialization of Inverter failed': boolean;
+            'Invalid or no SystemType was set': boolean;
+            'Inverter Over Temperature': boolean;
+            'Inverter Under Voltage': boolean;
+            'Inverter Unknown Error': boolean;
+            'Inverter Version Too Low For Dc-Module': boolean;
+            'Manual shutdown by user': boolean;
+            'Minimum rSOC of System reached': boolean;
+            'Modules voltage out of range': boolean;
+            'No Setpoint received by HC': boolean;
+            'Odd number of battery modules': boolean;
+            'One single module detected and module voltage is out of range': boolean;
+            'Only one single module detected': boolean;
+            'Shutdown Timer started': boolean;
+            'System Validation failed': boolean;
+            'Voltage Monitor Changed': boolean;
+        };
+        'Eclipse Led': {
+            'Blinking Red': boolean;
+            'Pulsing Green': boolean;
+            'Pulsing Orange': boolean;
+            'Pulsing White': boolean;
+            'Solid Red': boolean;
+        };
+        'MISC Status Bits': {
+            'Discharge not allowed': boolean;
+            'F1 open': boolean;
+            'Grid-Disconnection requested from HC': boolean;
+            'Min System SOC': boolean;
+            'Min User SOC': boolean;
+            'Setpoint Timeout': boolean;
+        };
+        'Microgrid Status': {
+            'Continious Power Violation': boolean;
+            'Discharge Current Limit Violation': boolean;
+            'Low Temperature': boolean;
+            'Max System SOC': boolean;
+            'Max User SOC': boolean;
+            'Microgrid Enabled': boolean;
+            'Min System SOC': boolean;
+            'Min User SOC': boolean;
+            'Over Charge Current': boolean;
+            'Over Discharge Current': boolean;
+            'Peak Power Violation': boolean;
+            'Protect is activated': boolean;
+            'Transition to Ongrid Pending': boolean;
+        };
+        'Setpoint Priority': {
+            BMS: boolean;
+            'Energy Manager': boolean;
+            'Full Charge Request': boolean;
+            Inverter: boolean;
+            'Min User SOC': boolean;
+            'Trickle Charge': boolean;
+        };
+        'System Validation': {
+            'Country Code Set status flag 1': boolean;
+            'Country Code Set status flag 2': boolean;
+            'Self test Error DC Wiring': boolean;
+            'Self test Postponed': boolean;
+            'Self test Precondition not met': boolean;
+            'Self test Running': boolean;
+            'Self test successful finished': boolean;
+        };
+        nrbatterymodules: number;
+        secondssincefullcharge: number;
+        statebms: string;
+        statecorecontrolmodule: string;
+        stateinverter: string;
+        timestamp: string;
+    };
+}
+
+interface PowerMeterEntry {
+    a_l1: number;
+    a_l2: number;
+    a_l3: number;
+    channel: number;
+    deviceid: number;
+    direction: 'production' | 'consumption';
+    error: number;
+    kwh_exported: number;
+    kwh_imported: number;
+    v_l1_l2: number;
+    v_l1_n: number;
+    v_l2_l3: number;
+    v_l2_n: number;
+    v_l3_l1: number;
+    v_l3_n: number;
+    va_total: number;
+    var_total: number;
+    w_l1: number;
+    w_l2: number;
+    w_l3: number;
+    w_total: number;
+}
+
 interface StatusData {
     SystemStatus: string;
     FlowConsumptionProduction: number;
@@ -97,7 +219,9 @@ function startAdapter(options: Partial<utils.AdapterOptions> = {}) {
                 adapter.log.debug('[START] Auth-Token provided... trying official API');
                 requestOptions.headers!['Auth-Token'] = adapter.config.token;
                 try {
-                    await requestPromise({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
+                    const data = await requestPromise({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    const latestData: LatestData = JSON.parse(data);
                     apiVersion = 'v2';
                     adapter.log.debug('[START] Check ok, using official API');
                     return void main();
@@ -649,12 +773,12 @@ async function requestPowermeterEndpoint() {
     try {
         const powermeterUrl =
             apiVersion === 'v2' ? `http://${ip}/api/v2/powermeter` : `http://${ip}:8080/api/powermeter`;
-        let data = await requestPromise({ url: powermeterUrl, ...requestOptions });
+        const data = await requestPromise({ url: powermeterUrl, ...requestOptions });
 
         adapter.log.debug(`Powermeter: ${data}`);
         const promises = [];
         promises.push(adapter.setStateAsync(`info.powerMeter`, data, true));
-        data = JSON.parse(data);
+        const powerMeterData: PowerMeterEntry[] = JSON.parse(data);
 
         const relevantStates = [
             'a_l1',
@@ -671,20 +795,20 @@ async function requestPowermeterEndpoint() {
             'w_l1',
             'w_l2',
             'w_l3'
-        ];
+        ] as const;
 
         // we have multiple powermeters
-        for (const pm of Object.keys(data)) {
+        for (const pm in powerMeterData) {
             for (const state of relevantStates) {
                 if (!powermeterCreated) {
-                    const objs = getPowermeterStates(pm, data[pm].direction);
+                    const objs = getPowermeterStates(pm, powerMeterData[pm].direction);
                     for (const obj of objs) {
                         const id = obj._id;
                         await adapter.extendObjectAsync(id, obj);
                     }
                 }
 
-                promises.push(adapter.setStateAsync(`powermeter.${pm}.${state}`, data[pm][state], true));
+                promises.push(adapter.setStateAsync(`powermeter.${pm}.${state}`, powerMeterData[pm][state], true));
             }
         }
 
