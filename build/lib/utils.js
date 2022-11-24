@@ -65,8 +65,8 @@ exports.generalAPIStates = [
         type: 'state',
         common: {
             name: 'System time',
-            type: 'string',
-            role: 'value.datetime',
+            type: 'number',
+            role: 'value.time',
             read: true,
             write: false,
             desc: 'System time'

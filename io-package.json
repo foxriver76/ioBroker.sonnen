@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.13.0",
+    "version": "1.13.1",
     "news": {
+      "1.13.1": {
+        "en": "minor performance optimization\n`info.lastSync` and `status.systemTime` are now type number\nimplemented silent fail on `ios` endpoint to support both API versions",
+        "de": "geringe leistungsoptimierung\ninfo.lastSync und Status. System Zeit ist jetzt Typ Nummer\nimplementiert still scheitern auf ios endpoint, um beide API-Versionen zu unterstützen",
+        "ru": "незначительная оптимизация производительности\ninfo.lastSync и статус. система Время сейчас тип номера\nреализован бесшумный провал на ios endpoint для поддержки обеих версий API",
+        "pt": "otimização de desempenho menor\ninfo.lastSync e status. sistema O tempo é agora o número do tipo\nimplementado falha silenciosa no ponto final do ios para suportar ambas as versões da API",
+        "nl": "minor prestatie\nInfo.lastSync en status. systeem Tijd is nu type nummer\nquality over Quantity (QoQ) Releases Vertaling:",
+        "fr": "optimisation des performances mineures\ninfo.lastSync et statut. système Le temps est maintenant de type numéro\nimplémenté silence échoue sur ios finpoint pour soutenir les deux versions API",
+        "it": "ottimizzazione delle prestazioni minori\ninfo.lastSync e stato. sistema Il tempo è ora il numero di tipo\nimplementato silenzioso fail su ios endpoint per supportare entrambe le versioni API",
+        "es": "optimización del rendimiento menor\ninfo.lastSync y status. sistema El tiempo ahora es el número de tipo\nimplementado silencioso fallo en ios endpoint para apoyar ambas versiones de API",
+        "pl": "optymalizacja drobnej wydajności\ninfo.lastSync and status (ang.). system Czas ten jest teraz numerem typowym\nzaimplementowane ciemne nie występują na osi końcowej, aby wspierać oba wersje API",
+        "uk": "оптимізація продуктивності\ninfo.lastSync і статус. системи Час тепер тип номеру\nвпроваджено безшумний вихід на кінцеву точку ios для підтримки версій API",
+        "zh-cn": "小业绩优化\n页: 1 系统 时间现为类型\n实施沉默的终点没有支持协会版本。"
+      },
       "1.13.0": {
         "en": "added `latestData` endpoint providing eclipse LED status and time since last full charge",
         "de": "neuheit Datenendpunkt Bereitstellung Eclipse LED Status und Zeit seit letzte volle Ladung",
@@ -77,18 +90,6 @@
         "es": "estado añadido. sistemaEstatus para indicar si la batería está conectada a la cuadrícula (cerca #139)",
         "pl": "dodano status. SystemStatus wskazuje, że bateria jest połączona z siatką (okrąża 139)",
         "zh-cn": "附加地位。 系统说明电池是否与电网连接(第139号)"
-      },
-      "1.10.0": {
-        "en": "added battery discrete io states",
-        "de": "Batterie diskrete io-Zustände hinzugefügt",
-        "ru": "добавлены состояния дискретного ввода-вывода батареи",
-        "pt": "estados io discretos de bateria adicionados",
-        "nl": "toegevoegde batterij discrete io-statussen",
-        "fr": "ajout d'états io discrets de la batterie",
-        "it": "aggiunti stati io discreti della batteria",
-        "es": "estados io discretos de la batería añadida",
-        "pl": "dodano dyskretne stany io baterii;",
-        "zh-cn": "添加了电池离散 io 状态"
       }
     },
     "title": "sonnen",
@@ -158,8 +159,8 @@
       "type": "state",
       "common": {
         "name": "Last successful sync",
-        "type": "string",
-        "role": "value.datetime",
+        "type": "number",
+        "role": "value.time",
         "read": true,
         "write": false,
         "desc": "Last successful synchronization"

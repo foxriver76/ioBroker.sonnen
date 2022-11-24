@@ -255,7 +255,7 @@ async function main() {
                 adapter.setState(`info.connection`, true, true);
                 adapter.log.debug(`[CONNECT] Connection successfuly established`);
             }
-            setBatteryStates(JSON.parse(data));
+            await setBatteryStates(JSON.parse(data));
             try {
                 await requestPowermeterEndpoint();
                 if (adapter.config.pollOnlineStatus) {
@@ -313,11 +313,10 @@ async function oldAPImain() {
     promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
     try {
         await Promise.all(promises);
-        const lastSync = new Date();
-        adapter.setState(`info.lastSync`, new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+        await adapter.setState(`info.lastSync`, Date.now(), true);
         const state = await adapter.getStateAsync(`info.connection`);
         if (!(state === null || state === void 0 ? void 0 : state.val)) {
-            adapter.setState(`info.connection`, true, true);
+            await adapter.setState(`info.connection`, true, true);
         }
     }
     catch (e) {
@@ -337,8 +336,7 @@ async function oldAPImain() {
         promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
         try {
             await Promise.all(promises);
-            const lastSync = new Date();
-            adapter.setState(`info.lastSync`, new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+            adapter.setState(`info.lastSync`, Date.now(), true);
             adapter.setStateChanged(`info.connection`, true, true);
         }
         catch (e) {
@@ -438,8 +436,7 @@ async function legacyAPImain() {
                 }
             }
             // update the lastSync manually
-            const lastSync = new Date();
-            adapter.setState(`info.lastSync`, new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
+            adapter.setState(`info.lastSync`, Date.now(), true);
             // update the info connection state
             const state = await adapter.getStateAsync(`info.connection`);
             if (!state || !state.val) {
@@ -496,9 +493,11 @@ async function requestIosEndpoint() {
         await Promise.all(promises);
     }
     catch (e) {
-        throw new Error(`Could not request ios endpoint: ${e.message}`);
+        // TODO: for now don't throw to not disturb users with current API
+        adapter.log.debug(`Could not request ios endpoint: ${e.message}`);
+        //throw new Error(`Could not request ios endpoint: ${e.message}`);
     }
-} // requestIosEndpoint
+}
 async function requestInverterEndpoint() {
     try {
         let data = await (0, request_promise_native_1.default)(`http://${ip}:8080/api/inverter`);
@@ -591,14 +590,14 @@ async function requestPowermeterEndpoint() {
         ];
         // we have multiple powermeters
         for (const pm in powerMeterData) {
-            for (const state of relevantStates) {
-                if (!powermeterCreated) {
-                    const objs = (0, utils_1.getPowermeterStates)(pm, powerMeterData[pm].direction);
-                    for (const obj of objs) {
-                        const id = obj._id;
-                        await adapter.extendObjectAsync(id, obj);
-                    }
+            if (!powermeterCreated) {
+                const objs = (0, utils_1.getPowermeterStates)(pm, powerMeterData[pm].direction);
+                for (const obj of objs) {
+                    const id = obj._id;
+                    await adapter.extendObjectAsync(id, obj);
                 }
+            }
+            for (const state of relevantStates) {
                 promises.push(adapter.setStateAsync(`powermeter.${pm}.${state}`, powerMeterData[pm][state], true));
             }
         }
@@ -610,38 +609,39 @@ async function requestPowermeterEndpoint() {
         throw new Error(`Could not request powermeter endpoint: ${e.message}`);
     }
 }
-function setBatteryStates(json) {
+async function setBatteryStates(json) {
     if (json.ReturnCode) {
         adapter.log.warn(`[DATA] <== Return Code ${json.ReturnCode}`);
         return;
     }
-    const lastSync = new Date();
-    adapter.setState(`info.lastSync`, new Date(lastSync.getTime() - lastSync.getTimezoneOffset() * 60000).toISOString(), true);
-    adapter.setState(`status.consumption`, json.Consumption_W, true);
-    adapter.setState(`status.batteryCharging`, json.BatteryCharging, true);
-    adapter.setState(`status.production`, json.Production_W, true);
-    adapter.setState(`status.pacTotal`, json.Pac_total_W, true);
-    adapter.setState(`status.relativeSoc`, json.RSOC, true);
-    adapter.setState(`status.userSoc`, json.USOC, true);
-    adapter.setState(`status.acFrequency`, json.Fac, true);
-    adapter.setState(`status.acVoltage`, json.Uac, true);
-    adapter.setState(`status.batteryVoltage`, json.Ubat, true);
+    const promises = [];
+    promises.push(adapter.setStateAsync(`info.lastSync`, Date.now(), true));
+    promises.push(adapter.setStateAsync(`status.consumption`, json.Consumption_W, true));
+    promises.push(adapter.setStateAsync(`status.batteryCharging`, json.BatteryCharging, true));
+    promises.push(adapter.setStateAsync(`status.production`, json.Production_W, true));
+    promises.push(adapter.setStateAsync(`status.pacTotal`, json.Pac_total_W, true));
+    promises.push(adapter.setStateAsync(`status.relativeSoc`, json.RSOC, true));
+    promises.push(adapter.setStateAsync(`status.userSoc`, json.USOC, true));
+    promises.push(adapter.setStateAsync(`status.acFrequency`, json.Fac, true));
+    promises.push(adapter.setStateAsync(`status.acVoltage`, json.Uac, true));
+    promises.push(adapter.setStateAsync(`status.batteryVoltage`, json.Ubat, true));
     const systemTime = new Date(json.Timestamp);
-    adapter.setState(`status.systemTime`, new Date(systemTime.getTime() - systemTime.getTimezoneOffset() * 60000).toISOString(), true);
+    promises.push(adapter.setStateAsync(`status.systemTime`, systemTime.getTime(), true));
     if (json.IsSystemInstalled === 1) {
-        adapter.setState(`status.systemInstalled`, true, true);
+        promises.push(adapter.setStateAsync(`status.systemInstalled`, true, true));
     }
     else {
-        adapter.setState(`status.systemInstalled`, false, true);
+        promises.push(adapter.setStateAsync(`status.systemInstalled`, false, true));
     }
-    adapter.setState(`status.gridFeedIn`, json.GridFeedIn_W, true);
-    adapter.setState(`status.flowConsumptionBattery`, json.FlowConsumptionBattery, true);
-    adapter.setState(`status.flowConsumptionGrid`, json.FlowConsumptionGrid, true);
-    adapter.setState(`status.flowConsumptionProduction`, json.FlowConsumptionProduction, true);
-    adapter.setState(`status.flowGridBattery`, json.FlowGridBattery, true);
-    adapter.setState(`status.flowProductionBattery`, json.FlowProductionBattery, true);
-    adapter.setState(`status.flowProductionGrid`, json.FlowProductionGrid, true);
-    adapter.setState('status.systemStatus', json.SystemStatus, true);
+    promises.push(adapter.setStateAsync(`status.gridFeedIn`, json.GridFeedIn_W, true));
+    promises.push(adapter.setStateAsync(`status.flowConsumptionBattery`, json.FlowConsumptionBattery, true));
+    promises.push(adapter.setStateAsync(`status.flowConsumptionGrid`, json.FlowConsumptionGrid, true));
+    promises.push(adapter.setStateAsync(`status.flowConsumptionProduction`, json.FlowConsumptionProduction, true));
+    promises.push(adapter.setStateAsync(`status.flowGridBattery`, json.FlowGridBattery, true));
+    promises.push(adapter.setStateAsync(`status.flowProductionBattery`, json.FlowProductionBattery, true));
+    promises.push(adapter.setStateAsync(`status.flowProductionGrid`, json.FlowProductionGrid, true));
+    promises.push(adapter.setStateAsync('status.systemStatus', json.SystemStatus, true));
+    await Promise.all(promises);
 }
 async function requestStateAndSetOldAPI(code, stateId) {
     let res = await (0, request_promise_native_1.default)(`http://${ip}:7979/rest/devices/battery/${code}`);

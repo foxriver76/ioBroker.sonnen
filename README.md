@@ -320,6 +320,11 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### 1.13.1 (2022-11-24)
+* (foxriver76) minor performance optimization
+* (foxriver76) `info.lastSync` and `status.systemTime` are now type number
+* (foxriver76) implemented silent fail on `ios` endpoint to support both API versions
+
 ### 1.13.0 (2022-10-28)
 * (foxriver76) added `latestData` endpoint providing eclipse LED status and time since last full charge
 
