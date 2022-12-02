@@ -320,6 +320,9 @@ The channel consists of read-only states of type `boolean`, providing informatio
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### 1.14.0 (2022-12-02)
+* (foxriver76) implemented new state `latestData.dcShutdownReason` (closes #213)
+
 ### 1.13.1 (2022-11-24)
 * (foxriver76) minor performance optimization
 * (foxriver76) `info.lastSync` and `status.systemTime` are now type number

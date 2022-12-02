@@ -742,10 +742,33 @@ async function requestLatestData(): Promise<void> {
 
     const latestData: LatestData = JSON.parse(data);
 
-    const eclipseStatus = Object.entries(latestData.ic_status['Eclipse Led']).find(value => value[1])![0];
+    await adapter.setStateAsync(
+        'latestData.dcShutdownReason',
+        decodeBitmapLikeObj(latestData.ic_status['DC Shutdown Reason'], 'Running'),
+        true
+    );
+    await adapter.setStateAsync(
+        'latestData.eclipseLed',
+        decodeBitmapLikeObj(latestData.ic_status['Eclipse Led'], 'Unknown'),
+        true
+    );
 
-    await adapter.setStateAsync('latestData.eclipseLed', eclipseStatus, true);
     await adapter.setStateAsync('latestData.secondsSinceFullCharge', latestData.ic_status.secondssincefullcharge, true);
+}
+
+/**
+ * Decodes a bitmap like object to extract the key where the value is true
+ *
+ * @param bitmapLike The object to decode
+ * @param fallback fallback to return if no value is true
+ */
+function decodeBitmapLikeObj<T extends Record<string, boolean>, F extends string>(
+    bitmapLike: T,
+    fallback: F
+): keyof T | F {
+    const foundEntry = Object.entries(bitmapLike).find(value => value[1]);
+
+    return foundEntry ? foundEntry[0] : fallback;
 }
 
 async function requestPowermeterEndpoint(): Promise<void> {

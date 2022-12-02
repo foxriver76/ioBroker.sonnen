@@ -563,6 +563,50 @@ exports.generalAPIStates = [
         native: {}
     },
     {
+        _id: 'latestData.dcShutdownReason',
+        type: 'state',
+        common: {
+            name: 'IC DC Shutdown Reason',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
+            desc: 'IC Status Shutdown Reason of DC',
+            states: [
+                'Running',
+                'Critical BMS Alarm',
+                'Electrolyte Leakage',
+                'Error condition in BMS initialization',
+                'HW_Shutdown',
+                'HardWire Over Voltage',
+                'HardWired Dry Signal A',
+                'HardWired Under Voltage',
+                'Holding Circuit Error',
+                'Initialization Timeout',
+                'Initialization of AC contactor failed',
+                'Initialization of BMS hardware failed',
+                'Initialization of DC contactor failed',
+                'Initialization of Inverter failed',
+                'Invalid or no SystemType was set',
+                'Inverter Over Temperature',
+                'Inverter Under Voltage',
+                'Inverter Unknown Error',
+                'Inverter Version Too Low For Dc-Module',
+                'Manual shutdown by user',
+                'Minimum rSOC of System reached',
+                'Modules voltage out of range',
+                'No Setpoint received by HC',
+                'Odd number of battery modules',
+                'One single module detected and module voltage is out of range',
+                'Only one single module detected',
+                'Shutdown Timer started',
+                'System Validation failed',
+                'Voltage Monitor Changed'
+            ]
+        },
+        native: {}
+    },
+    {
         _id: 'latestData.secondsSinceFullCharge',
         type: 'state',
         common: {

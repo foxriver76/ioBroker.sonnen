@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.13.1",
+    "version": "1.14.0",
     "news": {
+      "1.14.0": {
+        "en": "implemented new state `latestData.dcShutdownReason` (closes #213)",
+        "de": "implementiert neuen Zustand neusteData.dcShutdownReason (schließt #213)",
+        "ru": "реализовано новое состояние LatestData.dcShutdownReason (закрыты #213)",
+        "pt": "implementado novo estado mais recenteData.dcShutdownReason (fecha #213)",
+        "nl": "vertaling:",
+        "fr": "mis en œuvre le nouveau dernier étatData.dcShutdownReason (ferme #213)",
+        "it": "implementato nuovo stato ultimoData.dcShutdownReason (chiudi #213)",
+        "es": "implementado nuevo estado más recienteData.dcShutdownReason (cerca #213)",
+        "pl": "wprowadzono nowy stan (DataShutdownReason)",
+        "uk": "впровадження нового стану останньогоData.dcShutdownReason (закриває #213)",
+        "zh-cn": "新的国家实施了新的Data.dcShutdown Reason(第213)号。"
+      },
       "1.13.1": {
         "en": "minor performance optimization\n`info.lastSync` and `status.systemTime` are now type number\nimplemented silent fail on `ios` endpoint to support both API versions",
         "de": "geringe leistungsoptimierung\ninfo.lastSync und Status. System Zeit ist jetzt Typ Nummer\nimplementiert still scheitern auf ios endpoint, um beide API-Versionen zu unterstützen",
@@ -78,18 +91,6 @@
         "es": "ahora utilizamos la API V2 para el punto final del medidor de potencia\nhemos portado el código a TipoScript\nconfiguración agregada para V2 API, incluyendo la capacidad de cambiarlo a través del adaptador",
         "pl": "obecnie używamy API V2 do końcowego punktu końcowego\nposiadamy kod do TypeScriptu\ndodano konfigurację V2 API, w tym możliwość zmiany jej przez adapter",
         "zh-cn": "我们现在使用维权参数的五二类阿联普办法\n我们把守则放到各种类型的产品。\n备选案文2"
-      },
-      "1.11.0": {
-        "en": "added `status.systemStatus` to indicate if the battery is connected to the grid (closes #139)",
-        "de": "status hinzugefügt. systemStatus, um anzuzeigen, ob die Batterie mit dem Netz verbunden ist (schließt #139)",
-        "ru": "добавлен статус. systemStatus указать, подключен ли аккумулятор к сети (closes #139)",
-        "pt": "status adicionado. systemStatus para indicar se a bateria está conectada à grade (fecha #139)",
-        "nl": "toegevoegde status. Systeemstatus om aan te geven of de accu verbonden is met het netwerk",
-        "fr": "statut ajouté. systemStatus pour indiquer si la batterie est connectée au réseau (ferme #139)",
-        "it": "stato aggiunto. systemStatus per indicare se la batteria è collegata alla griglia (chiude #139)",
-        "es": "estado añadido. sistemaEstatus para indicar si la batería está conectada a la cuadrícula (cerca #139)",
-        "pl": "dodano status. SystemStatus wskazuje, że bateria jest połączona z siatką (okrąża 139)",
-        "zh-cn": "附加地位。 系统说明电池是否与电网连接(第139号)"
       }
     },
     "title": "sonnen",
