@@ -5,7 +5,74 @@ import requestPromise, { RequestPromiseOptions } from 'request-promise-native';
 type ApiVersion = 'old' | 'v1' | 'v2' | 'legacy';
 type OnlineStatus = 'true' | 'false';
 
-interface LatestData {
+interface IoResponseValue {
+    connector: string;
+    status: 0 | 1;
+    usage: string;
+}
+
+type IoResponse = Record<string, IoResponseValue>;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface InverterResponse {
+    fac: number;
+    iac_total: number;
+    ibat: number;
+    ipv: number;
+    pac_microgrid: number;
+    pac_total: number;
+    pbat: number;
+    phi: number;
+    ppv: number;
+    sac_total: number;
+    tmax: number;
+    uac: number;
+    ubat: number;
+    upv: number;
+}
+
+interface ConfigurationsResponse {
+    /** number string */
+    CM_MarketingModuleCapacity: string;
+    CN_CascadingRole: string;
+    /** version string */
+    DE_Software: string;
+    /** integer string */
+    EM_OperatingMode: string;
+    /** integer string */
+    EM_Prognosis_Charging: string;
+    EM_RE_ENABLE_MICROGRID: 'true' | 'false';
+    /** Array string */
+    EM_ToU_Schedule: string;
+    /** integer string */
+    EM_USER_INPUT_TIME_ONE: string;
+    /** integer string */
+    EM_USER_INPUT_TIME_THREE: string;
+    /** integer string */
+    EM_USER_INPUT_TIME_TWO: string;
+    /** integer string */
+    EM_USOC: string;
+    /** integer string */
+    EM_US_GEN_POWER_SET_POINT: string;
+    /** integer string */
+    IC_BatteryModules: string;
+    /** integer string */
+    IC_InverterMaxPower_w: string;
+    /** integer string */
+    NVM_PfcFixedCosPhi: string;
+    /** integer string */
+    NVM_PfcIsFixedCosPhiActive: string;
+    /** integer string */
+    NVM_PfcIsFixedCosPhiLagging: string;
+    /** integer string */
+    SH_HeaterOperatingMode: string;
+    /** integer string */
+    SH_HeaterTemperatureMax: string;
+    /** integer string */
+    SH_HeaterTemperatureMin: string;
+}
+
+interface LatestDataResponse {
     Consumption_W: number;
     FullChargeCapacity: number;
     GridFeedIn_W: number;
@@ -103,7 +170,7 @@ interface LatestData {
     };
 }
 
-interface PowerMeterEntry {
+interface PowerMeterResponseEntry {
     a_l1: number;
     a_l2: number;
     a_l3: number;
@@ -127,51 +194,44 @@ interface PowerMeterEntry {
     w_total: number;
 }
 
-interface StatusData {
-    SystemStatus: string;
-    FlowConsumptionProduction: number;
-    FlowProductionGrid: number;
-    FlowProductionBattery: number;
-    FlowGridBattery: number;
-    FlowConsumptionGrid: number;
-    FlowConsumptionBattery: number;
+interface StatusResponse {
+    /** not existing according to API specs but was there for v1 */
+    ReturnCode?: number;
+    Apparent_output: number;
+    /** number string */
+    BackupBuffer: string;
+    BatteryCharging: boolean;
+    BatteryDischarging: boolean;
+    Consumption_Avg: number;
+    Consumption_W: number;
+    Fac: number;
+    FlowConsumptionBattery: boolean;
+    FlowConsumptionGrid: boolean;
+    FlowConsumptionProduction: boolean;
+    FlowGridBattery: boolean;
+    FlowProductionBattery: boolean;
+    FlowProductionGrid: boolean;
     GridFeedIn_W: number;
     IsSystemInstalled: number;
-    Consumption_W: number;
-    BatteryCharging: boolean;
-    Production_W: number;
+    /** 1 is API 2 is self-consumption */
+    OperatingMode: '1' | '2';
     Pac_total_W: number;
+    Production_W: number;
     /** relative state of charge */
     RSOC: number;
+    RemainingCapacity_Wh: number;
+    Sac1: number;
+    Sac2: number;
+    Sac3: number;
+    SystemStatus: 'OnGrid' | 'OffGrid';
+    Timestamp: 'string';
     /** user state of charge */
     USOC: number;
-    Fac: number;
     Uac: number;
     Ubat: number;
-    Timestamp: string;
-    ReturnCode: number;
+    dischargeNotAllowed: boolean;
+    generator_autostart: boolean;
 }
-
-const ENDPOINTS_CONFIG_V2 = [
-    'CM_MarketingModuleCapacity',
-    'DE_Software',
-    'EM_OperatingMode',
-    'EM_ToU_Schedule',
-    'EM_USOC',
-    'EM_US_CHP_Max_SOC',
-    'EM_US_CHP_Min_SOC',
-    'EM_US_GENRATOR_TYPE',
-    'EM_US_GEN_POWER_SET_POINT',
-    'EM_US_RE_ENABLE_MICROGRID',
-    'EM_US_USER_INPUT_TIME_ONE',
-    'EM_US_USER_INPUT_TIME_THREE',
-    'EM_US_USER_INPUT_TIME_TWO',
-    'IC_BatteryModules',
-    'IC_InverterMaxPower_w',
-    'NVM_PfcFixedCosPhi',
-    'NVM_PfcIsFixedCosPhiActive',
-    'NVM_PfcIsFixedCosPhiLagging'
-] as const;
 
 interface LegacyResponse {
     devices: Record<string, LegacyDevice>;
@@ -355,17 +415,17 @@ async function main() {
     }
     const specificStates = apiVersion === 'v2' ? apiStatesV2 : apiStatesV1;
 
-    for (const obj of specificStates) {
-        const id = obj._id;
-        // use extend to update stuff like types if they were wrong, but preserve name
-        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
-    }
-
     if (apiVersion === 'v2') {
         // cleanup old states
         for (const obj of apiStatesV1) {
             promises.push(adapter.delObjectAsync(obj._id));
         }
+    }
+
+    for (const obj of specificStates) {
+        const id = obj._id;
+        // use extend to update stuff like types if they were wrong, but preserve name
+        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
     }
 
     if (adapter.config.pollOnlineStatus) {
@@ -648,14 +708,16 @@ async function requestSettings() {
 
 async function requestIosEndpoint(): Promise<void> {
     try {
-        let data = await requestPromise(`http://${ip}:8080/api/ios`);
+        const iosUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/io` : `http://${ip}:8080/api/ios`;
+
+        const res = await requestPromise({ url: iosUrl, ...requestOptions });
         const promises = [];
 
-        promises.push(adapter.setStateAsync(`info.ios`, data, true));
+        promises.push(adapter.setStateAsync(`info.ios`, res, true));
 
-        adapter.log.debug(`io json: ${data}`);
+        adapter.log.debug(`io json: ${res}`);
 
-        data = JSON.parse(data);
+        const data: IoResponse = JSON.parse(res);
 
         const relevantIOs = ['DO_12', 'DO_13', 'DO_14'];
 
@@ -673,34 +735,39 @@ async function requestIosEndpoint(): Promise<void> {
 
 async function requestInverterEndpoint(): Promise<void> {
     try {
-        let data = await requestPromise(`http://${ip}:8080/api/inverter`);
+        const inverterUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/inverter` : `http://${ip}:8080/api/inverter`;
+        const res = await requestPromise({ url: inverterUrl, ...requestOptions });
         const promises = [];
 
-        promises.push(adapter.setStateAsync(`info.inverter`, data, true));
-        data = JSON.parse(data);
+        promises.push(adapter.setStateAsync(`info.inverter`, res, true));
+        const data = JSON.parse(res);
 
-        const relevantStates = [
-            'iac1',
-            'iac2',
-            'iac3',
-            'uac1',
-            'uac2',
-            'uac3',
-            'udc',
-            'temphmi',
-            'tempbdc',
-            'temppu',
-            'pac1',
-            'pac2',
-            'pac3'
-        ];
+        /** V1 has other response, handle it, v2 will only have the info state for now */
+        if (apiVersion === 'v1') {
+            const relevantStates = [
+                'iac1',
+                'iac2',
+                'iac3',
+                'uac1',
+                'uac2',
+                'uac3',
+                'udc',
+                'temphmi',
+                'tempbdc',
+                'temppu',
+                'pac1',
+                'pac2',
+                'pac3'
+            ];
 
-        for (const state of relevantStates) {
-            // inverter states are string but are all numbers
-            promises.push(adapter.setStateAsync(`inverter.${state}`, parseFloat(data.status[state]), true));
+            for (const state of relevantStates) {
+                // inverter states are string but are all numbers
+                promises.push(adapter.setStateAsync(`inverter.${state}`, parseFloat(data.status[state]), true));
+            }
         }
 
         await Promise.all(promises);
+
         // inverter endpoint exists
         inverterEndpoint = true;
     } catch (e: any) {
@@ -740,7 +807,7 @@ async function requestLatestData(): Promise<void> {
 
     adapter.log.debug(`Latest data: ${data}`);
 
-    const latestData: LatestData = JSON.parse(data);
+    const latestData: LatestDataResponse = JSON.parse(data);
 
     await adapter.setStateAsync(
         'latestData.dcShutdownReason',
@@ -780,7 +847,7 @@ async function requestPowermeterEndpoint(): Promise<void> {
         adapter.log.debug(`Powermeter: ${data}`);
         const promises = [];
         promises.push(adapter.setStateAsync(`info.powerMeter`, data, true));
-        const powerMeterData: PowerMeterEntry[] = JSON.parse(data);
+        const powerMeterData: PowerMeterResponseEntry[] = JSON.parse(data);
 
         const relevantStates = [
             'a_l1',
@@ -823,7 +890,7 @@ async function requestPowermeterEndpoint(): Promise<void> {
     }
 }
 
-async function setBatteryStates(json: StatusData): Promise<void> {
+async function setBatteryStates(json: StatusResponse): Promise<void> {
     if (json.ReturnCode) {
         adapter.log.warn(`[DATA] <== Return Code ${json.ReturnCode}`);
         return;
@@ -860,6 +927,7 @@ async function setBatteryStates(json: StatusData): Promise<void> {
     promises.push(adapter.setStateAsync(`status.flowProductionBattery`, json.FlowProductionBattery, true));
     promises.push(adapter.setStateAsync(`status.flowProductionGrid`, json.FlowProductionGrid, true));
     promises.push(adapter.setStateAsync('status.systemStatus', json.SystemStatus, true));
+    promises.push(adapter.setStateAsync('status.operatingMode', parseInt(json.OperatingMode), true));
 
     await Promise.all(promises);
 }
@@ -875,11 +943,14 @@ async function requestStateAndSetOldAPI(code: string, stateId: string): Promise<
  * Requests settings for V2 endpoint
  */
 async function requestSettingsV2(): Promise<void> {
-    for (const id of ENDPOINTS_CONFIG_V2) {
-        const data = await requestPromise({ url: `http://${ip}/api/v2/configurations/${id}`, ...requestOptions });
-        adapter.log.debug(`Configuration for "${id}" received: ${data}`);
-        let value = JSON.parse(data)[id];
+    const res = await requestPromise({ url: `http://${ip}/api/v2/configurations`, ...requestOptions });
 
+    adapter.log.debug(`Configuration received: ${res}`);
+
+    const data: ConfigurationsResponse = JSON.parse(res);
+
+    for (const [id, val] of Object.entries(data)) {
+        let value = val;
         if (value && !isNaN(Number(value))) {
             value = parseFloat(value);
         }

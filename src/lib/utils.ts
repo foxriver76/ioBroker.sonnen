@@ -52,8 +52,25 @@ export const generalAPIStates: ioBroker.AnyObject[] = [
             role: 'value.ubat',
             read: true,
             write: false,
-            desc: 'Battery volatge in volts',
+            desc: 'Battery voltage in volts',
             unit: 'volts'
+        },
+        native: {}
+    },
+    {
+        _id: 'status.operatingMode',
+        type: 'state',
+        common: {
+            name: 'Operating mode',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+            desc: 'Operating mode that is set on the system',
+            states: {
+                1: 'Manual charging or discharging via API',
+                2: 'Automatic Self Consumption'
+            }
         },
         native: {}
     },
@@ -348,6 +365,105 @@ export const generalAPIStates: ioBroker.AnyObject[] = [
         native: {}
     },
     {
+        _id: 'latestData',
+        type: 'channel',
+        common: {
+            name: 'Latest Data'
+        },
+        native: {}
+    },
+    {
+        _id: 'latestData.eclipseLed',
+        type: 'state',
+        common: {
+            name: 'Eclipse LED Status',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
+            desc: 'Eclipse LED Status of the Battery',
+            states: ['Blinking Red', 'Pulsing Green', 'Pulsing Orange', 'Pulsing White', 'Solid Red']
+        },
+        native: {}
+    },
+    {
+        _id: 'latestData.dcShutdownReason',
+        type: 'state',
+        common: {
+            name: 'IC DC Shutdown Reason',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
+            desc: 'IC Status Shutdown Reason of DC',
+            states: [
+                'Running',
+                'Critical BMS Alarm',
+                'Electrolyte Leakage',
+                'Error condition in BMS initialization',
+                'HW_Shutdown',
+                'HardWire Over Voltage',
+                'HardWired Dry Signal A',
+                'HardWired Under Voltage',
+                'Holding Circuit Error',
+                'Initialization Timeout',
+                'Initialization of AC contactor failed',
+                'Initialization of BMS hardware failed',
+                'Initialization of DC contactor failed',
+                'Initialization of Inverter failed',
+                'Invalid or no SystemType was set',
+                'Inverter Over Temperature',
+                'Inverter Under Voltage',
+                'Inverter Unknown Error',
+                'Inverter Version Too Low For Dc-Module',
+                'Manual shutdown by user',
+                'Minimum rSOC of System reached',
+                'Modules voltage out of range',
+                'No Setpoint received by HC',
+                'Odd number of battery modules',
+                'One single module detected and module voltage is out of range',
+                'Only one single module detected',
+                'Shutdown Timer started',
+                'System Validation failed',
+                'Voltage Monitor Changed'
+            ]
+        },
+        native: {}
+    },
+    {
+        _id: 'latestData.secondsSinceFullCharge',
+        type: 'state',
+        common: {
+            name: 'Seconds since full charge',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+            desc: 'Seconds since last time fully charged',
+            unit: 's'
+        },
+        native: {}
+    }
+];
+
+/**
+ * API states which are not in general and are exlusive for v1
+ */
+export const apiStatesV1: ioBroker.AnyObject[] = [
+    {
+        _id: 'info.configuration',
+        type: 'state',
+        common: {
+            name: 'Battery Configuration',
+            type: 'string',
+            role: 'json',
+            read: true,
+            write: false,
+            desc: 'Configuration of your sonnen battery as JSON'
+        },
+        native: {}
+    },
+    {
         _id: 'inverter',
         type: 'channel',
         common: {
@@ -536,105 +652,6 @@ export const generalAPIStates: ioBroker.AnyObject[] = [
             unit: 'W'
         },
         native: {}
-    },
-    {
-        _id: 'latestData',
-        type: 'channel',
-        common: {
-            name: 'Latest Data'
-        },
-        native: {}
-    },
-    {
-        _id: 'latestData.eclipseLed',
-        type: 'state',
-        common: {
-            name: 'Eclipse LED Status',
-            type: 'string',
-            role: 'text',
-            read: true,
-            write: false,
-            desc: 'Eclipse LED Status of the Battery',
-            states: ['Blinking Red', 'Pulsing Green', 'Pulsing Orange', 'Pulsing White', 'Solid Red']
-        },
-        native: {}
-    },
-    {
-        _id: 'latestData.dcShutdownReason',
-        type: 'state',
-        common: {
-            name: 'IC DC Shutdown Reason',
-            type: 'string',
-            role: 'text',
-            read: true,
-            write: false,
-            desc: 'IC Status Shutdown Reason of DC',
-            states: [
-                'Running',
-                'Critical BMS Alarm',
-                'Electrolyte Leakage',
-                'Error condition in BMS initialization',
-                'HW_Shutdown',
-                'HardWire Over Voltage',
-                'HardWired Dry Signal A',
-                'HardWired Under Voltage',
-                'Holding Circuit Error',
-                'Initialization Timeout',
-                'Initialization of AC contactor failed',
-                'Initialization of BMS hardware failed',
-                'Initialization of DC contactor failed',
-                'Initialization of Inverter failed',
-                'Invalid or no SystemType was set',
-                'Inverter Over Temperature',
-                'Inverter Under Voltage',
-                'Inverter Unknown Error',
-                'Inverter Version Too Low For Dc-Module',
-                'Manual shutdown by user',
-                'Minimum rSOC of System reached',
-                'Modules voltage out of range',
-                'No Setpoint received by HC',
-                'Odd number of battery modules',
-                'One single module detected and module voltage is out of range',
-                'Only one single module detected',
-                'Shutdown Timer started',
-                'System Validation failed',
-                'Voltage Monitor Changed'
-            ]
-        },
-        native: {}
-    },
-    {
-        _id: 'latestData.secondsSinceFullCharge',
-        type: 'state',
-        common: {
-            name: 'Seconds since full charge',
-            type: 'number',
-            role: 'value',
-            read: true,
-            write: false,
-            desc: 'Seconds since last time fully charged',
-            unit: 's'
-        },
-        native: {}
-    }
-];
-
-/**
- * API states which are not in general and are exlusive for v1
- */
-export const apiStatesV1: ioBroker.AnyObject[] = [
-    {
-        _id: 'info.configuration',
-        type: 'state',
-        common: {
-            name: 'Battery Configuration',
-            type: 'string',
-            role: 'json',
-            read: true,
-            write: false,
-            desc: 'Configuration of your sonnen battery as JSON'
-        },
-        native: {}
     }
 ];
 
@@ -642,6 +659,125 @@ export const apiStatesV1: ioBroker.AnyObject[] = [
  * API states which are not in general and are exlusive for v1
  */
 export const apiStatesV2: ioBroker.AnyObject[] = [
+    {
+        _id: 'configurations.EM_USER_INPUT_TIME_ONE',
+        type: 'state',
+        common: {
+            name: 'User Input Time One',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: true,
+            desc: 'User Input Time One'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations.EM_USER_INPUT_TIME_TWO',
+        type: 'state',
+        common: {
+            name: 'User Input Time Two',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: true,
+            desc: 'User Input Time Two'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations.EM_USER_INPUT_TIME_THREE',
+        type: 'state',
+        common: {
+            name: 'User Input Time Three',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: true,
+            desc: 'User Input Time Three'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations.EM_RE_ENABLE_MICROGRID',
+        type: 'state',
+        common: {
+            name: 'Re-enable Microgrid',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: true,
+            desc: 'Re-enable Microgrid'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations.EM_Prognosis_Charging',
+        type: 'state',
+        common: {
+            name: 'Prognosis Charging',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: true,
+            desc: 'Prognosis Charging'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations.CN_CascadingRole',
+        type: 'state',
+        common: {
+            name: 'Cascading Role',
+            type: 'string',
+            role: 'text',
+            read: true,
+            write: false,
+            desc: 'Cascading Role'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations.SH_HeaterOperatingMode',
+        type: 'state',
+        common: {
+            name: 'Heater Operating Mode',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: true,
+            desc: 'Heater Operating Mode'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations.SH_HeaterTemperatureMin',
+        type: 'state',
+        common: {
+            name: 'Minimum Heater Temperature',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: true,
+            desc: 'Minimum Heater Temperature',
+            unit: '°C'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations.SH_HeaterTemperatureMax',
+        type: 'state',
+        common: {
+            name: 'Maximum Heater Temperature',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: true,
+            desc: 'Maximum Heater Temperature',
+            unit: '°C'
+        },
+        native: {}
+    },
     {
         _id: 'configurations.CM_MarketingModuleCapacity',
         type: 'state',

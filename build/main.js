@@ -29,26 +29,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(require("@iobroker/adapter-core"));
 const utils_1 = require("./lib/utils");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
-const ENDPOINTS_CONFIG_V2 = [
-    'CM_MarketingModuleCapacity',
-    'DE_Software',
-    'EM_OperatingMode',
-    'EM_ToU_Schedule',
-    'EM_USOC',
-    'EM_US_CHP_Max_SOC',
-    'EM_US_CHP_Min_SOC',
-    'EM_US_GENRATOR_TYPE',
-    'EM_US_GEN_POWER_SET_POINT',
-    'EM_US_RE_ENABLE_MICROGRID',
-    'EM_US_USER_INPUT_TIME_ONE',
-    'EM_US_USER_INPUT_TIME_THREE',
-    'EM_US_USER_INPUT_TIME_TWO',
-    'IC_BatteryModules',
-    'IC_InverterMaxPower_w',
-    'NVM_PfcFixedCosPhi',
-    'NVM_PfcIsFixedCosPhiActive',
-    'NVM_PfcIsFixedCosPhiLagging'
-];
 let polling;
 let ip;
 let adapter;
@@ -215,16 +195,16 @@ async function main() {
         promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
     }
     const specificStates = apiVersion === 'v2' ? utils_1.apiStatesV2 : utils_1.apiStatesV1;
-    for (const obj of specificStates) {
-        const id = obj._id;
-        // use extend to update stuff like types if they were wrong, but preserve name
-        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
-    }
     if (apiVersion === 'v2') {
         // cleanup old states
         for (const obj of utils_1.apiStatesV1) {
             promises.push(adapter.delObjectAsync(obj._id));
         }
+    }
+    for (const obj of specificStates) {
+        const id = obj._id;
+        // use extend to update stuff like types if they were wrong, but preserve name
+        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
     }
     if (adapter.config.pollOnlineStatus) {
         promises.push(adapter.extendObjectAsync('status.onlineStatus', {
@@ -481,11 +461,12 @@ async function requestSettings() {
 }
 async function requestIosEndpoint() {
     try {
-        let data = await (0, request_promise_native_1.default)(`http://${ip}:8080/api/ios`);
+        const iosUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/io` : `http://${ip}:8080/api/ios`;
+        const res = await (0, request_promise_native_1.default)({ url: iosUrl, ...requestOptions });
         const promises = [];
-        promises.push(adapter.setStateAsync(`info.ios`, data, true));
-        adapter.log.debug(`io json: ${data}`);
-        data = JSON.parse(data);
+        promises.push(adapter.setStateAsync(`info.ios`, res, true));
+        adapter.log.debug(`io json: ${res}`);
+        const data = JSON.parse(res);
         const relevantIOs = ['DO_12', 'DO_13', 'DO_14'];
         for (const io of relevantIOs) {
             promises.push(adapter.setStateAsync(`ios.${io}`, !!data[io].status, true));
@@ -500,28 +481,32 @@ async function requestIosEndpoint() {
 }
 async function requestInverterEndpoint() {
     try {
-        let data = await (0, request_promise_native_1.default)(`http://${ip}:8080/api/inverter`);
+        const inverterUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/inverter` : `http://${ip}:8080/api/inverter`;
+        const res = await (0, request_promise_native_1.default)({ url: inverterUrl, ...requestOptions });
         const promises = [];
-        promises.push(adapter.setStateAsync(`info.inverter`, data, true));
-        data = JSON.parse(data);
-        const relevantStates = [
-            'iac1',
-            'iac2',
-            'iac3',
-            'uac1',
-            'uac2',
-            'uac3',
-            'udc',
-            'temphmi',
-            'tempbdc',
-            'temppu',
-            'pac1',
-            'pac2',
-            'pac3'
-        ];
-        for (const state of relevantStates) {
-            // inverter states are string but are all numbers
-            promises.push(adapter.setStateAsync(`inverter.${state}`, parseFloat(data.status[state]), true));
+        promises.push(adapter.setStateAsync(`info.inverter`, res, true));
+        const data = JSON.parse(res);
+        /** V1 has other response, handle it, v2 will only have the info state for now */
+        if (apiVersion === 'v1') {
+            const relevantStates = [
+                'iac1',
+                'iac2',
+                'iac3',
+                'uac1',
+                'uac2',
+                'uac3',
+                'udc',
+                'temphmi',
+                'tempbdc',
+                'temppu',
+                'pac1',
+                'pac2',
+                'pac3'
+            ];
+            for (const state of relevantStates) {
+                // inverter states are string but are all numbers
+                promises.push(adapter.setStateAsync(`inverter.${state}`, parseFloat(data.status[state]), true));
+            }
         }
         await Promise.all(promises);
         // inverter endpoint exists
@@ -651,6 +636,7 @@ async function setBatteryStates(json) {
     promises.push(adapter.setStateAsync(`status.flowProductionBattery`, json.FlowProductionBattery, true));
     promises.push(adapter.setStateAsync(`status.flowProductionGrid`, json.FlowProductionGrid, true));
     promises.push(adapter.setStateAsync('status.systemStatus', json.SystemStatus, true));
+    promises.push(adapter.setStateAsync('status.operatingMode', parseInt(json.OperatingMode), true));
     await Promise.all(promises);
 }
 async function requestStateAndSetOldAPI(code, stateId) {
@@ -663,10 +649,11 @@ async function requestStateAndSetOldAPI(code, stateId) {
  * Requests settings for V2 endpoint
  */
 async function requestSettingsV2() {
-    for (const id of ENDPOINTS_CONFIG_V2) {
-        const data = await (0, request_promise_native_1.default)({ url: `http://${ip}/api/v2/configurations/${id}`, ...requestOptions });
-        adapter.log.debug(`Configuration for "${id}" received: ${data}`);
-        let value = JSON.parse(data)[id];
+    const res = await (0, request_promise_native_1.default)({ url: `http://${ip}/api/v2/configurations`, ...requestOptions });
+    adapter.log.debug(`Configuration received: ${res}`);
+    const data = JSON.parse(res);
+    for (const [id, val] of Object.entries(data)) {
+        let value = val;
         if (value && !isNaN(Number(value))) {
             value = parseFloat(value);
         }
