@@ -661,6 +661,27 @@ export const apiStatesV1: ioBroker.AnyObject[] = [
  */
 export const apiStatesV2: ioBroker.AnyObject[] = [
     {
+        _id: 'battery',
+        type: 'channel',
+        common: {
+            name: 'Battery'
+        },
+        native: {}
+    },
+    {
+        _id: 'battery.cyclecount',
+        type: 'state',
+        common: {
+            name: 'Number of charge/discharge cycles',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+            desc: 'Number of charge/discharge cycles'
+        },
+        native: {}
+    },
+    {
         _id: 'inverter.pacTotal',
         type: 'state',
         common: {

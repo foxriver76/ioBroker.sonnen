@@ -318,11 +318,17 @@ The channel consists of read-only states of type `boolean`, providing informatio
 ### Channel: configurations
 The channel allows reading and writing configuration values of the battery.
 
+### Channel: battery
+The channel provides battery specific information like the number of cycle count.
+
 ## Changelog
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### 1.15.1 (2022-12-13)
+* (foxriver76) added `battery.cyclecount` state (closes #194)
+
 ### 1.15.0 (2022-12-13)
 * (foxriver76) full port to v2 API (Software Version >= 1.8.7)
 * (foxriver76) brings back `ios` and `inverter` endpoints

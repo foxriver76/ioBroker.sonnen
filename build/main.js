@@ -243,6 +243,9 @@ async function main() {
                 }
                 await requestIosEndpoint();
                 await requestInverterEndpoint();
+                if (apiVersion === 'v2') {
+                    await requestBatteryEndpoint();
+                }
             }
             catch (e) {
                 adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
@@ -459,6 +462,20 @@ async function requestSettings() {
     adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
     await adapter.setStateAsync(`info.configuration`, data, true);
 }
+/**
+ * Requests the battery endpoint of API v2 and syncs states accordingly
+ */
+async function requestBatteryEndpoint() {
+    try {
+        const res = await (0, request_promise_native_1.default)({ url: `http://${ip}/api/v2/battery`, ...requestOptions });
+        adapter.log.debug(`battery json: ${res}`);
+        const data = JSON.parse(res);
+        await adapter.setStateAsync('battery.cyclecount', data.cyclecount, true);
+    }
+    catch (e) {
+        throw new Error(`Could not request battery endpoint: ${e.message}`);
+    }
+}
 async function requestIosEndpoint() {
     try {
         const iosUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/io` : `http://${ip}:8080/api/ios`;
@@ -474,9 +491,7 @@ async function requestIosEndpoint() {
         await Promise.all(promises);
     }
     catch (e) {
-        // TODO: for now don't throw to not disturb users with current API
-        adapter.log.debug(`Could not request ios endpoint: ${e.message}`);
-        //throw new Error(`Could not request ios endpoint: ${e.message}`);
+        throw new Error(`Could not request ios endpoint: ${e.message}`);
     }
 }
 async function requestInverterEndpoint() {

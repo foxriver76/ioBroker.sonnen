@@ -8,9 +8,11 @@ export type OnlineStatus = 'true' | 'false';
 /** GET api/v2/io */
 export type IoResponse = Record<string, IoResponseValue>;
 
+type Binary = 0 | 1;
+
 interface IoResponseValue {
     connector: string;
-    status: 0 | 1;
+    status: Binary;
     usage: string;
 }
 
@@ -236,6 +238,37 @@ export interface StatusResponse {
     Ubat: number;
     dischargeNotAllowed: boolean;
     generator_autostart: boolean;
+}
+
+/** GET api/v2/battery */
+export interface BatteryResponse {
+    balancechargerequest: Binary;
+    chargecurrentlimit: number;
+    cyclecount: number;
+    dischargecurrentlimit: number;
+    fullchargecapacity: number;
+    maximumcelltemperature: number;
+    maximumcellvoltage: number;
+    /** Enum according to docs, but no info other than 0 */
+    maximumcellvoltagenum: number;
+    maximummodulecurrent: number;
+    maximummoduledcvoltage: number;
+    maximummoduletemperature: number;
+    minimumcelltemperature: number;
+    minimumcellvoltage: number;
+    /** Enum according to docs, but no info other than 0 */
+    minimumcellvoltagenum: number;
+    minimummodulecurrent: number;
+    minimummoduledcvoltage: number;
+    minimummoduletemperature: number;
+    relativestateofcharge: number;
+    remainingcapacity: number;
+    systemalarm: Binary;
+    systemcurrent: number;
+    systemdcvoltage: number;
+    systemstatus: number;
+    systemtime: Binary;
+    systemwarning: Binary;
 }
 
 export interface LegacyResponse {

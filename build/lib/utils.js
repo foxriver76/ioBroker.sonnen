@@ -662,6 +662,27 @@ exports.apiStatesV1 = [
  */
 exports.apiStatesV2 = [
     {
+        _id: 'battery',
+        type: 'channel',
+        common: {
+            name: 'Battery'
+        },
+        native: {}
+    },
+    {
+        _id: 'battery.cyclecount',
+        type: 'state',
+        common: {
+            name: 'Number of charge/discharge cycles',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+            desc: 'Number of charge/discharge cycles'
+        },
+        native: {}
+    },
+    {
         _id: 'inverter.pacTotal',
         type: 'state',
         common: {
