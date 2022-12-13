@@ -364,3 +364,6 @@ Der Kanal besteht aus schreibgeschützten Zuständen vom Typ `number`, die Infor
 
 ### Channel: ios
 Der Kanal besteht aus schreibgeschützten Zuständen vom Typ `boolean`, die Informationen über die discrete IO Status der sonnenBatterie liefern.
+
+### Channel: configurations
+Der Kanal erlaubt das Lesen und auch Schreiben von Konfigurationswerten der Sonnenbatterie,

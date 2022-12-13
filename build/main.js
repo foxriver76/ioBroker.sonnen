@@ -485,9 +485,9 @@ async function requestInverterEndpoint() {
         const res = await (0, request_promise_native_1.default)({ url: inverterUrl, ...requestOptions });
         const promises = [];
         promises.push(adapter.setStateAsync(`info.inverter`, res, true));
-        const data = JSON.parse(res);
         /** V1 has other response, handle it, v2 will only have the info state for now */
         if (apiVersion === 'v1') {
+            const data = JSON.parse(res);
             const relevantStates = [
                 'iac1',
                 'iac2',
@@ -507,6 +507,12 @@ async function requestInverterEndpoint() {
                 // inverter states are string but are all numbers
                 promises.push(adapter.setStateAsync(`inverter.${state}`, parseFloat(data.status[state]), true));
             }
+        }
+        else if (apiVersion === 'v2') {
+            const data = JSON.parse(res);
+            promises.push(adapter.setStateAsync('inverter.pacTotal', data.pac_total, true));
+            promises.push(adapter.setStateAsync('inverter.tmax', data.tmax, true));
+            promises.push(adapter.setStateAsync('inverter.ubat', data.ubat, true));
         }
         await Promise.all(promises);
         // inverter endpoint exists

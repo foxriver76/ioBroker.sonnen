@@ -315,6 +315,9 @@ The channel consists of read-only states of type `number`, providing information
 ### Channel: ios
 The channel consists of read-only states of type `boolean`, providing information about the discrete IO states of your battery.
 
+### Channel: configurations
+The channel allows reading and writing configuration values of the battery.
+
 ## Changelog
 <!--
 	Placeholder for the next version (at the beginning of the line):
@@ -325,6 +328,7 @@ The channel consists of read-only states of type `boolean`, providing informatio
 * (foxriver76) full port to v2 API (Software Version >= 1.8.7)
 * (foxriver76) brings back `ios` and `inverter` endpoints
 * (foxriver76) configuration request is now handled by a single call instead of one for each attribute
+* (foxriver76) we fixed a lot of state roles
 
 ### 1.14.0 (2022-12-02)
 * (foxriver76) implemented new state `latestData.dcShutdownReason` (closes #213)

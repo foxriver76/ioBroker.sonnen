@@ -1,14 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.oldAPIStates = exports.getPowermeterStates = exports.apiStatesV2 = exports.apiStatesV1 = exports.generalAPIStates = void 0;
+/** API states for v1 and v2 */
 exports.generalAPIStates = [
+    {
+        _id: 'inverter',
+        type: 'channel',
+        common: {
+            name: 'Inverter Information'
+        },
+        native: {}
+    },
     {
         _id: 'status.userSoc',
         type: 'state',
         common: {
             name: 'User State of Charge',
             type: 'number',
-            role: 'value.usoc',
+            role: 'value.battery',
             read: true,
             write: false,
             desc: 'User State of Charge',
@@ -24,11 +33,11 @@ exports.generalAPIStates = [
         common: {
             name: 'AC frequency',
             type: 'number',
-            role: 'value.fac',
+            role: 'value',
             read: true,
             write: false,
             desc: 'AC frequency in hertz',
-            unit: 'hertz'
+            unit: 'Hz'
         },
         native: {}
     },
@@ -38,11 +47,11 @@ exports.generalAPIStates = [
         common: {
             name: 'AC voltage',
             type: 'number',
-            role: 'value.uac',
+            role: 'value.voltage',
             read: true,
             write: false,
             desc: 'AC voltage in volts',
-            unit: 'volts'
+            unit: 'V'
         },
         native: {}
     },
@@ -52,11 +61,11 @@ exports.generalAPIStates = [
         common: {
             name: 'Battery voltage',
             type: 'number',
-            role: 'value.ubat',
+            role: 'value.voltage',
             read: true,
             write: false,
             desc: 'Battery voltage in volts',
-            unit: 'volts'
+            unit: 'V'
         },
         native: {}
     },
@@ -83,7 +92,7 @@ exports.generalAPIStates = [
         common: {
             name: 'System time',
             type: 'number',
-            role: 'value.time',
+            role: 'date',
             read: true,
             write: false,
             desc: 'System time'
@@ -96,7 +105,7 @@ exports.generalAPIStates = [
         common: {
             name: 'System Installed',
             type: 'boolean',
-            role: 'indicator.systemInstalled',
+            role: 'indicator',
             read: true,
             write: false,
             def: false,
@@ -110,7 +119,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Battery charging',
             type: 'boolean',
-            role: 'indicator.batteryCharging',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'System is installed or not'
@@ -123,7 +132,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Flow consumption battery',
             type: 'boolean',
-            role: 'indicator.flowConsumptionBattery',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'If consuming from battery'
@@ -136,7 +145,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Flow consumption Grid',
             type: 'boolean',
-            role: 'indicator.flowConsumptionGrid',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'If consuming from grid'
@@ -149,7 +158,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Flow consumption production',
             type: 'boolean',
-            role: 'indicator.flowConsumptionProduction',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'If consuming from production'
@@ -162,7 +171,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Flow grid battery',
             type: 'boolean',
-            role: 'indicator.flowGridBattery',
+            role: 'indicator',
             read: true,
             write: false,
             def: false,
@@ -176,7 +185,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Flow production battery',
             type: 'boolean',
-            role: 'indicator.flowProductionBattery',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'If charging from production'
@@ -189,7 +198,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Flow production grid',
             type: 'boolean',
-            role: 'indicator.flowProductionGrid',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'If production flows to grid'
@@ -202,7 +211,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Amount of grid feed in',
             type: 'number',
-            role: 'value.gridFeedIn',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'If negative consuming from grid',
@@ -237,7 +246,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Battery charging',
             type: 'number',
-            role: 'value.charge',
+            role: 'value.power',
             read: true,
             write: true,
             desc: 'Battery charge rate',
@@ -251,7 +260,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Battery charging',
             type: 'number',
-            role: 'value.discharge',
+            role: 'value.power',
             read: true,
             write: true,
             desc: 'Battery discharge rate',
@@ -265,7 +274,7 @@ exports.generalAPIStates = [
         common: {
             name: 'Power AC Total',
             type: 'number',
-            role: 'value.pac',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Inverter AC Power greater than 0 is discharging, smaller charging',
@@ -466,20 +475,12 @@ exports.apiStatesV1 = [
         native: {}
     },
     {
-        _id: 'inverter',
-        type: 'channel',
-        common: {
-            name: 'Inverter Information'
-        },
-        native: {}
-    },
-    {
         _id: 'inverter.iac1',
         type: 'state',
         common: {
             name: 'Phase 1 Ampere AC',
             type: 'number',
-            role: 'value',
+            role: 'value.current',
             read: true,
             write: false,
             desc: 'Accelerating Current Amperes of Phase 1',
@@ -493,7 +494,7 @@ exports.apiStatesV1 = [
         common: {
             name: 'Phase 2 Ampere AC',
             type: 'number',
-            role: 'value',
+            role: 'value.current',
             read: true,
             write: false,
             desc: 'Accelerating Current Amperes of Phase 2',
@@ -507,7 +508,7 @@ exports.apiStatesV1 = [
         common: {
             name: 'Phase 3 Ampere AC',
             type: 'number',
-            role: 'value',
+            role: 'value.current',
             read: true,
             write: false,
             desc: 'Accelerating Current Amperes of Phase 3',
@@ -521,11 +522,11 @@ exports.apiStatesV1 = [
         common: {
             name: 'Phase 1 Current AC',
             type: 'number',
-            role: 'value',
+            role: 'value.voltage',
             read: true,
             write: false,
             desc: 'Accelerating Current Voltage of Phase 1',
-            unit: 'volts'
+            unit: 'V'
         },
         native: {}
     },
@@ -535,11 +536,11 @@ exports.apiStatesV1 = [
         common: {
             name: 'Phase 2 Current AC',
             type: 'number',
-            role: 'value',
+            role: 'value.voltage',
             read: true,
             write: false,
             desc: 'Accelerating Current Voltage of Phase 2',
-            unit: 'volts'
+            unit: 'V'
         },
         native: {}
     },
@@ -549,11 +550,11 @@ exports.apiStatesV1 = [
         common: {
             name: 'Phase 3 Current AC',
             type: 'number',
-            role: 'value',
+            role: 'value.voltage',
             read: true,
             write: false,
             desc: 'Accelerating Current Voltage of Phase 3',
-            unit: 'volts'
+            unit: 'V'
         },
         native: {}
     },
@@ -563,11 +564,11 @@ exports.apiStatesV1 = [
         common: {
             name: 'Voltage DC',
             type: 'number',
-            role: 'value',
+            role: 'value.voltage',
             read: true,
             write: false,
             desc: 'Direct Current Voltage',
-            unit: 'volts'
+            unit: 'V'
         },
         native: {}
     },
@@ -577,7 +578,7 @@ exports.apiStatesV1 = [
         common: {
             name: 'Temperature HMI',
             type: 'number',
-            role: 'value',
+            role: 'value.temperature',
             read: true,
             write: false,
             desc: 'Temperature of HMI',
@@ -591,7 +592,7 @@ exports.apiStatesV1 = [
         common: {
             name: 'Temperature BDC',
             type: 'number',
-            role: 'value',
+            role: 'value.temperature',
             read: true,
             write: false,
             desc: 'Temperature of BDC',
@@ -605,7 +606,7 @@ exports.apiStatesV1 = [
         common: {
             name: 'Temperature PU',
             type: 'number',
-            role: 'value',
+            role: 'value.temperature',
             read: true,
             write: false,
             desc: 'Temperature of PU',
@@ -619,7 +620,7 @@ exports.apiStatesV1 = [
         common: {
             name: 'Phase 1 Power AC',
             type: 'number',
-            role: 'value',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Accelerating Current Power of Phase 1',
@@ -633,7 +634,7 @@ exports.apiStatesV1 = [
         common: {
             name: 'Phase 2 Power AC',
             type: 'number',
-            role: 'value',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Accelerating Current Power of Phase 2',
@@ -647,7 +648,7 @@ exports.apiStatesV1 = [
         common: {
             name: 'Phase 3 Power AC',
             type: 'number',
-            role: 'value',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Accelerating Current Power of Phase 3',
@@ -657,9 +658,59 @@ exports.apiStatesV1 = [
     }
 ];
 /**
- * API states which are not in general and are exlusive for v1
+ * API states which are not in general and are exlusive for v2
  */
 exports.apiStatesV2 = [
+    {
+        _id: 'inverter.pacTotal',
+        type: 'state',
+        common: {
+            name: 'AC Power Total',
+            type: 'number',
+            role: 'value.power',
+            read: true,
+            write: false,
+            desc: 'Greater than ZERO is discharging, less than ZERO is charging',
+            unit: 'W'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.tmax',
+        type: 'state',
+        common: {
+            name: 'Inverter Temperature',
+            type: 'number',
+            role: 'value.temperature',
+            read: true,
+            write: false,
+            desc: 'Inverter Temperature',
+            unit: '°C'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.ubat',
+        type: 'state',
+        common: {
+            name: 'Battery voltage in volts',
+            type: 'number',
+            role: 'value.voltage',
+            read: true,
+            write: false,
+            desc: 'Battery voltage in volts',
+            unit: 'V'
+        },
+        native: {}
+    },
+    {
+        _id: 'configurations',
+        type: 'channel',
+        common: {
+            name: 'Configurations'
+        },
+        native: {}
+    },
     {
         _id: 'configurations.EM_USER_INPUT_TIME_ONE',
         type: 'state',
@@ -860,7 +911,8 @@ exports.apiStatesV2 = [
             role: 'value',
             read: true,
             write: true,
-            desc: 'EM US CHP Max State of Charge'
+            desc: 'EM US CHP Max State of Charge',
+            unit: '%'
         },
         native: {}
     },
@@ -873,7 +925,8 @@ exports.apiStatesV2 = [
             role: 'value',
             read: true,
             write: true,
-            desc: 'EM US CHP Min State of Charge'
+            desc: 'EM US CHP Min State of Charge',
+            unit: '%'
         },
         native: {}
     },
@@ -974,7 +1027,7 @@ exports.apiStatesV2 = [
         common: {
             name: 'IC Inverter Max Power',
             type: 'number',
-            role: 'value',
+            role: 'value.power',
             read: true,
             write: true,
             unit: 'W',
@@ -1044,7 +1097,7 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Ampere Phase 1',
                 type: 'number',
-                role: 'value',
+                role: 'value.current',
                 read: true,
                 write: false,
                 desc: 'Amperes measured on Phase 1',
@@ -1058,7 +1111,7 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Ampere Phase 2',
                 type: 'number',
-                role: 'value',
+                role: 'value.current',
                 read: true,
                 write: false,
                 desc: 'Amperes measured on Phase 2',
@@ -1072,7 +1125,7 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Ampere Phase 3',
                 type: 'number',
-                role: 'value',
+                role: 'value.current',
                 read: true,
                 write: false,
                 desc: 'Amperes measured on Phase 3',
@@ -1086,11 +1139,11 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Voltage Phase 1 and 2',
                 type: 'number',
-                role: 'value',
+                role: 'value.voltage',
                 read: true,
                 write: false,
                 desc: 'Voltage of Phase 1 and 2',
-                unit: 'volts'
+                unit: 'V'
             },
             native: {}
         },
@@ -1100,11 +1153,11 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Voltage Phase 2 and 3',
                 type: 'number',
-                role: 'value',
+                role: 'valuevoltage',
                 read: true,
                 write: false,
                 desc: 'Voltage of Phase 2 and 3',
-                unit: 'volts'
+                unit: 'V'
             },
             native: {}
         },
@@ -1114,11 +1167,11 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Voltage Phase 1 and 3',
                 type: 'number',
-                role: 'value',
+                role: 'value.voltage',
                 read: true,
                 write: false,
                 desc: 'Voltage of Phase 1 and 3',
-                unit: 'volts'
+                unit: 'V'
             },
             native: {}
         },
@@ -1128,11 +1181,11 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Voltage Phase 1 and Neutral',
                 type: 'number',
-                role: 'value',
+                role: 'value.voltage',
                 read: true,
                 write: false,
                 desc: 'Voltage of Phase 1 and Neutral',
-                unit: 'volts'
+                unit: 'V'
             },
             native: {}
         },
@@ -1142,11 +1195,11 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Voltage Phase 2 and Neutral',
                 type: 'number',
-                role: 'value',
+                role: 'value.voltage',
                 read: true,
                 write: false,
                 desc: 'Voltage of Phase 2 and Neutral',
-                unit: 'volts'
+                unit: 'V'
             },
             native: {}
         },
@@ -1156,11 +1209,11 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Voltage Phase 3 and Neutral',
                 type: 'number',
-                role: 'value',
+                role: 'value.voltage',
                 read: true,
                 write: false,
                 desc: 'Voltage of Phase 3 and Neutral',
-                unit: 'volts'
+                unit: 'V'
             },
             native: {}
         },
@@ -1198,7 +1251,7 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Watts Phase 1',
                 type: 'number',
-                role: 'value',
+                role: 'value.power',
                 read: true,
                 write: false,
                 desc: 'Watts on Phase 1',
@@ -1212,7 +1265,7 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Watts Phase 2',
                 type: 'number',
-                role: 'value',
+                role: 'value.power',
                 read: true,
                 write: false,
                 desc: 'Watts on Phase 2',
@@ -1226,7 +1279,7 @@ const getPowermeterStates = (id, direction) => {
             common: {
                 name: 'Watts Phase 3',
                 type: 'number',
-                role: 'value',
+                role: 'value.power',
                 read: true,
                 write: false,
                 desc: 'Watts on Phase 3',
@@ -1237,6 +1290,7 @@ const getPowermeterStates = (id, direction) => {
     ];
 };
 exports.getPowermeterStates = getPowermeterStates;
+/** API states for old API (Port 7979) */
 exports.oldAPIStates = [
     {
         _id: 'status.pacCharge',
@@ -1244,7 +1298,7 @@ exports.oldAPIStates = [
         common: {
             name: 'Power AC Charge',
             type: 'number',
-            role: 'value.pac',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Inverter AC Power charging',
@@ -1258,7 +1312,7 @@ exports.oldAPIStates = [
         common: {
             name: 'Power AC Discharge',
             type: 'number',
-            role: 'value.pac',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Inverter AC Power discharging',
@@ -1291,7 +1345,7 @@ exports.oldAPIStates = [
         common: {
             name: 'Consumption L1',
             type: 'number',
-            role: 'value.consumption',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Consumption of L1',
@@ -1305,7 +1359,7 @@ exports.oldAPIStates = [
         common: {
             name: 'Consumption L2',
             type: 'number',
-            role: 'value.consumption',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Consumption of L2',
@@ -1319,7 +1373,7 @@ exports.oldAPIStates = [
         common: {
             name: 'Consumption L3',
             type: 'number',
-            role: 'value.consumption',
+            role: 'value.power',
             read: true,
             write: false,
             desc: 'Consumption of L3',

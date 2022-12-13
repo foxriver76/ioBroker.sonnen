@@ -161,7 +161,7 @@
       "common": {
         "name": "Last successful sync",
         "type": "number",
-        "role": "value.time",
+        "role": "date",
         "read": true,
         "write": false,
         "desc": "Last successful synchronization"
@@ -196,11 +196,11 @@
       "common": {
         "name": "Consumption",
         "type": "number",
-        "role": "value.consumption",
+        "role": "value.power",
         "read": true,
         "write": false,
         "desc": "House comsumption in watts",
-        "unit": "watts"
+        "unit": "W"
       },
       "native": {}
     },
@@ -210,11 +210,11 @@
       "common": {
         "name": "Production",
         "type": "number",
-        "role": "value.production",
+        "role": "value.power",
         "read": true,
         "write": false,
         "desc": "Production in watts",
-        "unit": "watts"
+        "unit": "W"
       },
       "native": {}
     },
@@ -224,7 +224,7 @@
       "common": {
         "name": "Relative State of Charge",
         "type": "number",
-        "role": "value.rsoc",
+        "role": "value.battery",
         "read": true,
         "min": 0,
         "max": 100,
