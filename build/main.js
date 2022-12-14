@@ -28,7 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const utils = __importStar(require("@iobroker/adapter-core"));
 const utils_1 = require("./lib/utils");
-const request_promise_native_1 = __importDefault(require("request-promise-native"));
+const axios_1 = __importDefault(require("axios"));
 class Sonnen extends utils.Adapter {
     constructor(options = {}) {
         super({ ...options, name: 'sonnen' });
@@ -80,7 +80,7 @@ class Sonnen extends utils.Adapter {
             this.log.debug('[START] Auth-Token provided... trying official API');
             this.requestOptions.headers['Auth-Token'] = this.config.token;
             try {
-                await (0, request_promise_native_1.default)({ url: `http://${this.ip}/api/v2/latestdata`, ...this.requestOptions });
+                await (0, axios_1.default)({ url: `http://${this.ip}/api/v2/latestdata`, ...this.requestOptions });
                 this.apiVersion = 'v2';
                 this.log.debug('[START] Check ok, using official API');
                 return void this.main();
@@ -90,7 +90,7 @@ class Sonnen extends utils.Adapter {
             }
         }
         try {
-            await (0, request_promise_native_1.default)({ url: `http://${this.ip}:8080/api/v1/status`, timeout: 2000 });
+            await (0, axios_1.default)({ url: `http://${this.ip}:8080/api/v1/status`, timeout: 2000 });
             this.log.debug(`[START] 8080 API detected`);
             this.apiVersion = 'v1';
             return void this.main();
@@ -100,8 +100,8 @@ class Sonnen extends utils.Adapter {
         }
         try {
             // test if both works, else use legacy, because of incomplete implementation of API
-            await (0, request_promise_native_1.default)(`http://${this.ip}:7979/rest/devices/battery/M03`);
-            await (0, request_promise_native_1.default)(`http://${this.ip}:7979/rest/devices/battery/M034`);
+            await (0, axios_1.default)(`http://${this.ip}:7979/rest/devices/battery/M03`);
+            await (0, axios_1.default)(`http://${this.ip}:7979/rest/devices/battery/M034`);
             this.apiVersion = 'old';
             this.log.debug(`[START] 7979 API detected`);
             return void this.oldAPImain();
@@ -110,7 +110,7 @@ class Sonnen extends utils.Adapter {
             this.log.debug(`[START] It's not 7979, because ${e.message}`);
         }
         try {
-            await (0, request_promise_native_1.default)(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`);
+            await (0, axios_1.default)(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`);
             this.apiVersion = 'legacy';
             return void this.legacyAPImain();
         }
@@ -132,16 +132,17 @@ class Sonnen extends utils.Adapter {
         if (id === `control.charge`) {
             try {
                 if (this.apiVersion === 'v2') {
-                    await request_promise_native_1.default.post({
+                    await (0, axios_1.default)({
+                        method: 'POST',
                         url: `http://${this.ip}/api/v2/setpoint/charge/${stateVal}`,
                         ...this.requestOptions
                     });
                 }
                 else {
-                    await request_promise_native_1.default.put({ url: `http://${this.ip}:8080/api/v1/setpoint/charge/${stateVal}` });
+                    await (0, axios_1.default)({ method: 'PUT', url: `http://${this.ip}:8080/api/v1/setpoint/charge/${stateVal}` });
                 }
                 this.setState(`control.charge`, state, true);
-                this.log.debug(`[PUT] ==> Sent ${stateVal} to charge`);
+                this.log.debug(`Sent ${stateVal} to charge`);
             }
             catch (e) {
                 this.log.warn(`Error changing charge: ${e.message}`);
@@ -150,16 +151,17 @@ class Sonnen extends utils.Adapter {
         else if (id === `control.discharge`) {
             try {
                 if (this.apiVersion === 'v2') {
-                    await request_promise_native_1.default.post({
+                    await (0, axios_1.default)({
+                        method: 'POST',
                         url: `http://${this.ip}/api/v2/setpoint/discharge/${stateVal}`,
                         ...this.requestOptions
                     });
                 }
                 else {
-                    await request_promise_native_1.default.put({ url: `http://${this.ip}:8080/api/v1/setpoint/discharge/${stateVal}` });
+                    await (0, axios_1.default)({ method: 'PUT', url: `http://${this.ip}:8080/api/v1/setpoint/discharge/${stateVal}` });
                 }
                 this.setState(`control.discharge`, state, true);
-                this.log.debug(`[PUT] ==> Sent ${stateVal} to discharge`);
+                this.log.debug(`Sent ${stateVal} to discharge`);
             }
             catch (e) {
                 this.log.warn(`Error changing discharge: ${e.message}`);
@@ -172,10 +174,11 @@ class Sonnen extends utils.Adapter {
             data[command] = val;
             this.log.debug(`[PUT] ==> Sent ${JSON.stringify(data)} to configurations`);
             try {
-                await request_promise_native_1.default.put({
+                await (0, axios_1.default)({
+                    method: 'PUT',
                     url: `http://${this.ip}/api/v2/configurations`,
                     ...this.requestOptions,
-                    json: data
+                    data
                 });
             }
             catch (e) {
@@ -230,13 +233,13 @@ class Sonnen extends utils.Adapter {
         const pollStates = async () => {
             // poll states every [30] seconds
             try {
-                const data = await (0, request_promise_native_1.default)(statusUrl);
+                const data = (await (0, axios_1.default)(statusUrl)).data;
                 const state = await this.getStateAsync(`info.connection`);
                 if (!state || !state.val) {
                     this.setState(`info.connection`, true, true);
                     this.log.debug(`[CONNECT] Connection successfuly established`);
                 }
-                await this.setBatteryStates(JSON.parse(data));
+                await this.setBatteryStates(data);
                 try {
                     await this.requestPowermeterEndpoint();
                     if (this.config.pollOnlineStatus) {
@@ -338,8 +341,7 @@ class Sonnen extends utils.Adapter {
         // here we store the id of the battery
         let batteryId;
         try {
-            const res = await (0, request_promise_native_1.default)(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`);
-            const data = JSON.parse(res);
+            const data = (await (0, axios_1.default)(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`)).data;
             // we got data successfully -> mark as connected
             this.setState(`info.connection`, true, true);
             this.log.debug(`[CONNECT] Connection successfuly established`);
@@ -406,8 +408,7 @@ class Sonnen extends utils.Adapter {
         }
         const pollStates = async () => {
             try {
-                const res = await (0, request_promise_native_1.default)(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`);
-                const data = JSON.parse(res);
+                const data = (await (0, axios_1.default)(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`)).data;
                 for (const device of Object.values(data.devices)) {
                     if (device.id === batteryId) {
                         for (const attr of Object.keys(device)) {
@@ -458,23 +459,28 @@ class Sonnen extends utils.Adapter {
         }
         return stateVal;
     }
+    /**
+     * Request settings for v1 or v2 API
+     */
     async requestSettings() {
         if (this.apiVersion === 'v2') {
             this.requestSettingsV2();
             return;
         }
-        const data = await (0, request_promise_native_1.default)(`http://${this.ip}:8080/api/configuration`);
-        this.log.debug(`[SETTINGS] Configuration received: ${data}`);
-        await this.setStateAsync(`info.configuration`, data, true);
+        const rawData = JSON.stringify(await (0, axios_1.default)(`http://${this.ip}:8080/api/configuration`));
+        this.log.debug(`[SETTINGS] Configuration received: ${rawData}`);
+        await this.setStateAsync(`info.configuration`, rawData, true);
     }
     /**
      * Requests the battery endpoint of API v2 and syncs states accordingly
      */
     async requestBatteryEndpoint() {
         try {
-            const res = await (0, request_promise_native_1.default)({ url: `http://${this.ip}/api/v2/battery`, ...this.requestOptions });
-            this.log.debug(`battery json: ${res}`);
-            const data = JSON.parse(res);
+            const data = (await (0, axios_1.default)({
+                url: `http://${this.ip}/api/v2/battery`,
+                ...this.requestOptions
+            })).data;
+            this.log.debug(`Battery json: ${JSON.stringify(data)}`);
             await this.setStateAsync('battery.cyclecount', data.cyclecount, true);
         }
         catch (e) {
@@ -487,11 +493,11 @@ class Sonnen extends utils.Adapter {
     async requestIosEndpoint() {
         try {
             const iosUrl = this.apiVersion === 'v2' ? `http://${this.ip}/api/v2/io` : `http://${this.ip}:8080/api/ios`;
-            const res = await (0, request_promise_native_1.default)({ url: iosUrl, ...this.requestOptions });
+            const data = (await (0, axios_1.default)({ url: iosUrl, ...this.requestOptions })).data;
+            const rawData = JSON.stringify(data);
             const promises = [];
-            promises.push(this.setStateAsync(`info.ios`, res, true));
-            this.log.debug(`io json: ${res}`);
-            const data = JSON.parse(res);
+            promises.push(this.setStateAsync(`info.ios`, rawData, true));
+            this.log.debug(`io json: ${rawData}`);
             const relevantIOs = ['DO_12', 'DO_13', 'DO_14'];
             for (const io of relevantIOs) {
                 promises.push(this.setStateAsync(`ios.${io}`, !!data[io].status, true));
@@ -508,12 +514,11 @@ class Sonnen extends utils.Adapter {
     async requestInverterEndpoint() {
         try {
             const inverterUrl = this.apiVersion === 'v2' ? `http://${this.ip}/api/v2/inverter` : `http://${this.ip}:8080/api/inverter`;
-            const res = await (0, request_promise_native_1.default)({ url: inverterUrl, ...this.requestOptions });
+            const data = (await (0, axios_1.default)({ url: inverterUrl, ...this.requestOptions })).data;
             const promises = [];
-            promises.push(this.setStateAsync(`info.inverter`, res, true));
+            promises.push(this.setStateAsync(`info.inverter`, JSON.stringify(data), true));
             // V1 has other response, handle it accordingly
             if (this.apiVersion === 'v1') {
-                const data = JSON.parse(res);
                 const relevantStates = [
                     'iac1',
                     'iac2',
@@ -535,10 +540,10 @@ class Sonnen extends utils.Adapter {
                 }
             }
             else if (this.apiVersion === 'v2') {
-                const data = JSON.parse(res);
-                promises.push(this.setStateAsync('inverter.pacTotal', data.pac_total, true));
-                promises.push(this.setStateAsync('inverter.tmax', data.tmax, true));
-                promises.push(this.setStateAsync('inverter.ubat', data.ubat, true));
+                const invererData = data;
+                promises.push(this.setStateAsync('inverter.pacTotal', invererData.pac_total, true));
+                promises.push(this.setStateAsync('inverter.tmax', invererData.tmax, true));
+                promises.push(this.setStateAsync('inverter.ubat', invererData.ubat, true));
             }
             await Promise.all(promises);
             // inverter endpoint exists
@@ -561,11 +566,8 @@ class Sonnen extends utils.Adapter {
      */
     async requestOnlineStatus() {
         try {
-            const data = await (0, request_promise_native_1.default)(`http://${this.ip}/api/online_status`);
-            if (data !== 'true' && data !== 'false') {
-                throw new Error(`Expected string with "true" or "false" as onlineStatus, got "${data}"`);
-            }
-            await this.setStateAsync(`status.onlineStatus`, data === 'true', true);
+            const onlineState = (await (0, axios_1.default)(`http://${this.ip}/api/online_status`)).data;
+            await this.setStateAsync(`status.onlineStatus`, onlineState, true);
         }
         catch (e) {
             throw new Error(`Could not request online status: ${e.message}`);
@@ -576,12 +578,11 @@ class Sonnen extends utils.Adapter {
      */
     async requestLatestData() {
         const latestDataUrl = this.apiVersion === 'v2' ? `http://${this.ip}/api/v2/latestdata` : `http://${this.ip}:8080/api/latestdata`;
-        const data = await (0, request_promise_native_1.default)({ url: latestDataUrl, ...this.requestOptions });
-        this.log.debug(`Latest data: ${data}`);
-        const latestData = JSON.parse(data);
-        await this.setStateAsync('latestData.dcShutdownReason', this.decodeBitmapLikeObj(latestData.ic_status['DC Shutdown Reason'], 'Running'), true);
-        await this.setStateAsync('latestData.eclipseLed', this.decodeBitmapLikeObj(latestData.ic_status['Eclipse Led'], 'Unknown'), true);
-        await this.setStateAsync('latestData.secondsSinceFullCharge', latestData.ic_status.secondssincefullcharge, true);
+        const data = (await (0, axios_1.default)({ url: latestDataUrl, ...this.requestOptions })).data;
+        this.log.debug(`Latest data: ${JSON.stringify(data)}`);
+        await this.setStateAsync('latestData.dcShutdownReason', this.decodeBitmapLikeObj(data.ic_status['DC Shutdown Reason'], 'Running'), true);
+        await this.setStateAsync('latestData.eclipseLed', this.decodeBitmapLikeObj(data.ic_status['Eclipse Led'], 'Unknown'), true);
+        await this.setStateAsync('latestData.secondsSinceFullCharge', data.ic_status.secondssincefullcharge, true);
     }
     /**
      * Decodes a bitmap like object to extract the key where the value is true
@@ -601,11 +602,11 @@ class Sonnen extends utils.Adapter {
             const powermeterUrl = this.apiVersion === 'v2'
                 ? `http://${this.ip}/api/v2/powermeter`
                 : `http://${this.ip}:8080/api/powermeter`;
-            const data = await (0, request_promise_native_1.default)({ url: powermeterUrl, ...this.requestOptions });
-            this.log.debug(`Powermeter: ${data}`);
+            const data = (await (0, axios_1.default)({ url: powermeterUrl, ...this.requestOptions })).data;
+            const rawData = JSON.stringify(data);
+            this.log.debug(`Powermeter: ${rawData}`);
             const promises = [];
-            promises.push(this.setStateAsync(`info.powerMeter`, data, true));
-            const powerMeterData = JSON.parse(data);
+            promises.push(this.setStateAsync(`info.powerMeter`, rawData, true));
             const relevantStates = [
                 'a_l1',
                 'a_l2',
@@ -623,16 +624,16 @@ class Sonnen extends utils.Adapter {
                 'w_l3'
             ];
             // we have multiple powermeters
-            for (const pm in powerMeterData) {
+            for (const pm in data) {
                 if (!this.powermeterCreated) {
-                    const objs = (0, utils_1.getPowermeterStates)(pm, powerMeterData[pm].direction);
+                    const objs = (0, utils_1.getPowermeterStates)(pm, data[pm].direction);
                     for (const obj of objs) {
                         const id = obj._id;
                         await this.extendObjectAsync(id, obj);
                     }
                 }
                 for (const state of relevantStates) {
-                    promises.push(this.setStateAsync(`powermeter.${pm}.${state}`, powerMeterData[pm][state], true));
+                    promises.push(this.setStateAsync(`powermeter.${pm}.${state}`, data[pm][state], true));
                 }
             }
             // all powermeters created
@@ -690,7 +691,7 @@ class Sonnen extends utils.Adapter {
      * @param stateId state id where the retrived value will be set too
      */
     async requestStateAndSetOldAPI(code, stateId) {
-        let res = await (0, request_promise_native_1.default)(`http://${this.ip}:7979/rest/devices/battery/${code}`);
+        let res = (await (0, axios_1.default)(`http://${this.ip}:7979/rest/devices/battery/${code}`)).data;
         res = res.trim();
         this.log.debug(`[DATA] Received ${res} for ${code} and set it to ${stateId}`);
         this.setState(stateId, parseFloat(res), true);
@@ -699,9 +700,11 @@ class Sonnen extends utils.Adapter {
      * Requests configurations endpoint for V2 api
      */
     async requestSettingsV2() {
-        const res = await (0, request_promise_native_1.default)({ url: `http://${this.ip}/api/v2/configurations`, ...this.requestOptions });
-        this.log.debug(`Configuration received: ${res}`);
-        const data = JSON.parse(res);
+        const data = (await (0, axios_1.default)({
+            url: `http://${this.ip}/api/v2/configurations`,
+            ...this.requestOptions
+        })).data;
+        this.log.debug(`Configuration received: ${JSON.stringify(data)}`);
         for (const [id, val] of Object.entries(data)) {
             let value = val;
             if (value && !isNaN(Number(value))) {

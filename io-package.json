@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.15.2",
+    "version": "1.15.3",
     "news": {
+      "1.15.3": {
+        "en": "internal optimizations (Axios port)",
+        "de": "interne Optimierungen (Axios Port)",
+        "ru": "внутренняя оптимизация (Axios port)",
+        "pt": "otimizações internas (porto de Axios)",
+        "nl": "inwendige optimaties (Axios port)",
+        "fr": "optimisations internes (port Axios)",
+        "it": "ottimizzazioni interne (porta assios)",
+        "es": "optimizaciones internas (puerto Axios)",
+        "pl": "optymalizacja wewnętrznego portu (Axios port)",
+        "uk": "внутрішня оптимізація (Axios порт)",
+        "zh-cn": "内部优化(Axios港口)"
+      },
       "1.15.2": {
         "en": "internal optimization (ES6 class)",
         "de": "interne Optimierung (ES6-Klasse)",
@@ -80,19 +93,6 @@
         "pl": "dodać Dane końcowe zapewniają zaćmienie LED i czas od ostatniego pełnego zapotrzebowania",
         "uk": "додано останні Кінцева точка даних забезпечує світлодіодний статус і час з останнього повного заряду",
         "zh-cn": "最新增加 数据最后点:自上次全额收费以来提供微不足道的LED地位和时间"
-      },
-      "1.12.3": {
-        "en": "readded widget (closes #189)",
-        "de": "widget (schließt #189)",
-        "ru": "прочитанный виджет (closes #189)",
-        "pt": "widget adicionado (fecha #189)",
-        "nl": "gelezen widget (closes #189)",
-        "fr": "widget lissé (ferme #189)",
-        "it": "widget letto (chiudi #189)",
-        "es": "widget readded (closes #189)",
-        "pl": "czytaj widget (okrążeń #189)",
-        "uk": "читання віджету (закривається #189)",
-        "zh-cn": "读成的黑体(第189号)"
       }
     },
     "title": "sonnen",

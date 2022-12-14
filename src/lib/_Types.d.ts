@@ -1,5 +1,4 @@
 export type ApiVersion = 'old' | 'v1' | 'v2' | 'legacy';
-export type OnlineStatus = 'true' | 'false';
 
 /**
  * Up from here endpoint interactions
