@@ -14,751 +14,790 @@ import {
     BatteryResponse
 } from './lib/_Types';
 
-let polling: NodeJS.Timeout;
-let ip: string;
-let adapter: ioBroker.Adapter;
-let pollingTime: number;
-let apiVersion: ApiVersion;
-let restartTimer: NodeJS.Timeout;
-let powermeterCreated = false;
-const requestOptions: RequestPromiseOptions = { headers: {} };
-let inverterEndpoint = false;
+class Sonnen extends utils.Adapter {
+    private apiVersion: ApiVersion | undefined;
+    private polling: NodeJS.Timeout | undefined;
+    private ip = '';
+    private pollingTime: number = 7_000;
+    private restartTimer: NodeJS.Timeout | undefined;
+    private powermeterCreated = false;
+    /** indicator if inverter endpoint is supported */
+    private inverterEndpoint = false;
+    private requestOptions: RequestPromiseOptions = { headers: {} };
 
-function startAdapter(options: Partial<utils.AdapterOptions> = {}) {
-    adapter = new utils.Adapter({ ...options, name: 'sonnen' });
+    public constructor(options: Partial<utils.AdapterOptions> = {}) {
+        super({ ...options, name: 'sonnen' });
 
-    adapter.on(`unload`, async callback => {
+        this.on('ready', this.onReady.bind(this));
+        this.on('stateChange', this.onStateChange.bind(this));
+        this.on('unload', this.onUnload.bind(this));
+    }
+
+    /**
+     * Is called when adapter shuts down - callback has to be called under any circumstances!
+     */
+    private async onUnload(callback: () => void): Promise<void> {
         try {
-            clearTimeout(polling);
-            if (restartTimer) {
-                clearTimeout(restartTimer);
+            clearTimeout(this.polling);
+            if (this.restartTimer) {
+                clearTimeout(this.restartTimer);
             }
-            adapter.log.info(`[END] Stopping sonnen adapter...`);
-            await adapter.setStateAsync(`info.connection`, false, true);
+            this.log.info(`[END] Stopping sonnen this...`);
+            await this.setStateAsync(`info.connection`, false, true);
             callback();
         } catch {
             callback();
         }
-    });
+    }
 
-    adapter.on(`ready`, async () => {
-        if (adapter.config.ip) {
-            ip = adapter.config.ip;
-            adapter.log.info(`[START] Starting sonnen adapter`);
-            adapter.log.debug(`[START] Check API`);
-            if (adapter.config.token) {
-                adapter.log.debug('[START] Auth-Token provided... trying official API');
-                requestOptions.headers!['Auth-Token'] = adapter.config.token;
-                try {
-                    await requestPromise({ url: `http://${ip}/api/v2/latestdata`, ...requestOptions });
-
-                    apiVersion = 'v2';
-                    adapter.log.debug('[START] Check ok, using official API');
-                    return void main();
-                } catch (e: any) {
-                    adapter.log.error(`Auth-Token provided, but could not use official API: ${e.message}`);
-                }
-            }
-
-            try {
-                await requestPromise({ url: `http://${ip}:8080/api/v1/status`, timeout: 2000 });
-                adapter.log.debug(`[START] 8080 API detected`);
-                apiVersion = 'v1';
-                return void main();
-            } catch (e: any) {
-                adapter.log.debug(`[START] It's not 8080, because ${e.message}`);
-            }
-
-            try {
-                // test if both works, else use legacy, because of incomplete implementation of API
-                await requestPromise(`http://${ip}:7979/rest/devices/battery/M03`);
-                await requestPromise(`http://${ip}:7979/rest/devices/battery/M034`);
-                apiVersion = `old`;
-                adapter.log.debug(`[START] 7979 API detected`);
-                return void main();
-            } catch (e: any) {
-                adapter.log.debug(`[START] It's not 7979, because ${e.message}`);
-            }
-
-            try {
-                await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
-                apiVersion = 'legacy';
-                return void main();
-            } catch (e: any) {
-                adapter.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e.message}`);
-                restartTimer = setTimeout(adapter.restart, 30000);
-            }
-        } else {
-            adapter.log.warn(`[START] No IP-address set`);
+    /**
+     * Is called when databases are connected and adapter received configuration.
+     */
+    private async onReady(): Promise<void> {
+        if (!this.config.ip) {
+            this.log.warn('[START] No IP-address set');
+            return;
         }
-    });
 
-    adapter.on(`stateChange`, async (id, state) => {
+        this.log.info(`[START] Starting sonnen adapter`);
+
+        this.ip = this.config.ip;
+
+        if (this.config.pollInterval) {
+            this.pollingTime = this.config.pollInterval;
+        }
+        this.log.debug(`[INFO] Configured polling interval: ${this.pollingTime}`);
+
+        // all states changes inside the adapters namespace are subscribed
+        this.subscribeStates('*');
+
+        this.log.debug(`[START] Check API`);
+
+        if (this.config.token) {
+            this.log.debug('[START] Auth-Token provided... trying official API');
+            this.requestOptions.headers!['Auth-Token'] = this.config.token;
+            try {
+                await requestPromise({ url: `http://${this.ip}/api/v2/latestdata`, ...this.requestOptions });
+
+                this.apiVersion = 'v2';
+                this.log.debug('[START] Check ok, using official API');
+                return void this.main();
+            } catch (e: any) {
+                this.log.error(`Auth-Token provided, but could not use official API: ${e.message}`);
+            }
+        }
+
+        try {
+            await requestPromise({ url: `http://${this.ip}:8080/api/v1/status`, timeout: 2000 });
+            this.log.debug(`[START] 8080 API detected`);
+            this.apiVersion = 'v1';
+            return void this.main();
+        } catch (e: any) {
+            this.log.debug(`[START] It's not 8080, because ${e.message}`);
+        }
+
+        try {
+            // test if both works, else use legacy, because of incomplete implementation of API
+            await requestPromise(`http://${this.ip}:7979/rest/devices/battery/M03`);
+            await requestPromise(`http://${this.ip}:7979/rest/devices/battery/M034`);
+            this.apiVersion = 'old';
+            this.log.debug(`[START] 7979 API detected`);
+            return void this.oldAPImain();
+        } catch (e: any) {
+            this.log.debug(`[START] It's not 7979, because ${e.message}`);
+        }
+
+        try {
+            await requestPromise(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`);
+            this.apiVersion = 'legacy';
+            return void this.legacyAPImain();
+        } catch (e: any) {
+            this.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e.message}`);
+            this.restartTimer = setTimeout(this.restart, 30_000);
+        }
+    }
+
+    /**
+     * Is called if a subscribed state changes
+     */
+    private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
         if (!id || !state || state.ack) {
             return;
         } // Ignore acknowledged state changes or error states
-        id = id.substring(adapter.namespace.length + 1); // remove instance name and id
+        id = id.substring(this.namespace.length + 1); // remove instance name and id
         const stateVal = state.val;
 
-        adapter.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${stateVal}`);
+        this.log.debug(`[COMMAND] State Change - ID: ${id}; State: ${stateVal}`);
 
         if (id === `control.charge`) {
             try {
-                if (apiVersion === 'v2') {
+                if (this.apiVersion === 'v2') {
                     await requestPromise.post({
-                        url: `http://${ip}/api/v2/setpoint/charge/${stateVal}`,
-                        ...requestOptions
+                        url: `http://${this.ip}/api/v2/setpoint/charge/${stateVal}`,
+                        ...this.requestOptions
                     });
                 } else {
-                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/charge/${stateVal}` });
+                    await requestPromise.put({ url: `http://${this.ip}:8080/api/v1/setpoint/charge/${stateVal}` });
                 }
-                adapter.setState(`control.charge`, state, true);
-                adapter.log.debug(`[PUT] ==> Sent ${stateVal} to charge`);
+                this.setState(`control.charge`, state, true);
+                this.log.debug(`[PUT] ==> Sent ${stateVal} to charge`);
             } catch (e: any) {
-                adapter.log.warn(`Error changing charge: ${e.message}`);
+                this.log.warn(`Error changing charge: ${e.message}`);
             }
         } else if (id === `control.discharge`) {
             try {
-                if (apiVersion === 'v2') {
+                if (this.apiVersion === 'v2') {
                     await requestPromise.post({
-                        url: `http://${ip}/api/v2/setpoint/discharge/${stateVal}`,
-                        ...requestOptions
+                        url: `http://${this.ip}/api/v2/setpoint/discharge/${stateVal}`,
+                        ...this.requestOptions
                     });
                 } else {
-                    await requestPromise.put({ url: `http://${ip}:8080/api/v1/setpoint/discharge/${stateVal}` });
+                    await requestPromise.put({ url: `http://${this.ip}:8080/api/v1/setpoint/discharge/${stateVal}` });
                 }
-                adapter.setState(`control.discharge`, state, true);
-                adapter.log.debug(`[PUT] ==> Sent ${stateVal} to discharge`);
+                this.setState(`control.discharge`, state, true);
+                this.log.debug(`[PUT] ==> Sent ${stateVal} to discharge`);
             } catch (e: any) {
-                adapter.log.warn(`Error changing discharge: ${e.message}`);
+                this.log.warn(`Error changing discharge: ${e.message}`);
             }
         } else if (id.startsWith('configurations.')) {
             const command = id.split('.')[1];
             const data: Record<string, string> = {};
             const val = typeof stateVal === 'number' ? stateVal.toString() : stateVal;
             data[command] = val as string;
-            adapter.log.debug(`[PUT] ==> Sent ${JSON.stringify(data)} to configurations`);
+            this.log.debug(`[PUT] ==> Sent ${JSON.stringify(data)} to configurations`);
             try {
-                await requestPromise.put({ url: `http://${ip}/api/v2/configurations`, ...requestOptions, json: data });
+                await requestPromise.put({
+                    url: `http://${this.ip}/api/v2/configurations`,
+                    ...this.requestOptions,
+                    json: data
+                });
             } catch (e: any) {
-                adapter.log.error(`Could not change configuration "${command}": ${e.message}`);
+                this.log.error(`Could not change configuration "${command}": ${e.message}`);
             }
         }
-    });
+    }
 
-    return adapter;
-}
+    /**
+     * Main logic for v1 and v2 API
+     */
+    async main(): Promise<void> {
+        const statusUrl =
+            this.apiVersion === 'v2' ? `http://${this.ip}/api/v2/status` : `http://${this.ip}:8080/api/v1/status`;
 
-async function main() {
-    pollingTime = adapter.config.pollInterval || 7000;
-    adapter.log.debug(`[INFO] Configured polling interval: ${pollingTime}`);
-    // all states changes inside the adapters namespace are subscribed
-    adapter.subscribeStates(`*`);
-
-    // create device namespace
-    await adapter.setForeignObjectNotExistsAsync(adapter.namespace, {
-        // @ts-expect-error issue already opened it is allowed
-        type: 'device',
-        // @ts-expect-error issue already opened it is allowed
-        common: {
-            name: 'sonnen device'
+        // create objects
+        const promises = [];
+        for (const obj of generalAPIStates) {
+            const id = obj._id;
+            // use extend to update stuff like types if they were wrong, but preserve name
+            promises.push(this.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
         }
-    });
+        const specificStates = this.apiVersion === 'v2' ? apiStatesV2 : apiStatesV1;
 
-    adapter.log.debug(`[START] Started Adapter with: ${ip}`);
-
-    if (apiVersion === 'old') {
-        return void oldAPImain();
-    }
-
-    if (apiVersion === 'legacy') {
-        return void legacyAPImain();
-    }
-
-    const statusUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/status` : `http://${ip}:8080/api/v1/status`;
-
-    // create objects
-    const promises = [];
-    for (const obj of generalAPIStates) {
-        const id = obj._id;
-        // use extend to update stuff like types if they were wrong, but preserve name
-        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
-    }
-    const specificStates = apiVersion === 'v2' ? apiStatesV2 : apiStatesV1;
-
-    if (apiVersion === 'v2') {
-        // cleanup old states
-        for (const obj of apiStatesV1) {
-            promises.push(adapter.delObjectAsync(obj._id));
-        }
-    }
-
-    for (const obj of specificStates) {
-        const id = obj._id;
-        // use extend to update stuff like types if they were wrong, but preserve name
-        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
-    }
-
-    if (adapter.config.pollOnlineStatus) {
-        promises.push(
-            adapter.extendObjectAsync('status.onlineStatus', {
-                _id: 'status.onlineStatus',
-                type: `state`,
-                common: {
-                    name: `Battery Online Status`,
-                    type: `boolean`,
-                    role: `indicator`,
-                    read: true,
-                    write: false,
-                    desc: `Online status of your sonnen battery`
-                },
-                native: {}
-            })
-        );
-    } else {
-        // make sure to delete the object
-        promises.push(adapter.delObjectAsync('status.onlineStatus'));
-    }
-
-    await Promise.all(promises);
-
-    const pollStates = async () => {
-        // poll states every [30] seconds
-        try {
-            const data = await requestPromise(statusUrl);
-            const state = await adapter.getStateAsync(`info.connection`);
-            if (!state || !state.val) {
-                adapter.setState(`info.connection`, true, true);
-                adapter.log.debug(`[CONNECT] Connection successfuly established`);
+        if (this.apiVersion === 'v2') {
+            // cleanup old states
+            for (const obj of apiStatesV1) {
+                promises.push(this.delObjectAsync(obj._id));
             }
-            await setBatteryStates(JSON.parse(data));
-            try {
-                await requestPowermeterEndpoint();
-                if (adapter.config.pollOnlineStatus) {
-                    await requestOnlineStatus();
-                }
-                await requestIosEndpoint();
-                await requestInverterEndpoint();
-
-                if (apiVersion === 'v2') {
-                    await requestBatteryEndpoint();
-                }
-            } catch (e: any) {
-                adapter.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
-            }
-
-            try {
-                await requestSettings();
-            } catch (e: any) {
-                adapter.log.warn(`[SETTINGS] Error receiving configuration: ${e.message}`);
-            }
-        } catch (e: any) {
-            adapter.log.warn(`[REQUEST] <== ${e.message}`);
-            adapter.setState(`info.connection`, false, true);
-            adapter.log.warn(`[CONNECT] Connection failed`);
         }
 
-        try {
-            await requestLatestData();
-        } catch (e: any) {
-            adapter.log.warn(`[LATEST] Error receiving latest data: ${e.message}`);
+        for (const obj of specificStates) {
+            const id = obj._id;
+            // use extend to update stuff like types if they were wrong, but preserve name
+            promises.push(this.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
         }
 
-        polling = setTimeout(pollStates, pollingTime);
-    };
+        if (this.config.pollOnlineStatus) {
+            promises.push(
+                this.extendObjectAsync('status.onlineStatus', {
+                    _id: 'status.onlineStatus',
+                    type: `state`,
+                    common: {
+                        name: `Battery Online Status`,
+                        type: `boolean`,
+                        role: `indicator`,
+                        read: true,
+                        write: false,
+                        desc: `Online status of your sonnen battery`
+                    },
+                    native: {}
+                })
+            );
+        } else {
+            // make sure to delete the object
+            promises.push(this.delObjectAsync('status.onlineStatus'));
+        }
 
-    pollStates();
-}
-
-/*
- * Internals
- */
-async function oldAPImain(): Promise<void> {
-    // create objects
-    let promises = [];
-    for (const obj of oldAPIStates) {
-        const id = obj._id;
-        // use extend to update stuff like types if they were wrong, but preserve name
-        promises.push(adapter.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
-    }
-
-    await Promise.all(promises);
-    promises = [];
-    promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
-    promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
-    promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
-    promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
-    promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
-    promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
-    promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
-    promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
-    promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
-
-    try {
         await Promise.all(promises);
 
-        await adapter.setState(`info.lastSync`, Date.now(), true);
-        const state = await adapter.getStateAsync(`info.connection`);
-        if (!state?.val) {
-            await adapter.setState(`info.connection`, true, true);
-        }
-    } catch (e: any) {
-        adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
+        const pollStates = async () => {
+            // poll states every [30] seconds
+            try {
+                const data = await requestPromise(statusUrl);
+                const state = await this.getStateAsync(`info.connection`);
+                if (!state || !state.val) {
+                    this.setState(`info.connection`, true, true);
+                    this.log.debug(`[CONNECT] Connection successfuly established`);
+                }
+                await this.setBatteryStates(JSON.parse(data));
+                try {
+                    await this.requestPowermeterEndpoint();
+                    if (this.config.pollOnlineStatus) {
+                        await this.requestOnlineStatus();
+                    }
+                    await this.requestIosEndpoint();
+                    await this.requestInverterEndpoint();
+
+                    if (this.apiVersion === 'v2') {
+                        await this.requestBatteryEndpoint();
+                    }
+                } catch (e: any) {
+                    this.log.warn(`[ADDITIONAL] Error on requesting additional endpoints: ${e.message}`);
+                }
+
+                try {
+                    await this.requestSettings();
+                } catch (e: any) {
+                    this.log.warn(`[SETTINGS] Error receiving configuration: ${e.message}`);
+                }
+            } catch (e: any) {
+                this.log.warn(`[REQUEST] <== ${e.message}`);
+                this.setState(`info.connection`, false, true);
+                this.log.warn(`[CONNECT] Connection failed`);
+            }
+
+            try {
+                await this.requestLatestData();
+            } catch (e: any) {
+                this.log.warn(`[LATEST] Error receiving latest data: ${e.message}`);
+            }
+
+            this.polling = setTimeout(pollStates, this.pollingTime);
+        };
+
+        pollStates();
     }
 
-    const pollStates = async () => {
-        // poll states every configured seconds
-        const promises = [];
-        promises.push(requestStateAndSetOldAPI(`M03`, `status.production`));
-        promises.push(requestStateAndSetOldAPI(`M04`, `status.consumption`));
-        promises.push(requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
-        promises.push(requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
-        promises.push(requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
-        promises.push(requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
-        promises.push(requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
-        promises.push(requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
-        promises.push(requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
+    /**
+     * Main logic for "old" Port 7979 API
+     */
+    async oldAPImain(): Promise<void> {
+        // create objects
+        let promises = [];
+        for (const obj of oldAPIStates) {
+            const id = obj._id;
+            // use extend to update stuff like types if they were wrong, but preserve name
+            promises.push(this.extendObjectAsync(id, obj, { preserve: { common: ['name'] } }));
+        }
+
+        await Promise.all(promises);
+        promises = [];
+        promises.push(this.requestStateAndSetOldAPI(`M03`, `status.production`));
+        promises.push(this.requestStateAndSetOldAPI(`M04`, `status.consumption`));
+        promises.push(this.requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
+        promises.push(this.requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
+        promises.push(this.requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
+        promises.push(this.requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
+        promises.push(this.requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
+        promises.push(this.requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
+        promises.push(this.requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
 
         try {
             await Promise.all(promises);
-            adapter.setState(`info.lastSync`, Date.now(), true);
 
-            adapter.setStateChanged(`info.connection`, true, true);
+            await this.setState(`info.lastSync`, Date.now(), true);
+            const state = await this.getStateAsync(`info.connection`);
+            if (!state?.val) {
+                await this.setState(`info.connection`, true, true);
+            }
         } catch (e: any) {
-            await adapter.setStateChangedAsync(`info.connection`, false, true);
-            adapter.log.warn(`[DATA] Error getting Data ${e.message}`);
+            this.log.warn(`[DATA] Error getting Data ${e.message}`);
         }
 
-        polling = setTimeout(pollStates, pollingTime);
-    };
+        const pollStates = async () => {
+            // poll states every configured seconds
+            const promises = [];
+            promises.push(this.requestStateAndSetOldAPI(`M03`, `status.production`));
+            promises.push(this.requestStateAndSetOldAPI(`M04`, `status.consumption`));
+            promises.push(this.requestStateAndSetOldAPI(`M05`, `status.relativeSoc`));
+            promises.push(this.requestStateAndSetOldAPI(`M06`, `status.operatingMode`));
+            promises.push(this.requestStateAndSetOldAPI(`M34`, `status.pacDischarge`));
+            promises.push(this.requestStateAndSetOldAPI(`M35`, `status.pacCharge`));
+            promises.push(this.requestStateAndSetOldAPI(`M07`, `status.consumptionL1`));
+            promises.push(this.requestStateAndSetOldAPI(`M08`, `status.consumptionL2`));
+            promises.push(this.requestStateAndSetOldAPI(`M09`, `status.consumptionL3`));
 
-    pollStates();
-}
+            try {
+                await Promise.all(promises);
+                this.setState(`info.lastSync`, Date.now(), true);
 
-async function legacyAPImain() {
-    // here we store the id of the battery
-    let batteryId: number | undefined;
-    try {
-        const res = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
-        const data: LegacyResponse = JSON.parse(res);
+                this.setStateChanged(`info.connection`, true, true);
+            } catch (e: any) {
+                await this.setStateChangedAsync(`info.connection`, false, true);
+                this.log.warn(`[DATA] Error getting Data ${e.message}`);
+            }
 
-        // we got data successfully -> mark as connected
-        adapter.setState(`info.connection`, true, true);
-        adapter.log.debug(`[CONNECT] Connection successfuly established`);
+            this.polling = setTimeout(pollStates, this.pollingTime);
+        };
 
-        for (const device of Object.values(data.devices)) {
-            if (device.parent === 0) {
-                batteryId = device.id;
-                // create channel
-                await adapter.setObjectNotExistsAsync('main', {
-                    type: 'channel',
-                    common: {
-                        name: 'Main information'
-                    },
-                    native: {}
-                });
+        pollStates();
+    }
 
-                // this should be the sonnen battery
-                for (const attr of Object.keys(device)) {
-                    const stateVal = convertLegacyState(device[attr]);
-                    await adapter.setObjectNotExistsAsync(`main.${attr}`, {
-                        type: 'state',
+    /**
+     * Main logic for "legacy" Port 3480 API
+     */
+    async legacyAPImain() {
+        // here we store the id of the battery
+        let batteryId: number | undefined;
+        try {
+            const res = await requestPromise(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`);
+            const data: LegacyResponse = JSON.parse(res);
+
+            // we got data successfully -> mark as connected
+            this.setState(`info.connection`, true, true);
+            this.log.debug(`[CONNECT] Connection successfuly established`);
+
+            for (const device of Object.values(data.devices)) {
+                if (device.parent === 0) {
+                    batteryId = device.id;
+                    // create channel
+                    await this.setObjectNotExistsAsync('main', {
+                        type: 'channel',
                         common: {
-                            name: attr,
-                            // @ts-expect-error investigate later
-                            read: true,
-                            write: false,
-                            type: typeof stateVal,
-                            def: stateVal,
-                            role: 'state'
+                            name: 'Main information'
                         },
                         native: {}
                     });
+
+                    // this should be the sonnen battery
+                    for (const attr of Object.keys(device)) {
+                        const stateVal = this.convertLegacyState(device[attr]);
+                        await this.setObjectNotExistsAsync(`main.${attr}`, {
+                            type: 'state',
+                            common: {
+                                name: attr,
+                                // @ts-expect-error investigate later
+                                read: true,
+                                write: false,
+                                type: typeof stateVal,
+                                def: stateVal,
+                                role: 'state'
+                            },
+                            native: {}
+                        });
+                    }
                 }
             }
-        }
-
-        for (const device of Object.values(data.devices)) {
-            if (device.parent === batteryId) {
-                await adapter.setObjectNotExistsAsync(device.id.toString(), {
-                    type: 'channel',
-                    common: {
-                        name: device.name
-                    },
-                    native: {}
-                });
-
-                for (const attr of Object.keys(device)) {
-                    const stateVal = convertLegacyState(device[attr]);
-                    await adapter.setObjectNotExistsAsync(`${device.id}.${attr}`, {
-                        type: 'state',
-                        common: {
-                            // @ts-expect-error investigate later
-                            read: true,
-                            write: false,
-                            name: attr,
-                            type: typeof stateVal,
-                            def: stateVal,
-                            role: 'state'
-                        }
-                    });
-                }
-            }
-        }
-    } catch (e: any) {
-        adapter.log.error(`Could not get initial data - restarting adapter: ${e.message}`);
-        return void adapter.restart();
-    }
-
-    const pollStates = async () => {
-        try {
-            const res = await requestPromise(`http://${ip}:3480/data_request?id=sdata&output_format=json`);
-            const data: LegacyResponse = JSON.parse(res);
 
             for (const device of Object.values(data.devices)) {
-                if (device.id === batteryId) {
+                if (device.parent === batteryId) {
+                    await this.setObjectNotExistsAsync(device.id.toString(), {
+                        type: 'channel',
+                        common: {
+                            name: device.name
+                        },
+                        native: {}
+                    });
+
                     for (const attr of Object.keys(device)) {
-                        const stateVal = convertLegacyState(device[attr]);
-                        await adapter.setStateAsync(`main.${attr}`, stateVal, true);
-                    }
-                } else if (device.parent === batteryId) {
-                    for (const attr of Object.keys(device)) {
-                        const stateVal = convertLegacyState(device[attr]);
-                        await adapter.setStateAsync(`${device.id}.${attr}`, stateVal, true);
+                        const stateVal = this.convertLegacyState(device[attr]);
+                        await this.setObjectNotExistsAsync(`${device.id}.${attr}`, {
+                            type: 'state',
+                            common: {
+                                // @ts-expect-error investigate later
+                                read: true,
+                                write: false,
+                                name: attr,
+                                type: typeof stateVal,
+                                def: stateVal,
+                                role: 'state'
+                            }
+                        });
                     }
                 }
-            }
-
-            // update the lastSync manually
-            adapter.setState(`info.lastSync`, Date.now(), true);
-
-            // update the info connection state
-            const state = await adapter.getStateAsync(`info.connection`);
-            if (!state || !state.val) {
-                adapter.setState(`info.connection`, true, true);
-                adapter.log.debug(`[CONNECT] Connection successfuly established`);
             }
         } catch (e: any) {
-            adapter.log.warn(`[REQUEST] <== ${e.message}`);
-            adapter.setState(`info.connection`, false, true);
-            adapter.log.warn(`[CONNECT] Connection failed`);
+            this.log.error(`Could not get initial data - restarting adapter: ${e.message}`);
+            return void this.restart();
         }
 
-        setTimeout(pollStates, pollingTime);
-    };
+        const pollStates = async () => {
+            try {
+                const res = await requestPromise(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`);
+                const data: LegacyResponse = JSON.parse(res);
 
-    pollStates();
-}
+                for (const device of Object.values(data.devices)) {
+                    if (device.id === batteryId) {
+                        for (const attr of Object.keys(device)) {
+                            const stateVal = this.convertLegacyState(device[attr]);
+                            await this.setStateAsync(`main.${attr}`, stateVal, true);
+                        }
+                    } else if (device.parent === batteryId) {
+                        for (const attr of Object.keys(device)) {
+                            const stateVal = this.convertLegacyState(device[attr]);
+                            await this.setStateAsync(`${device.id}.${attr}`, stateVal, true);
+                        }
+                    }
+                }
 
-/**
- * Converts a state value to the correct type
- * @param stateVal - state value to convert
- */
-function convertLegacyState(stateVal: string): number | boolean | string {
-    if (stateVal === 'TRUE') {
-        return true;
+                // update the lastSync manually
+                this.setState(`info.lastSync`, Date.now(), true);
+
+                // update the info connection state
+                const state = await this.getStateAsync(`info.connection`);
+                if (!state || !state.val) {
+                    this.setState(`info.connection`, true, true);
+                    this.log.debug(`[CONNECT] Connection successfuly established`);
+                }
+            } catch (e: any) {
+                this.log.warn(`[REQUEST] <== ${e.message}`);
+                this.setState(`info.connection`, false, true);
+                this.log.warn(`[CONNECT] Connection failed`);
+            }
+
+            setTimeout(pollStates, this.pollingTime);
+        };
+
+        pollStates();
     }
 
-    if (stateVal === 'FALSE') {
-        return false;
-    }
-
-    if (!isNaN(Number(stateVal))) {
-        // it's a number
-        return parseFloat(stateVal);
-    }
-
-    return stateVal;
-}
-
-async function requestSettings() {
-    if (apiVersion === 'v2') {
-        requestSettingsV2();
-        return;
-    }
-    const data = await requestPromise(`http://${ip}:8080/api/configuration`);
-    adapter.log.debug(`[SETTINGS] Configuration received: ${data}`);
-    await adapter.setStateAsync(`info.configuration`, data, true);
-}
-
-/**
- * Requests the battery endpoint of API v2 and syncs states accordingly
- */
-async function requestBatteryEndpoint(): Promise<void> {
-    try {
-        const res = await requestPromise({ url: `http://${ip}/api/v2/battery`, ...requestOptions });
-
-        adapter.log.debug(`battery json: ${res}`);
-
-        const data: BatteryResponse = JSON.parse(res);
-
-        await adapter.setStateAsync('battery.cyclecount', data.cyclecount, true);
-    } catch (e: any) {
-        throw new Error(`Could not request battery endpoint: ${e.message}`);
-    }
-}
-
-async function requestIosEndpoint(): Promise<void> {
-    try {
-        const iosUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/io` : `http://${ip}:8080/api/ios`;
-
-        const res = await requestPromise({ url: iosUrl, ...requestOptions });
-        const promises = [];
-
-        promises.push(adapter.setStateAsync(`info.ios`, res, true));
-
-        adapter.log.debug(`io json: ${res}`);
-
-        const data: IoResponse = JSON.parse(res);
-
-        const relevantIOs = ['DO_12', 'DO_13', 'DO_14'];
-
-        for (const io of relevantIOs) {
-            promises.push(adapter.setStateAsync(`ios.${io}`, !!data[io].status, true));
+    /**
+     * Converts a state value to the correct type
+     *
+     * @param stateVal - state value to convert
+     */
+    convertLegacyState(stateVal: string): number | boolean | string {
+        if (stateVal === 'TRUE') {
+            return true;
         }
 
-        await Promise.all(promises);
-    } catch (e: any) {
-        throw new Error(`Could not request ios endpoint: ${e.message}`);
+        if (stateVal === 'FALSE') {
+            return false;
+        }
+
+        if (!isNaN(Number(stateVal))) {
+            // it's a number
+            return parseFloat(stateVal);
+        }
+
+        return stateVal;
     }
-}
 
-async function requestInverterEndpoint(): Promise<void> {
-    try {
-        const inverterUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/inverter` : `http://${ip}:8080/api/inverter`;
-        const res = await requestPromise({ url: inverterUrl, ...requestOptions });
-        const promises = [];
+    async requestSettings() {
+        if (this.apiVersion === 'v2') {
+            this.requestSettingsV2();
+            return;
+        }
+        const data = await requestPromise(`http://${this.ip}:8080/api/configuration`);
+        this.log.debug(`[SETTINGS] Configuration received: ${data}`);
+        await this.setStateAsync(`info.configuration`, data, true);
+    }
 
-        promises.push(adapter.setStateAsync(`info.inverter`, res, true));
+    /**
+     * Requests the battery endpoint of API v2 and syncs states accordingly
+     */
+    async requestBatteryEndpoint(): Promise<void> {
+        try {
+            const res = await requestPromise({ url: `http://${this.ip}/api/v2/battery`, ...this.requestOptions });
 
-        /** V1 has other response, handle it, v2 will only have the info state for now */
-        if (apiVersion === 'v1') {
-            const data = JSON.parse(res);
+            this.log.debug(`battery json: ${res}`);
+
+            const data: BatteryResponse = JSON.parse(res);
+
+            await this.setStateAsync('battery.cyclecount', data.cyclecount, true);
+        } catch (e: any) {
+            throw new Error(`Could not request battery endpoint: ${e.message}`);
+        }
+    }
+
+    /**
+     * Request io(s) endpoint of v1 and v2 API
+     */
+    async requestIosEndpoint(): Promise<void> {
+        try {
+            const iosUrl = this.apiVersion === 'v2' ? `http://${this.ip}/api/v2/io` : `http://${this.ip}:8080/api/ios`;
+
+            const res = await requestPromise({ url: iosUrl, ...this.requestOptions });
+            const promises = [];
+
+            promises.push(this.setStateAsync(`info.ios`, res, true));
+
+            this.log.debug(`io json: ${res}`);
+
+            const data: IoResponse = JSON.parse(res);
+
+            const relevantIOs = ['DO_12', 'DO_13', 'DO_14'];
+
+            for (const io of relevantIOs) {
+                promises.push(this.setStateAsync(`ios.${io}`, !!data[io].status, true));
+            }
+
+            await Promise.all(promises);
+        } catch (e: any) {
+            throw new Error(`Could not request ios endpoint: ${e.message}`);
+        }
+    }
+
+    /**
+     * Request inverter endpoint of v1 and v2 API
+     */
+    async requestInverterEndpoint(): Promise<void> {
+        try {
+            const inverterUrl =
+                this.apiVersion === 'v2' ? `http://${this.ip}/api/v2/inverter` : `http://${this.ip}:8080/api/inverter`;
+            const res = await requestPromise({ url: inverterUrl, ...this.requestOptions });
+            const promises = [];
+
+            promises.push(this.setStateAsync(`info.inverter`, res, true));
+
+            // V1 has other response, handle it accordingly
+            if (this.apiVersion === 'v1') {
+                const data = JSON.parse(res);
+
+                const relevantStates = [
+                    'iac1',
+                    'iac2',
+                    'iac3',
+                    'uac1',
+                    'uac2',
+                    'uac3',
+                    'udc',
+                    'temphmi',
+                    'tempbdc',
+                    'temppu',
+                    'pac1',
+                    'pac2',
+                    'pac3'
+                ];
+
+                for (const state of relevantStates) {
+                    // inverter states are string but are all numbers
+                    promises.push(this.setStateAsync(`inverter.${state}`, parseFloat(data.status[state]), true));
+                }
+            } else if (this.apiVersion === 'v2') {
+                const data: InverterResponse = JSON.parse(res);
+
+                promises.push(this.setStateAsync('inverter.pacTotal', data.pac_total, true));
+                promises.push(this.setStateAsync('inverter.tmax', data.tmax, true));
+                promises.push(this.setStateAsync('inverter.ubat', data.ubat, true));
+            }
+
+            await Promise.all(promises);
+
+            // inverter endpoint exists
+            this.inverterEndpoint = true;
+        } catch (e: any) {
+            if (this.inverterEndpoint) {
+                throw new Error(`Could not request inverter endpoint: ${e.message}`);
+            } else {
+                // not all batteries seem to have this endpoint so don't throw an error if it was never there, see Issue #55
+                this.log.debug(`Could not request inverter endpoint: ${e.message}`);
+            }
+        }
+    }
+
+    /**
+     * Request online status of the battery
+     * Works for batteries with v1 and v2 API
+     * Every request also generates a request from the battery to the internet
+     */
+    async requestOnlineStatus(): Promise<void> {
+        try {
+            const data: OnlineStatus = await requestPromise(`http://${this.ip}/api/online_status`);
+
+            if (data !== 'true' && data !== 'false') {
+                throw new Error(`Expected string with "true" or "false" as onlineStatus, got "${data as any}"`);
+            }
+
+            await this.setStateAsync(`status.onlineStatus`, data === 'true', true);
+        } catch (e: any) {
+            throw new Error(`Could not request online status: ${e.message}`);
+        }
+    }
+
+    /**
+     * Requests the latest data endpoint of v1 and v2 API and syncs states accordignly
+     */
+    async requestLatestData(): Promise<void> {
+        const latestDataUrl =
+            this.apiVersion === 'v2' ? `http://${this.ip}/api/v2/latestdata` : `http://${this.ip}:8080/api/latestdata`;
+
+        const data = await requestPromise({ url: latestDataUrl, ...this.requestOptions });
+
+        this.log.debug(`Latest data: ${data}`);
+
+        const latestData: LatestDataResponse = JSON.parse(data);
+
+        await this.setStateAsync(
+            'latestData.dcShutdownReason',
+            this.decodeBitmapLikeObj(latestData.ic_status['DC Shutdown Reason'], 'Running'),
+            true
+        );
+        await this.setStateAsync(
+            'latestData.eclipseLed',
+            this.decodeBitmapLikeObj(latestData.ic_status['Eclipse Led'], 'Unknown'),
+            true
+        );
+
+        await this.setStateAsync(
+            'latestData.secondsSinceFullCharge',
+            latestData.ic_status.secondssincefullcharge,
+            true
+        );
+    }
+
+    /**
+     * Decodes a bitmap like object to extract the key where the value is true
+     *
+     * @param bitmapLike The object to decode
+     * @param fallback fallback to return if no value is true
+     */
+    decodeBitmapLikeObj<T extends Record<string, boolean>, F extends string>(bitmapLike: T, fallback: F): keyof T | F {
+        const foundEntry = Object.entries(bitmapLike).find(value => value[1]);
+
+        return foundEntry ? foundEntry[0] : fallback;
+    }
+
+    /**
+     * Request powermeter endpoint of v1 and v2 API
+     */
+    async requestPowermeterEndpoint(): Promise<void> {
+        try {
+            const powermeterUrl =
+                this.apiVersion === 'v2'
+                    ? `http://${this.ip}/api/v2/powermeter`
+                    : `http://${this.ip}:8080/api/powermeter`;
+            const data = await requestPromise({ url: powermeterUrl, ...this.requestOptions });
+
+            this.log.debug(`Powermeter: ${data}`);
+            const promises = [];
+            promises.push(this.setStateAsync(`info.powerMeter`, data, true));
+            const powerMeterData: PowerMeterResponseEntry[] = JSON.parse(data);
 
             const relevantStates = [
-                'iac1',
-                'iac2',
-                'iac3',
-                'uac1',
-                'uac2',
-                'uac3',
-                'udc',
-                'temphmi',
-                'tempbdc',
-                'temppu',
-                'pac1',
-                'pac2',
-                'pac3'
-            ];
+                'a_l1',
+                'a_l2',
+                'a_l3',
+                'v_l1_l2',
+                'v_l2_l3',
+                'v_l3_l1',
+                'v_l1_n',
+                'v_l2_n',
+                'v_l3_n',
+                'kwh_exported',
+                'kwh_imported',
+                'w_l1',
+                'w_l2',
+                'w_l3'
+            ] as const;
 
-            for (const state of relevantStates) {
-                // inverter states are string but are all numbers
-                promises.push(adapter.setStateAsync(`inverter.${state}`, parseFloat(data.status[state]), true));
-            }
-        } else if (apiVersion === 'v2') {
-            const data: InverterResponse = JSON.parse(res);
+            // we have multiple powermeters
+            for (const pm in powerMeterData) {
+                if (!this.powermeterCreated) {
+                    const objs = getPowermeterStates(pm, powerMeterData[pm].direction);
+                    for (const obj of objs) {
+                        const id = obj._id;
+                        await this.extendObjectAsync(id, obj);
+                    }
+                }
 
-            promises.push(adapter.setStateAsync('inverter.pacTotal', data.pac_total, true));
-            promises.push(adapter.setStateAsync('inverter.tmax', data.tmax, true));
-            promises.push(adapter.setStateAsync('inverter.ubat', data.ubat, true));
-        }
-
-        await Promise.all(promises);
-
-        // inverter endpoint exists
-        inverterEndpoint = true;
-    } catch (e: any) {
-        if (inverterEndpoint) {
-            throw new Error(`Could not request inverter endpoint: ${e.message}`);
-        } else {
-            // not all batteries seem to have this endpoint so don't throw an error if it was never there, see Issue #55
-            adapter.log.debug(`Could not request inverter endpoint: ${e.message}`);
-        }
-    }
-}
-
-/**
- * request online status of the battery
- */
-async function requestOnlineStatus(): Promise<void> {
-    try {
-        const data: OnlineStatus = await requestPromise(`http://${ip}/api/online_status`);
-
-        if (data !== 'true' && data !== 'false') {
-            throw new Error(`Expected string with "true" or "false" as onlineStatus, got "${data as any}"`);
-        }
-
-        await adapter.setStateAsync(`status.onlineStatus`, data === 'true', true);
-    } catch (e: any) {
-        throw new Error(`Could not request online status: ${e.message}`);
-    }
-}
-
-/**
- * Requests the latest data endpoint and syncs states accordignly
- */
-async function requestLatestData(): Promise<void> {
-    const latestDataUrl = apiVersion === 'v2' ? `http://${ip}/api/v2/latestdata` : `http://${ip}:8080/api/latestdata`;
-
-    const data = await requestPromise({ url: latestDataUrl, ...requestOptions });
-
-    adapter.log.debug(`Latest data: ${data}`);
-
-    const latestData: LatestDataResponse = JSON.parse(data);
-
-    await adapter.setStateAsync(
-        'latestData.dcShutdownReason',
-        decodeBitmapLikeObj(latestData.ic_status['DC Shutdown Reason'], 'Running'),
-        true
-    );
-    await adapter.setStateAsync(
-        'latestData.eclipseLed',
-        decodeBitmapLikeObj(latestData.ic_status['Eclipse Led'], 'Unknown'),
-        true
-    );
-
-    await adapter.setStateAsync('latestData.secondsSinceFullCharge', latestData.ic_status.secondssincefullcharge, true);
-}
-
-/**
- * Decodes a bitmap like object to extract the key where the value is true
- *
- * @param bitmapLike The object to decode
- * @param fallback fallback to return if no value is true
- */
-function decodeBitmapLikeObj<T extends Record<string, boolean>, F extends string>(
-    bitmapLike: T,
-    fallback: F
-): keyof T | F {
-    const foundEntry = Object.entries(bitmapLike).find(value => value[1]);
-
-    return foundEntry ? foundEntry[0] : fallback;
-}
-
-async function requestPowermeterEndpoint(): Promise<void> {
-    try {
-        const powermeterUrl =
-            apiVersion === 'v2' ? `http://${ip}/api/v2/powermeter` : `http://${ip}:8080/api/powermeter`;
-        const data = await requestPromise({ url: powermeterUrl, ...requestOptions });
-
-        adapter.log.debug(`Powermeter: ${data}`);
-        const promises = [];
-        promises.push(adapter.setStateAsync(`info.powerMeter`, data, true));
-        const powerMeterData: PowerMeterResponseEntry[] = JSON.parse(data);
-
-        const relevantStates = [
-            'a_l1',
-            'a_l2',
-            'a_l3',
-            'v_l1_l2',
-            'v_l2_l3',
-            'v_l3_l1',
-            'v_l1_n',
-            'v_l2_n',
-            'v_l3_n',
-            'kwh_exported',
-            'kwh_imported',
-            'w_l1',
-            'w_l2',
-            'w_l3'
-        ] as const;
-
-        // we have multiple powermeters
-        for (const pm in powerMeterData) {
-            if (!powermeterCreated) {
-                const objs = getPowermeterStates(pm, powerMeterData[pm].direction);
-                for (const obj of objs) {
-                    const id = obj._id;
-                    await adapter.extendObjectAsync(id, obj);
+                for (const state of relevantStates) {
+                    promises.push(this.setStateAsync(`powermeter.${pm}.${state}`, powerMeterData[pm][state], true));
                 }
             }
 
-            for (const state of relevantStates) {
-                promises.push(adapter.setStateAsync(`powermeter.${pm}.${state}`, powerMeterData[pm][state], true));
-            }
+            // all powermeters created
+            this.powermeterCreated = true;
+
+            await Promise.all(promises);
+        } catch (e: any) {
+            throw new Error(`Could not request powermeter endpoint: ${e.message}`);
+        }
+    }
+
+    /**
+     * Sets the battery states, which have been received from v1 or v2 API
+     *
+     * @param json Status response from the battery
+     */
+    async setBatteryStates(json: StatusResponse): Promise<void> {
+        if (json.ReturnCode) {
+            this.log.warn(`[DATA] <== Return Code ${json.ReturnCode}`);
+            return;
         }
 
-        // all powermeters created
-        powermeterCreated = true;
+        const promises = [];
+
+        promises.push(this.setStateAsync(`info.lastSync`, Date.now(), true));
+
+        promises.push(this.setStateAsync(`status.consumption`, json.Consumption_W, true));
+        promises.push(this.setStateAsync(`status.batteryCharging`, json.BatteryCharging, true));
+        promises.push(this.setStateAsync(`status.production`, json.Production_W, true));
+        promises.push(this.setStateAsync(`status.pacTotal`, json.Pac_total_W, true));
+        promises.push(this.setStateAsync(`status.relativeSoc`, json.RSOC, true));
+        promises.push(this.setStateAsync(`status.userSoc`, json.USOC, true));
+        promises.push(this.setStateAsync(`status.acFrequency`, json.Fac, true));
+        promises.push(this.setStateAsync(`status.acVoltage`, json.Uac, true));
+        promises.push(this.setStateAsync(`status.batteryVoltage`, json.Ubat, true));
+
+        const systemTime = new Date(json.Timestamp);
+        promises.push(this.setStateAsync(`status.systemTime`, systemTime.getTime(), true));
+
+        if (json.IsSystemInstalled === 1) {
+            promises.push(this.setStateAsync(`status.systemInstalled`, true, true));
+        } else {
+            promises.push(this.setStateAsync(`status.systemInstalled`, false, true));
+        }
+
+        promises.push(this.setStateAsync(`status.gridFeedIn`, json.GridFeedIn_W, true));
+        promises.push(this.setStateAsync(`status.flowConsumptionBattery`, json.FlowConsumptionBattery, true));
+        promises.push(this.setStateAsync(`status.flowConsumptionGrid`, json.FlowConsumptionGrid, true));
+        promises.push(this.setStateAsync(`status.flowConsumptionProduction`, json.FlowConsumptionProduction, true));
+        promises.push(this.setStateAsync(`status.flowGridBattery`, json.FlowGridBattery, true));
+        promises.push(this.setStateAsync(`status.flowProductionBattery`, json.FlowProductionBattery, true));
+        promises.push(this.setStateAsync(`status.flowProductionGrid`, json.FlowProductionGrid, true));
+        promises.push(this.setStateAsync('status.systemStatus', json.SystemStatus, true));
+        promises.push(this.setStateAsync('status.operatingMode', parseInt(json.OperatingMode), true));
 
         await Promise.all(promises);
-    } catch (e: any) {
-        throw new Error(`Could not request powermeter endpoint: ${e.message}`);
-    }
-}
-
-async function setBatteryStates(json: StatusResponse): Promise<void> {
-    if (json.ReturnCode) {
-        adapter.log.warn(`[DATA] <== Return Code ${json.ReturnCode}`);
-        return;
     }
 
-    const promises = [];
-
-    promises.push(adapter.setStateAsync(`info.lastSync`, Date.now(), true));
-
-    promises.push(adapter.setStateAsync(`status.consumption`, json.Consumption_W, true));
-    promises.push(adapter.setStateAsync(`status.batteryCharging`, json.BatteryCharging, true));
-    promises.push(adapter.setStateAsync(`status.production`, json.Production_W, true));
-    promises.push(adapter.setStateAsync(`status.pacTotal`, json.Pac_total_W, true));
-    promises.push(adapter.setStateAsync(`status.relativeSoc`, json.RSOC, true));
-    promises.push(adapter.setStateAsync(`status.userSoc`, json.USOC, true));
-    promises.push(adapter.setStateAsync(`status.acFrequency`, json.Fac, true));
-    promises.push(adapter.setStateAsync(`status.acVoltage`, json.Uac, true));
-    promises.push(adapter.setStateAsync(`status.batteryVoltage`, json.Ubat, true));
-
-    const systemTime = new Date(json.Timestamp);
-    promises.push(adapter.setStateAsync(`status.systemTime`, systemTime.getTime(), true));
-
-    if (json.IsSystemInstalled === 1) {
-        promises.push(adapter.setStateAsync(`status.systemInstalled`, true, true));
-    } else {
-        promises.push(adapter.setStateAsync(`status.systemInstalled`, false, true));
+    /**
+     * Requests state by given code from old Port 7979 API
+     *
+     * @param code code which will be requested
+     * @param stateId state id where the retrived value will be set too
+     */
+    async requestStateAndSetOldAPI(code: string, stateId: string): Promise<void> {
+        let res = await requestPromise(`http://${this.ip}:7979/rest/devices/battery/${code}`);
+        res = res.trim();
+        this.log.debug(`[DATA] Received ${res} for ${code} and set it to ${stateId}`);
+        this.setState(stateId, parseFloat(res), true);
     }
 
-    promises.push(adapter.setStateAsync(`status.gridFeedIn`, json.GridFeedIn_W, true));
-    promises.push(adapter.setStateAsync(`status.flowConsumptionBattery`, json.FlowConsumptionBattery, true));
-    promises.push(adapter.setStateAsync(`status.flowConsumptionGrid`, json.FlowConsumptionGrid, true));
-    promises.push(adapter.setStateAsync(`status.flowConsumptionProduction`, json.FlowConsumptionProduction, true));
-    promises.push(adapter.setStateAsync(`status.flowGridBattery`, json.FlowGridBattery, true));
-    promises.push(adapter.setStateAsync(`status.flowProductionBattery`, json.FlowProductionBattery, true));
-    promises.push(adapter.setStateAsync(`status.flowProductionGrid`, json.FlowProductionGrid, true));
-    promises.push(adapter.setStateAsync('status.systemStatus', json.SystemStatus, true));
-    promises.push(adapter.setStateAsync('status.operatingMode', parseInt(json.OperatingMode), true));
+    /**
+     * Requests configurations endpoint for V2 api
+     */
+    async requestSettingsV2(): Promise<void> {
+        const res = await requestPromise({ url: `http://${this.ip}/api/v2/configurations`, ...this.requestOptions });
 
-    await Promise.all(promises);
-}
+        this.log.debug(`Configuration received: ${res}`);
 
-async function requestStateAndSetOldAPI(code: string, stateId: string): Promise<void> {
-    let res = await requestPromise(`http://${ip}:7979/rest/devices/battery/${code}`);
-    res = res.trim();
-    adapter.log.debug(`[DATA] Received ${res} for ${code} and set it to ${stateId}`);
-    adapter.setState(stateId, parseFloat(res), true);
-}
+        const data: ConfigurationsResponse = JSON.parse(res);
 
-/**
- * Requests settings for V2 endpoint
- */
-async function requestSettingsV2(): Promise<void> {
-    const res = await requestPromise({ url: `http://${ip}/api/v2/configurations`, ...requestOptions });
-
-    adapter.log.debug(`Configuration received: ${res}`);
-
-    const data: ConfigurationsResponse = JSON.parse(res);
-
-    for (const [id, val] of Object.entries(data)) {
-        let value = val;
-        if (value && !isNaN(Number(value))) {
-            value = parseFloat(value);
+        for (const [id, val] of Object.entries(data)) {
+            let value = val;
+            if (value && !isNaN(Number(value))) {
+                value = parseFloat(value);
+            }
+            await this.setState(`configurations.${id}`, value, true);
         }
-        await adapter.setState(`configurations.${id}`, value, true);
     }
 }
 
 // If started as allInOne/compact mode => return function to create instance
 if (require.main === module) {
     // start the instance directly
-    startAdapter();
+    (() => new Sonnen())();
 } else {
-    module.exports = startAdapter;
+    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new Sonnen(options);
 }

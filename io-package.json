@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.15.1",
+    "version": "1.15.2",
     "news": {
+      "1.15.2": {
+        "en": "internal optimization (ES6 class)",
+        "de": "interne Optimierung (ES6-Klasse)",
+        "ru": "внутренняя оптимизация (класс ES6)",
+        "pt": "otimização interna (classe ES6)",
+        "nl": "inwendige optimatie (ES6 klasse)",
+        "fr": "optimisation interne (classe E6)",
+        "it": "ottimizzazione interna (classe ES6)",
+        "es": "optimización interna (clase ES6)",
+        "pl": "optymalizacja wewnętrznej klasy (ES6)",
+        "uk": "внутрішня оптимізація (ES6 клас)",
+        "zh-cn": "内部优化(ES6级)"
+      },
       "1.15.1": {
         "en": "added `battery.cyclecount` state (closes #194)",
         "de": "batterie.cyclecount zustand (schließt #194)",
@@ -80,19 +93,6 @@
         "pl": "czytaj widget (okrążeń #189)",
         "uk": "читання віджету (закривається #189)",
         "zh-cn": "读成的黑体(第189号)"
-      },
-      "1.12.2": {
-        "en": "fixed issue with data types of configuration",
-        "de": "festes problem mit datentypen der konfiguration",
-        "ru": "фиксированная проблема с типами данных конфигурации",
-        "pt": "problema fixo com tipos de dados de configuração",
-        "nl": "vertaling:",
-        "fr": "problème fixe avec les types de données de configuration",
-        "it": "problema fisso con tipi di dati di configurazione",
-        "es": "edición fija con tipos de datos de configuración",
-        "pl": "zawarty problem z typami danych",
-        "uk": "виправлено проблему з типами даних конфігурації",
-        "zh-cn": "a. 固定问题与数据组合类型"
       }
     },
     "title": "sonnen",
@@ -149,6 +149,14 @@
   },
   "objects": [],
   "instanceObjects": [
+    {
+      "_id": "",
+      "type": "device",
+      "common": {
+        "name": "Sonnen device"
+      },
+      "native": {}
+    },
     {
       "_id": "info",
       "type": "channel",
