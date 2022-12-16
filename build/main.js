@@ -464,8 +464,7 @@ class Sonnen extends utils.Adapter {
      */
     async requestSettings() {
         if (this.apiVersion === 'v2') {
-            this.requestSettingsV2();
-            return;
+            return this.requestSettingsV2();
         }
         const rawData = JSON.stringify(await (0, axios_1.default)(`http://${this.ip}:8080/api/configuration`));
         this.log.debug(`[SETTINGS] Configuration received: ${rawData}`);

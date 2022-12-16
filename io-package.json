@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.15.3",
+    "version": "1.15.4",
     "news": {
+      "1.15.4": {
+        "en": "fixed crash if v2 configurations endpoint is not available (closes #228)",
+        "de": "fester crash, wenn v2 konfigurationen endpoint nicht verfügbar ist (schließt #228)",
+        "ru": "фиксированная авария, если конечная точка v2 не доступна (закрыты #228)",
+        "pt": "trava fixa se as configurações v2 endpoint não estiver disponível (fecha #228)",
+        "nl": "gerepareerd als v2 configurations niet beschikbaar zijn",
+        "fr": "crash fixe si v2 configurations endpoint n'est pas disponible (closes #228)",
+        "it": "crash fisso se v2 configurazioni endpoint non è disponibile (chiude #228)",
+        "es": "bloqueo fijo si las configuraciones v2 endpoint no está disponible (cerca #228)",
+        "pl": "w przypadku, gdy ustawiony punkt końcowy nie jest dostępny (ograniczony #228)",
+        "uk": "фіксована аварія, якщо v2 конфігурації кінцева точка недоступна (закривається #228)",
+        "zh-cn": "如果无法提供固定的事故(第228号)"
+      },
       "1.15.3": {
         "en": "internal optimizations (Axios port)",
         "de": "interne Optimierungen (Axios Port)",
@@ -80,19 +93,6 @@
         "pl": "optymalizacja drobnej wydajności\ninfo.lastSync and status (ang.). system Czas ten jest teraz numerem typowym\nzaimplementowane ciemne nie występują na osi końcowej, aby wspierać oba wersje API",
         "uk": "оптимізація продуктивності\ninfo.lastSync і статус. системи Час тепер тип номеру\nвпроваджено безшумний вихід на кінцеву точку ios для підтримки версій API",
         "zh-cn": "小业绩优化\n页: 1 系统 时间现为类型\n实施沉默的终点没有支持协会版本。"
-      },
-      "1.13.0": {
-        "en": "added `latestData` endpoint providing eclipse LED status and time since last full charge",
-        "de": "neuheit Datenendpunkt Bereitstellung Eclipse LED Status und Zeit seit letzte volle Ladung",
-        "ru": "добавлены последние Конечная точка данных, предоставляющая eclipse LED статус и время с последнего полного заряда",
-        "pt": "mais recente Data endpoint fornecendo status e tempo do eclipse LED desde a última carga completa",
-        "nl": "vertaling: Vertaling:",
-        "fr": "le dernier Point d'extrémité de données fournissant l'état LED éclipse et le temps depuis la dernière charge complète",
-        "it": "aggiunto Data endpoint che fornisce lo stato eclissi LED e il tempo dall'ultima carica completa",
-        "es": "más recientes Punto final de datos que proporciona el estado y tiempo del eclipse LED desde la última carga completa",
-        "pl": "dodać Dane końcowe zapewniają zaćmienie LED i czas od ostatniego pełnego zapotrzebowania",
-        "uk": "додано останні Кінцева точка даних забезпечує світлодіодний статус і час з останнього повного заряду",
-        "zh-cn": "最新增加 数据最后点:自上次全额收费以来提供微不足道的LED地位和时间"
       }
     },
     "title": "sonnen",

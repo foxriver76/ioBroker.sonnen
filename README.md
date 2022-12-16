@@ -326,6 +326,9 @@ The channel provides battery specific information like the number of cycle count
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### 1.15.4 (2022-12-16)
+* (foxriver76) fixed crash if v2 configurations endpoint is not available (closes #228)
+
 ### 1.15.3 (2022-12-14)
 * (foxriver76) internal optimizations (Axios port)
 
