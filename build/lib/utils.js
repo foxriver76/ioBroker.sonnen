@@ -1041,7 +1041,7 @@ exports.apiStatesV2 = [
             type: 'number',
             role: 'value',
             read: true,
-            write: true,
+            write: false,
             desc: 'IC Battery Modules'
         },
         native: {}
@@ -1054,7 +1054,7 @@ exports.apiStatesV2 = [
             type: 'number',
             role: 'value.power',
             read: true,
-            write: true,
+            write: false,
             unit: 'W',
             desc: 'IC Inverter Max Power'
         },

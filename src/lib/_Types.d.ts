@@ -44,7 +44,7 @@ export interface ConfigurationsResponse {
     EM_OperatingMode: string;
     /** integer string */
     EM_Prognosis_Charging: string;
-    EM_RE_ENABLE_MICROGRID: 'true' | 'false';
+    EM_RE_ENABLE_MICROGRID: 'false' | '0' | '1';
     /** Array string */
     EM_ToU_Schedule: string;
     /** integer string */

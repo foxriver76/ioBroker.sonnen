@@ -1040,7 +1040,7 @@ export const apiStatesV2: ioBroker.AnyObject[] = [
             type: 'number',
             role: 'value',
             read: true,
-            write: true,
+            write: false,
             desc: 'IC Battery Modules'
         },
         native: {}
@@ -1053,7 +1053,7 @@ export const apiStatesV2: ioBroker.AnyObject[] = [
             type: 'number',
             role: 'value.power',
             read: true,
-            write: true,
+            write: false,
             unit: 'W',
             desc: 'IC Inverter Max Power'
         },
