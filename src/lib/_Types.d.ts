@@ -67,8 +67,7 @@ export interface ConfigurationsResponse {
     NVM_PfcIsFixedCosPhiActive: string;
     /** integer string */
     NVM_PfcIsFixedCosPhiLagging: string;
-    /** integer string */
-    SH_HeaterOperatingMode: string;
+    SH_HeaterOperatingMode: '0' | '1';
     /** integer string */
     SH_HeaterTemperatureMax: string;
     /** integer string */

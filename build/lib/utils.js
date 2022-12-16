@@ -819,7 +819,11 @@ exports.apiStatesV2 = [
             role: 'value',
             read: true,
             write: true,
-            desc: 'Heater Operating Mode'
+            desc: 'Heater Operating Mode',
+            states: {
+                0: 'Self-consumption',
+                1: 'Feed optimization'
+            }
         },
         native: {}
     },
