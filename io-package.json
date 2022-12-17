@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.15.4",
+    "version": "1.15.5",
     "news": {
+      "1.15.5": {
+        "en": "added state list for `configurations.SH_HeaterOperatingMode'`\nmarked some datapoints as read-only and fixed state types",
+        "de": "hinzugefügt Zustandsliste für Konfigurationen.SH_HeaterOperatingMode '\neinige datenpunkte als eingelesene und feste zustandstypen markiert",
+        "ru": "добавлен список состояния для конфигураций.SH_HeaterOperatingMode « »\nпомечены некоторые данные, как только чтение и фиксированные типы",
+        "pt": "adicionado lista de estado para configurações.SH_HeaterOperatingMode '\nmarcado alguns datapoints como tipos de estado somente leitura e fixo",
+        "nl": "vertaling: '\neen paar datapoints als lees-only en gerepareerde staatstypes",
+        "fr": "liste d'état pour les configurations.SH_HeaterOperatingMode '\nmarqué certains points de données comme les types d'états lisibles et fixes",
+        "it": "elenco stato aggiunto per configurazioni.SH_HeaterOperatingMode '\nha segnato alcuni datapoint come tipi di stato in sola lettura e fissi",
+        "es": "lista de estado añadido para configuraciones.SH_HeaterOperatingMode '\nmarcaron algunos puntos de datos como tipos de estado solo lectura y fijo",
+        "pl": "lista państwowa do konfiguracji SH_HeaterOperatingMode. '\nniektóre punkty danych są zgodne i stałymi typami stanów",
+        "uk": "додано державний список для конфігурацій.SH_HeaterOperatingMode Р\nпозначені деякі точки даних, як зчитування та фіксовані типи держави",
+        "zh-cn": "添加了国家组合名单:SH_HaterOpering Mode 评 注\n阅读和固定状态类型的一些数据点"
+      },
       "1.15.4": {
         "en": "fixed crash if v2 configurations endpoint is not available (closes #228)",
         "de": "fester crash, wenn v2 konfigurationen endpoint nicht verfügbar ist (schließt #228)",
@@ -80,19 +93,6 @@
         "pl": "wprowadzono nowy stan (DataShutdownReason)",
         "uk": "впровадження нового стану останньогоData.dcShutdownReason (закриває #213)",
         "zh-cn": "新的国家实施了新的Data.dcShutdown Reason(第213)号。"
-      },
-      "1.13.1": {
-        "en": "minor performance optimization\n`info.lastSync` and `status.systemTime` are now type number\nimplemented silent fail on `ios` endpoint to support both API versions",
-        "de": "geringe leistungsoptimierung\ninfo.lastSync und Status. System Zeit ist jetzt Typ Nummer\nimplementiert still scheitern auf ios endpoint, um beide API-Versionen zu unterstützen",
-        "ru": "незначительная оптимизация производительности\ninfo.lastSync и статус. система Время сейчас тип номера\nреализован бесшумный провал на ios endpoint для поддержки обеих версий API",
-        "pt": "otimização de desempenho menor\ninfo.lastSync e status. sistema O tempo é agora o número do tipo\nimplementado falha silenciosa no ponto final do ios para suportar ambas as versões da API",
-        "nl": "minor prestatie\nInfo.lastSync en status. systeem Tijd is nu type nummer\nquality over Quantity (QoQ) Releases Vertaling:",
-        "fr": "optimisation des performances mineures\ninfo.lastSync et statut. système Le temps est maintenant de type numéro\nimplémenté silence échoue sur ios finpoint pour soutenir les deux versions API",
-        "it": "ottimizzazione delle prestazioni minori\ninfo.lastSync e stato. sistema Il tempo è ora il numero di tipo\nimplementato silenzioso fail su ios endpoint per supportare entrambe le versioni API",
-        "es": "optimización del rendimiento menor\ninfo.lastSync y status. sistema El tiempo ahora es el número de tipo\nimplementado silencioso fallo en ios endpoint para apoyar ambas versiones de API",
-        "pl": "optymalizacja drobnej wydajności\ninfo.lastSync and status (ang.). system Czas ten jest teraz numerem typowym\nzaimplementowane ciemne nie występują na osi końcowej, aby wspierać oba wersje API",
-        "uk": "оптимізація продуктивності\ninfo.lastSync і статус. системи Час тепер тип номеру\nвпроваджено безшумний вихід на кінцеву точку ios для підтримки версій API",
-        "zh-cn": "小业绩优化\n页: 1 系统 时间现为类型\n实施沉默的终点没有支持协会版本。"
       }
     },
     "title": "sonnen",

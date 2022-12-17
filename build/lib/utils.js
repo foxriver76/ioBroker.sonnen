@@ -737,11 +737,11 @@ exports.apiStatesV2 = [
         type: 'state',
         common: {
             name: 'User Input Time One',
-            type: 'number',
-            role: 'value',
+            type: 'mixed',
+            role: 'state',
             read: true,
             write: true,
-            desc: 'User Input Time One'
+            desc: 'User Input Time One, 0 if unsupported else string'
         },
         native: {}
     },
@@ -750,11 +750,11 @@ exports.apiStatesV2 = [
         type: 'state',
         common: {
             name: 'User Input Time Two',
-            type: 'number',
-            role: 'value',
+            type: 'mixed',
+            role: 'state',
             read: true,
             write: true,
-            desc: 'User Input Time Two'
+            desc: 'User Input Time Two, 0 if unsupported else string'
         },
         native: {}
     },
@@ -763,11 +763,11 @@ exports.apiStatesV2 = [
         type: 'state',
         common: {
             name: 'User Input Time Three',
-            type: 'number',
-            role: 'value',
+            type: 'mixed',
+            role: 'state',
             read: true,
             write: true,
-            desc: 'User Input Time Three'
+            desc: 'User Input Time Three, 0 if unsupported else string'
         },
         native: {}
     },
@@ -776,11 +776,11 @@ exports.apiStatesV2 = [
         type: 'state',
         common: {
             name: 'Re-enable Microgrid',
-            type: 'string',
-            role: 'text',
+            type: 'mixed',
+            role: 'state',
             read: true,
             write: true,
-            desc: 'Re-enable Microgrid'
+            desc: 'Re-enable Microgrid, "false" if unsupported, else 0/1'
         },
         native: {}
     },
