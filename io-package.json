@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.15.5",
+    "version": "1.15.6",
     "news": {
+      "1.15.6": {
+        "en": "added two GPIOs for CHP status",
+        "de": "zwei GPIOs für CHP-Status hinzugefügt",
+        "ru": "добавили два GPIO для статуса CHP",
+        "pt": "adicionado dois GPIOs para o status CHP",
+        "nl": "twee GPIO's toegevoegd voor CHP status",
+        "fr": "a ajouté deux GPIO pour le statut CHP",
+        "it": "aggiunto due GPIO per lo stato CHP",
+        "es": "añadió dos GPIO para el estado de CHP",
+        "pl": "dodano dwa GPIO dla statusu CHP",
+        "uk": "додано два GPIO для статусу CHP",
+        "zh-cn": "增加2个《政府采购方案》现状"
+      },
       "1.15.5": {
         "en": "added state list for `configurations.SH_HeaterOperatingMode'`\nmarked some datapoints as read-only and fixed state types",
         "de": "hinzugefügt Zustandsliste für Konfigurationen.SH_HeaterOperatingMode '\neinige datenpunkte als eingelesene und feste zustandstypen markiert",
@@ -80,19 +93,6 @@
         "pl": "pełny port do API (Software Version >= 1.8.7)\nprzynoszą os i odwrócone punkty końcowe\nnakaz konfiguracyjny jest obecnie obsługiwany przez pojedyncze wezwanie zamiast każdej atrybuty\nstało się wiele ról państwowych",
         "uk": "повний порт для v2 API (версія програмного забезпечення >= 1.8.7)\nприносить назад ios і інвертор кінцеві точки\nзапит на налаштування тепер керуються одним викликом замість одного для кожного атрибуту\nми зафіксували багато державних ролей",
         "zh-cn": "正式港口诉2API(Software Version >=1.8.7)\n后盾和点\n组合请求现在由单一的呼吁而不是每个属性处理。\n我们确定了大量国家作用"
-      },
-      "1.14.0": {
-        "en": "implemented new state `latestData.dcShutdownReason` (closes #213)",
-        "de": "implementiert neuen Zustand neusteData.dcShutdownReason (schließt #213)",
-        "ru": "реализовано новое состояние LatestData.dcShutdownReason (закрыты #213)",
-        "pt": "implementado novo estado mais recenteData.dcShutdownReason (fecha #213)",
-        "nl": "vertaling:",
-        "fr": "mis en œuvre le nouveau dernier étatData.dcShutdownReason (ferme #213)",
-        "it": "implementato nuovo stato ultimoData.dcShutdownReason (chiudi #213)",
-        "es": "implementado nuevo estado más recienteData.dcShutdownReason (cerca #213)",
-        "pl": "wprowadzono nowy stan (DataShutdownReason)",
-        "uk": "впровадження нового стану останньогоData.dcShutdownReason (закриває #213)",
-        "zh-cn": "新的国家实施了新的Data.dcShutdown Reason(第213)号。"
       }
     },
     "title": "sonnen",

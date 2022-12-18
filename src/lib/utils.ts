@@ -335,12 +335,38 @@ export const generalAPIStates: ioBroker.AnyObject[] = [
         native: {}
     },
     {
+        _id: 'ios.DI_10',
+        type: 'state',
+        common: {
+            name: 'Micro CHP',
+            type: 'boolean',
+            role: 'indicator',
+            read: true,
+            write: false,
+            desc: 'Micro Combined Heat Power Status'
+        },
+        native: {}
+    },
+    {
+        _id: 'ios.DO_11',
+        type: 'state',
+        common: {
+            name: 'CHP SOC (Min/Max)',
+            type: 'boolean',
+            role: 'indicator',
+            read: true,
+            write: false,
+            desc: 'Combined Heat Power SOC (Min/Max) Status'
+        },
+        native: {}
+    },
+    {
         _id: 'ios.DO_12',
         type: 'state',
         common: {
             name: 'Self Consumption Relay',
             type: 'boolean',
-            role: 'status',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'Self Consumption Relay Status'
@@ -353,7 +379,7 @@ export const generalAPIStates: ioBroker.AnyObject[] = [
         common: {
             name: 'PV Reduction 1',
             type: 'boolean',
-            role: 'status',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'PV Reduction 1 Status'
@@ -366,7 +392,7 @@ export const generalAPIStates: ioBroker.AnyObject[] = [
         common: {
             name: 'PV Reduction 2',
             type: 'boolean',
-            role: 'status',
+            role: 'indicator',
             read: true,
             write: false,
             desc: 'PV Reduction 2 Status'

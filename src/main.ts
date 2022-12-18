@@ -538,7 +538,7 @@ class Sonnen extends utils.Adapter {
 
             this.log.debug(`io json: ${rawData}`);
 
-            const relevantIOs = ['DO_12', 'DO_13', 'DO_14'];
+            const relevantIOs = ['DI_10', 'DO_11', 'DO_12', 'DO_13', 'DO_14'];
 
             for (const io of relevantIOs) {
                 promises.push(this.setStateAsync(`ios.${io}`, !!data[io].status, true));

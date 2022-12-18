@@ -326,6 +326,9 @@ The channel provides battery specific information like the number of cycle count
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### 1.15.6 (2022-12-18)
+* (foxriver76) added two GPIOs for CHP status
+
 ### 1.15.5 (2022-12-17)
 * (foxriver76) added state list for `configurations.SH_HeaterOperatingMode'`
 * (foxriver76) marked some datapoints as read-only and fixed state types
