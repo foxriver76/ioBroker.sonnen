@@ -517,6 +517,7 @@ class Sonnen extends utils.Adapter {
             this.log.debug(`Battery json: ${JSON.stringify(data)}`);
 
             await this.setStateAsync('battery.cyclecount', data.cyclecount, true);
+            await this.setStateAsync('battery.balanceChargeRequest', !!data.balancechargerequest, true);
         } catch (e: any) {
             throw new Error(`Could not request battery endpoint: ${e.message}`);
         }

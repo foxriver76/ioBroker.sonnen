@@ -708,6 +708,19 @@ export const apiStatesV2: ioBroker.AnyObject[] = [
         native: {}
     },
     {
+        _id: 'battery.balanceChargeRequest',
+        type: 'state',
+        common: {
+            name: 'Module request for balance charge',
+            type: 'boolean',
+            role: 'indicator',
+            read: true,
+            write: false,
+            desc: 'Module request for balance charge'
+        },
+        native: {}
+    },
+    {
         _id: 'inverter.pacTotal',
         type: 'state',
         common: {
