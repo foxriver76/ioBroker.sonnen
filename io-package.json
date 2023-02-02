@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.15.6",
+    "version": "1.16.0",
     "news": {
+      "1.16.0": {
+        "en": "added state `battery.balanceChargeRequest` (closes #258)",
+        "de": "add state Battery.balanceChargeRequest (schließt #258)",
+        "ru": "добавлена государственная батарея.balanceChargeRequest (closes #258)",
+        "pt": "adicionado estado battery.balanceChargeRequest (closes #258)",
+        "nl": "voegde staatsbatterij toe.balanceChargeRequest (closes #258)",
+        "fr": "batterie d'état.balanceChargeRequest (ferme #258)",
+        "it": "aggiunto stato batteria.balanceChargeRequest (chiudi #258)",
+        "es": "agregado de la batería estatal.balanceChargeRequest (cerca #258)",
+        "pl": "dodawane są baterie równowagi ChargeRequest (zamknięte #258)",
+        "uk": "додано державний акумулятор.balanceChargeRequest (закривається #258)",
+        "zh-cn": "增加国家电池:平衡采掘(第258号)"
+      },
       "1.15.6": {
         "en": "added two GPIOs for CHP status",
         "de": "zwei GPIOs für CHP-Status hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "dodawany do baterii stan (okrążeń #194)",
         "uk": "додано акумулятор.cyclecount state (закривається #194)",
         "zh-cn": "新增电池:循环国(第194号)"
-      },
-      "1.15.0": {
-        "en": "full port to v2 API (Software Version >= 1.8.7)\nbrings back `ios` and `inverter` endpoints\nconfiguration request is now handled by a single call instead of one for each attribute\nwe fixed a lot of state roles",
-        "de": "vollport zu v2 API (Software Version >= 1.8.7)\nios und wechselrichter endpunkte zurückbringen\nkonfigurationsanfrage wird nun von einem einzigen anruf statt einem für jedes attribut bearbeitet\nwir haben eine menge staatlicher rollen fixiert",
-        "ru": "полный порт для v2 API (версия программного обеспечения >= 1.8.7)\nвозвращает ios и инвертор endpoints\nзапрос конфигурации теперь обрабатывается одним звонком вместо одного для каждого атрибута\nмы исправили много государственных ролей",
-        "pt": "port to v2 API (Software Version >= 1.8.7)\ntraz de volta ios e endpoints do inversor\npedido de configuração agora é tratado por uma única chamada em vez de uma para cada atributo\nnós fixamos um monte de papéis do estado",
-        "nl": "volle haven tot v2 API (Software Version 1.8.7)\nbrengt io's en inverter eindpunten terug\nverzoek van vertrouwen wordt nu afgehandeld door één telefoontje in plaats van één voor elke bijdrage\nwe hebben veel staatsrollen gemaakt",
-        "fr": "port complet à l'API v2 (Version logicielle ACIA= 1.8.7)\nrapporte les points d'extrémité ios et inverter\nla demande de configuration est maintenant traitée par un seul appel au lieu d'un pour chaque attribut\nnous avons fixé beaucoup de rôles d'etat",
-        "it": "porta completa a v2 API (versione software >= 1.8.7)\nporta indietro ios e endpoint inverter\nla richiesta di configurazione è ora gestita da una singola chiamata invece di una per ogni attributo\nabbiamo fissato un sacco di ruoli statali",
-        "es": "puerto completo a v2 API (Versión de software = 1.8.7)\ntrae ios y puntos finales inverter\nla solicitud de configuración ahora es manejada por una sola llamada en lugar de una para cada atributo\nfijamos muchos papeles estatales",
-        "pl": "pełny port do API (Software Version >= 1.8.7)\nprzynoszą os i odwrócone punkty końcowe\nnakaz konfiguracyjny jest obecnie obsługiwany przez pojedyncze wezwanie zamiast każdej atrybuty\nstało się wiele ról państwowych",
-        "uk": "повний порт для v2 API (версія програмного забезпечення >= 1.8.7)\nприносить назад ios і інвертор кінцеві точки\nзапит на налаштування тепер керуються одним викликом замість одного для кожного атрибуту\nми зафіксували багато державних ролей",
-        "zh-cn": "正式港口诉2API(Software Version >=1.8.7)\n后盾和点\n组合请求现在由单一的呼吁而不是每个属性处理。\n我们确定了大量国家作用"
       }
     },
     "title": "sonnen",
