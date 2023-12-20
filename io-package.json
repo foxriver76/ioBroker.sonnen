@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.16.0",
+    "version": "1.17.0",
     "news": {
+      "1.17.0": {
+        "en": "sync brightness status of eclipse led\nfixed issue with eclipse led status (closes #293)",
+        "de": "sync helligkeitsstatus von eclipse led\nfeste ausgabe mit eclipse led status (schließt #293)",
+        "ru": "синхронизируйте статус яркости eclipse led\nфиксированная проблема со статусом eclipse led (closes #293)",
+        "pt": "status de brilho de sincronização do eclipse led\nproblema fixo com o estado do eclipse led (fecha #293)",
+        "nl": "vertaling:\ngerepareerde kwestie met eclipse leidde status (closes #293)",
+        "fr": "sync luminosité statut de l'éclipse led\nproblème fixe avec le statut d'éclipse led (fermeture #293)",
+        "it": "stato di luminosità di sincronizzazione di eclissi led\nproblema fisso con lo stato principale di eclissi (chiude #293)",
+        "es": "estado de brillo sincronizado de eclipse led\nproblema fijo con el estado del eclipse (cerca #293)",
+        "pl": "status jasności synchronizacji skłonił się do zaćmienia, co doprowadziło do powstania jasności synchronizacji\nzawartość zaćmienia doprowadziła do spadku (okrążenia #293)",
+        "uk": "синк яскравість статусу eclipse призвело\nвиправлено проблему з екліпсом під керівництвом статусу (закриває #293)",
+        "zh-cn": "b. 动摇的光明地位\n固定问题,有动产地位(第293号)"
+      },
       "1.16.0": {
         "en": "added state `battery.balanceChargeRequest` (closes #258)",
         "de": "add state Battery.balanceChargeRequest (schließt #258)",
@@ -80,19 +93,6 @@
         "pl": "optymalizacja wewnętrznej klasy (ES6)",
         "uk": "внутрішня оптимізація (ES6 клас)",
         "zh-cn": "内部优化(ES6级)"
-      },
-      "1.15.1": {
-        "en": "added `battery.cyclecount` state (closes #194)",
-        "de": "batterie.cyclecount zustand (schließt #194)",
-        "ru": "добавлено состояние батареи.cyclecount (closes #194)",
-        "pt": "adicionado estado da conta da bateria.cycle (fecha #194)",
-        "nl": "voegde batterij toe",
-        "fr": "état de compte de batterie ajouté (fermetures #194)",
-        "it": "stato del conteggio della batteria aggiunto (chiusura #194)",
-        "es": "estado de cuenta de ciclo (cerca #194)",
-        "pl": "dodawany do baterii stan (okrążeń #194)",
-        "uk": "додано акумулятор.cyclecount state (закривається #194)",
-        "zh-cn": "新增电池:循环国(第194号)"
       }
     },
     "title": "sonnen",
