@@ -280,3 +280,11 @@ interface LegacyDevice {
     parent: number;
     [other: string]: any;
 }
+
+/** Create a new Record from a Record which has all non-boolean attributes removed */
+type ExtractBooleanAttributesHelper<TRecord extends Record<string, unknown>> = {
+    [Property in keyof TRecord as TRecord[Property] extends boolean ? Property : never]: TRecord[Property];
+};
+
+/** Extract attribute names of Record, which are of type boolean */
+export type ExtractBooleanAttributes<T> = keyof ExtractBooleanAttributesHelper<T>;

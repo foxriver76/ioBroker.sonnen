@@ -11,7 +11,8 @@ import {
     StatusResponse,
     LegacyResponse,
     InverterResponse,
-    BatteryResponse
+    BatteryResponse,
+    ExtractBooleanAttributes
 } from './lib/_Types';
 
 class Sonnen extends utils.Adapter {
@@ -638,6 +639,7 @@ class Sonnen extends utils.Adapter {
             this.decodeBitmapLikeObj(data.ic_status['DC Shutdown Reason'], 'Running'),
             true
         );
+
         await this.setStateAsync(
             'latestData.eclipseLed',
             this.decodeBitmapLikeObj(data.ic_status['Eclipse Led'], 'Unknown'),
@@ -654,10 +656,12 @@ class Sonnen extends utils.Adapter {
      * @param bitmapLike The object to decode
      * @param fallback fallback to return if no value is true
      */
-    decodeBitmapLikeObj<T extends Record<string, unknown>, F extends string>(bitmapLike: T, fallback: F): keyof T | F {
+    decodeBitmapLikeObj<TBitmap extends Record<string, unknown>, TFallback extends string>(
+        bitmapLike: TBitmap,
+        fallback: TFallback
+    ): ExtractBooleanAttributes<TBitmap> | TFallback {
         const foundEntry = Object.entries(bitmapLike).find(value => value[1] === true);
-
-        return foundEntry ? foundEntry[0] : fallback;
+        return foundEntry ? (foundEntry[0] as ExtractBooleanAttributes<TBitmap>) : fallback;
     }
 
     /**
