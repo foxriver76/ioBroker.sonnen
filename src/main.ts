@@ -233,7 +233,7 @@ class Sonnen extends utils.Adapter {
 
         await Promise.all(promises);
 
-        const pollStates = async () => {
+        const pollStates: () => Promise<void> = async () => {
             // poll states every [30] seconds
             try {
                 const data: StatusResponse = (await axios(statusUrl)).data;
@@ -319,7 +319,7 @@ class Sonnen extends utils.Adapter {
             this.log.warn(`[DATA] Error getting Data ${e.message}`);
         }
 
-        const pollStates = async () => {
+        const pollStates: () => Promise<void> = async () => {
             // poll states every configured seconds
             const promises = [];
             promises.push(this.requestStateAndSetOldAPI(`M03`, `status.production`));
@@ -351,7 +351,7 @@ class Sonnen extends utils.Adapter {
     /**
      * Main logic for "legacy" Port 3480 API
      */
-    async legacyAPImain() {
+    async legacyAPImain(): Promise<void> {
         // here we store the id of the battery
         let batteryId: number | undefined;
         try {
@@ -427,7 +427,7 @@ class Sonnen extends utils.Adapter {
             return void this.restart();
         }
 
-        const pollStates = async () => {
+        const pollStates: () => Promise<void> = async () => {
             try {
                 const data: LegacyResponse = (
                     await axios(`http://${this.ip}:3480/data_request?id=sdata&output_format=json`)
