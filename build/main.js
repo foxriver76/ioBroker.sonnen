@@ -582,6 +582,7 @@ class Sonnen extends utils.Adapter {
         this.log.debug(`Latest data: ${JSON.stringify(data)}`);
         await this.setStateAsync('latestData.dcShutdownReason', this.decodeBitmapLikeObj(data.ic_status['DC Shutdown Reason'], 'Running'), true);
         await this.setStateAsync('latestData.eclipseLed', this.decodeBitmapLikeObj(data.ic_status['Eclipse Led'], 'Unknown'), true);
+        await this.setStateAsync('latestData.eclipseLedBrightness', data.ic_status['Eclipse Led'].Brightness, true);
         await this.setStateAsync('latestData.secondsSinceFullCharge', data.ic_status.secondssincefullcharge, true);
     }
     /**
@@ -591,7 +592,7 @@ class Sonnen extends utils.Adapter {
      * @param fallback fallback to return if no value is true
      */
     decodeBitmapLikeObj(bitmapLike, fallback) {
-        const foundEntry = Object.entries(bitmapLike).find(value => value[1]);
+        const foundEntry = Object.entries(bitmapLike).find(value => value[1] === true);
         return foundEntry ? foundEntry[0] : fallback;
     }
     /**

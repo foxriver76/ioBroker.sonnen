@@ -123,6 +123,7 @@ export interface LatestDataResponse {
             'Pulsing Orange': boolean;
             'Pulsing White': boolean;
             'Solid Red': boolean;
+            Brightness: number;
         };
         'MISC Status Bits': {
             'Discharge not allowed': boolean;

@@ -134,7 +134,7 @@ With API v2 the new channel configurations can be used, for write states you can
     |:---:|:---:|
     |number|R|
 
-   *Read-only number, which represents the inverter AC Power in watts. If the value is greater than 0 the battery is discharging, if greater than zero it is charging.*
+   *Read-only number, which represents the inverter AC Power in watts. If the value is greater than 0 the battery is discharging, if less than zero it is charging.*
    
 * status.relativeSoc
 
@@ -326,6 +326,10 @@ The channel provides battery specific information like the number of cycle count
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (foxriver76) sync brightness status of eclipse led
+* (foxriver76) fixed issue with eclipse led status (closes #293)
+
 ### 1.16.0 (2023-02-02)
 * (foxriver76) added state `battery.balanceChargeRequest` (closes #258)
 

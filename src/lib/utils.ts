@@ -422,6 +422,22 @@ export const generalAPIStates: ioBroker.AnyObject[] = [
         native: {}
     },
     {
+        _id: 'latestData.eclipseLedBrightness',
+        type: 'state',
+        common: {
+            name: 'Eclipse LED Brightness',
+            type: 'number',
+            role: 'value.brightness',
+            read: true,
+            write: false,
+            desc: 'Brightness of the Eclipse LED',
+            unit: '%',
+            min: 0,
+            max: 100
+        },
+        native: {}
+    },
+    {
         _id: 'latestData.dcShutdownReason',
         type: 'state',
         common: {
