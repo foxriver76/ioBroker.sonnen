@@ -780,6 +780,160 @@ exports.apiStatesV2 = [
         native: {}
     },
     {
+        _id: 'inverter.fac',
+        type: 'state',
+        common: {
+            name: 'AC frequency',
+            type: 'number',
+            role: 'value.frequency',
+            read: true,
+            write: false,
+            desc: 'AC frequency in Hz',
+            unit: 'Hz'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.iacTotal',
+        type: 'state',
+        common: {
+            name: 'AC Current Total',
+            type: 'number',
+            role: 'value.current',
+            read: true,
+            write: false,
+            desc: 'Total AC Current',
+            unit: 'A'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.ibat',
+        type: 'state',
+        common: {
+            name: 'DC Current',
+            type: 'number',
+            role: 'value.current',
+            read: true,
+            write: false,
+            desc: 'DC Current',
+            unit: 'A'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.ipv',
+        type: 'state',
+        common: {
+            name: 'IPV',
+            type: 'number',
+            role: 'value.current',
+            read: true,
+            write: false,
+            desc: 'IPV',
+            unit: 'A'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.pacMicrogrid',
+        type: 'state',
+        common: {
+            name: 'AC Power Microgrid',
+            type: 'number',
+            role: 'value.power',
+            read: true,
+            write: false,
+            desc: 'AC Power Microgrid',
+            unit: 'W'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.pbat',
+        type: 'state',
+        common: {
+            name: 'Power Battery',
+            type: 'number',
+            role: 'value.power',
+            read: true,
+            write: false,
+            desc: 'Power Battery',
+            unit: 'W'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.phi',
+        type: 'state',
+        common: {
+            name: 'Phase Shift phi',
+            type: 'number',
+            role: 'value',
+            read: true,
+            write: false,
+            desc: 'Phase Shift phi',
+            unit: '°'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.ppv',
+        type: 'state',
+        common: {
+            name: 'PPV',
+            type: 'number',
+            role: 'value.power',
+            read: true,
+            write: false,
+            desc: 'PPV',
+            unit: 'W'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.sacTotal',
+        type: 'state',
+        common: {
+            name: 'SAC Total',
+            type: 'number',
+            role: 'value.power',
+            read: true,
+            write: false,
+            desc: 'SAC Total',
+            unit: 'VA'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.uac',
+        type: 'state',
+        common: {
+            name: 'AC Voltage',
+            type: 'number',
+            role: 'value.voltage',
+            read: true,
+            write: false,
+            desc: 'AC Voltage',
+            unit: 'V'
+        },
+        native: {}
+    },
+    {
+        _id: 'inverter.upv',
+        type: 'state',
+        common: {
+            name: 'UPV',
+            type: 'number',
+            role: 'value.voltage',
+            read: true,
+            write: false,
+            desc: 'UPV',
+            unit: 'V'
+        },
+        native: {}
+    },
+    {
         _id: 'configurations',
         type: 'channel',
         common: {
@@ -1363,6 +1517,48 @@ const getPowermeterStates = (id, direction) => {
                 read: true,
                 write: false,
                 desc: 'Watts on Phase 3',
+                unit: 'W'
+            },
+            native: {}
+        },
+        {
+            _id: `powermeter.${id}.va_total`,
+            type: 'state',
+            common: {
+                name: 'Apparent Power Total',
+                type: 'number',
+                role: 'value.power',
+                read: true,
+                write: false,
+                desc: 'Apparent Power Total',
+                unit: 'VA'
+            },
+            native: {}
+        },
+        {
+            _id: `powermeter.${id}.var_total`,
+            type: 'state',
+            common: {
+                name: 'Reactive Power Total',
+                type: 'number',
+                role: 'value.power',
+                read: true,
+                write: false,
+                desc: 'Reactive Power Total',
+                unit: 'VAr'
+            },
+            native: {}
+        },
+        {
+            _id: `powermeter.${id}.w_total`,
+            type: 'state',
+            common: {
+                name: 'Active Power Total',
+                type: 'number',
+                role: 'value.power',
+                read: true,
+                write: false,
+                desc: 'Active Power Total',
                 unit: 'W'
             },
             native: {}

@@ -592,6 +592,17 @@ class Sonnen extends utils.Adapter {
                 promises.push(this.setStateAsync('inverter.pacTotal', invererData.pac_total, true));
                 promises.push(this.setStateAsync('inverter.tmax', invererData.tmax, true));
                 promises.push(this.setStateAsync('inverter.ubat', invererData.ubat, true));
+                promises.push(this.setStateAsync('inverter.fac', invererData.fac, true));
+                promises.push(this.setStateAsync('inverter.iacTotal', invererData.iac_total, true));
+                promises.push(this.setStateAsync('inverter.ibat', invererData.ibat, true));
+                promises.push(this.setStateAsync('inverter.ipv', invererData.ipv, true));
+                promises.push(this.setStateAsync('inverter.pacMicrogrid', invererData.pac_microgrid, true));
+                promises.push(this.setStateAsync('inverter.pbat', invererData.pbat, true));
+                promises.push(this.setStateAsync('inverter.phi', invererData.phi, true));
+                promises.push(this.setStateAsync('inverter.ppv', invererData.ppv, true));
+                promises.push(this.setStateAsync('inverter.sacTotal', invererData.sac_total, true));
+                promises.push(this.setStateAsync('inverter.uac', invererData.uac, true));
+                promises.push(this.setStateAsync('inverter.upv', invererData.upv, true));
             }
 
             await Promise.all(promises);
@@ -694,7 +705,10 @@ class Sonnen extends utils.Adapter {
                 'kwh_imported',
                 'w_l1',
                 'w_l2',
-                'w_l3'
+                'w_l3',
+                'va_total',
+                'var_total',
+                'w_total'
             ] as const;
 
             // we have multiple powermeters

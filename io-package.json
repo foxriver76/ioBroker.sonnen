@@ -130,7 +130,10 @@
     "type": "energy",
     "connectionType": "local",
     "dataSource": "poll",
-    "license": "MIT",
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
     "messagebox": false,
     "restartAdapters": [
       "vis",
