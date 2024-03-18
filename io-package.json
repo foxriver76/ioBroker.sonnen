@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.17.0",
+    "version": "1.18.0",
     "news": {
+      "1.18.0": {
+        "en": "added new inverter and powermeter states",
+        "de": "neue wechselrichter- und leistungszählerzustände hinzugefügt",
+        "ru": "добавлены новые состояния инвертора и электрометра",
+        "pt": "adicionado novo inversor e powermeter estados",
+        "nl": "toegevoegd nieuwe omvormer en powermeter toestanden",
+        "fr": "nouveaux états d'onduleur et de powermeter",
+        "it": "aggiunto nuovi stati inverter e powermeter",
+        "es": "nuevos estados inverter y powermeter",
+        "pl": "dodane nowe stany inwertera i power meter",
+        "uk": "додано нові інвертори та стани",
+        "zh-cn": "添加新的反转和电量计状态"
+      },
       "1.17.0": {
         "en": "sync brightness status of eclipse led\nfixed issue with eclipse led status (closes #293)",
         "de": "sync helligkeitsstatus von eclipse led\nfeste ausgabe mit eclipse led status (schließt #293)",
@@ -80,19 +93,6 @@
         "pl": "optymalizacja wewnętrznego portu (Axios port)",
         "uk": "внутрішня оптимізація (Axios порт)",
         "zh-cn": "内部优化(Axios港口)"
-      },
-      "1.15.2": {
-        "en": "internal optimization (ES6 class)",
-        "de": "interne Optimierung (ES6-Klasse)",
-        "ru": "внутренняя оптимизация (класс ES6)",
-        "pt": "otimização interna (classe ES6)",
-        "nl": "inwendige optimatie (ES6 klasse)",
-        "fr": "optimisation interne (classe E6)",
-        "it": "ottimizzazione interna (classe ES6)",
-        "es": "optimización interna (clase ES6)",
-        "pl": "optymalizacja wewnętrznej klasy (ES6)",
-        "uk": "внутрішня оптимізація (ES6 клас)",
-        "zh-cn": "内部优化(ES6级)"
       }
     },
     "title": "sonnen",
