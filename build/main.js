@@ -51,7 +51,7 @@ class Sonnen extends utils.Adapter {
             if (this.restartTimer) {
                 clearTimeout(this.restartTimer);
             }
-            this.log.info(`[END] Stopping sonnen this...`);
+            this.log.info(`[END] Stopping sonnen adapter...`);
             await this.setStateAsync(`info.connection`, false, true);
             callback();
         }
@@ -99,9 +99,7 @@ class Sonnen extends utils.Adapter {
             this.log.debug(`[START] It's not 8080, because ${e.message}`);
         }
         try {
-            // test if both works, else use legacy, because of incomplete implementation of API
-            await (0, axios_1.default)(`http://${this.ip}:7979/rest/devices/battery/M03`);
-            await (0, axios_1.default)(`http://${this.ip}:7979/rest/devices/battery/M034`);
+            await this.testOldApi();
             this.apiVersion = 'old';
             this.log.debug(`[START] 7979 API detected`);
             return void this.oldAPImain();
@@ -117,6 +115,18 @@ class Sonnen extends utils.Adapter {
         catch (e) {
             this.log.warn(`[START] Could not get API version... restarting in 30 seconds: ${e.message}`);
             this.restartTimer = setTimeout(this.restart, 30000);
+        }
+    }
+    /**
+     * Test if it is the port 7979 API, throws if not
+     */
+    async testOldApi() {
+        // test if both works, else use legacy, because of incomplete implementation of API
+        if (typeof (await (0, axios_1.default)(`http://${this.ip}:7979/rest/devices/battery/M03`)).data !== 'string') {
+            throw new Error('Wrong API result for "M03"');
+        }
+        if (typeof (await (0, axios_1.default)(`http://${this.ip}:7979/rest/devices/battery/M034`)).data !== 'string') {
+            throw new Error('Wrong API result for "M034"');
         }
     }
     /**
@@ -359,14 +369,14 @@ class Sonnen extends utils.Adapter {
                     // this should be the sonnen battery
                     for (const attr of Object.keys(device)) {
                         const stateVal = this.convertLegacyState(device[attr]);
+                        const stateType = typeof stateVal;
                         await this.setObjectNotExistsAsync(`main.${attr}`, {
                             type: 'state',
                             common: {
                                 name: attr,
-                                // @ts-expect-error investigate later
                                 read: true,
                                 write: false,
-                                type: typeof stateVal,
+                                type: stateType,
                                 def: stateVal,
                                 role: 'state'
                             },
@@ -386,17 +396,18 @@ class Sonnen extends utils.Adapter {
                     });
                     for (const attr of Object.keys(device)) {
                         const stateVal = this.convertLegacyState(device[attr]);
+                        const stateType = typeof stateVal;
                         await this.setObjectNotExistsAsync(`${device.id}.${attr}`, {
                             type: 'state',
                             common: {
-                                // @ts-expect-error investigate later
                                 read: true,
                                 write: false,
                                 name: attr,
-                                type: typeof stateVal,
                                 def: stateVal,
-                                role: 'state'
-                            }
+                                role: 'state',
+                                type: stateType
+                            },
+                            native: {}
                         });
                     }
                 }
@@ -466,7 +477,7 @@ class Sonnen extends utils.Adapter {
         if (this.apiVersion === 'v2') {
             return this.requestSettingsV2();
         }
-        const rawData = JSON.stringify(await (0, axios_1.default)(`http://${this.ip}:8080/api/configuration`));
+        const rawData = JSON.stringify((await (0, axios_1.default)(`http://${this.ip}:8080/api/configuration`)).data);
         this.log.debug(`[SETTINGS] Configuration received: ${rawData}`);
         await this.setStateAsync(`info.configuration`, rawData, true);
     }

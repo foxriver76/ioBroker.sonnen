@@ -326,6 +326,9 @@ The channel provides battery specific information like the number of cycle count
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
 -->
+### __WORK IN PROGRESS__
+* (foxriver76) fixed detection of legacy API
+
 ### 1.18.0 (2024-03-18)
 * (foxriver76) added new inverter and powermeter states
 
