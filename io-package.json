@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "sonnen",
-    "version": "1.18.0",
+    "version": "1.18.1",
     "news": {
+      "1.18.1": {
+        "en": "fixed detection of legacy API",
+        "de": "feste Erkennung von Vermächtnis API",
+        "ru": "фиксированное обнаружение наследия API",
+        "pt": "detecção fixa de API legado",
+        "nl": "vaste detectie van legacy API",
+        "fr": "détection fixe de l'API héritée",
+        "it": "rilevamento fisso di API legacy",
+        "es": "detección fija de API heredada",
+        "pl": "stałe wykrywanie dotychczasowych API",
+        "uk": "виправлене виявлення API Legacy",
+        "zh-cn": "固定检测遗留的 API"
+      },
       "1.18.0": {
         "en": "added new inverter and powermeter states",
         "de": "neue wechselrichter- und leistungszählerzustände hinzugefügt",
@@ -80,19 +93,6 @@
         "pl": "w przypadku, gdy ustawiony punkt końcowy nie jest dostępny (ograniczony #228)",
         "uk": "фіксована аварія, якщо v2 конфігурації кінцева точка недоступна (закривається #228)",
         "zh-cn": "如果无法提供固定的事故(第228号)"
-      },
-      "1.15.3": {
-        "en": "internal optimizations (Axios port)",
-        "de": "interne Optimierungen (Axios Port)",
-        "ru": "внутренняя оптимизация (Axios port)",
-        "pt": "otimizações internas (porto de Axios)",
-        "nl": "inwendige optimaties (Axios port)",
-        "fr": "optimisations internes (port Axios)",
-        "it": "ottimizzazioni interne (porta assios)",
-        "es": "optimizaciones internas (puerto Axios)",
-        "pl": "optymalizacja wewnętrznego portu (Axios port)",
-        "uk": "внутрішня оптимізація (Axios порт)",
-        "zh-cn": "内部优化(Axios港口)"
       }
     },
     "title": "sonnen",
