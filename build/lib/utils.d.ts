@@ -1,4 +1,3 @@
-/// <reference types="iobroker" />
 /** API states for v1 and v2 */
 export declare const generalAPIStates: ioBroker.AnyObject[];
 /**

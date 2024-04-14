@@ -98,11 +98,29 @@
     "title": "sonnen",
     "titleLang": {
       "en": "sonnenBattery",
-      "de": "sonnenBatterie"
+      "de": "sonnenBatterie",
+      "ru": "sonnen батарея",
+      "pt": "sonnen Bateria",
+      "nl": "sonnen Batterij",
+      "fr": "sonnen Batterie",
+      "it": "sonnen Batteria",
+      "es": "sonnen Batería",
+      "pl": "sonnen Bateria",
+      "uk": "синен Акумулятори",
+      "zh-cn": "声音 电池"
     },
     "desc": {
       "en": "Monitor your sonnen battery",
-      "de": "Überwache deine sonnen Batterie"
+      "de": "Überwache deine sonnen Batterie",
+      "ru": "Следите за батареей сосен",
+      "pt": "Monitore sua bateria sonnen",
+      "nl": "Monitor uw sonnen batterij",
+      "fr": "Surveillez votre batterie Sonnen",
+      "it": "Monitora la batteria sonnen",
+      "es": "Monitoree su batería sonnen",
+      "pl": "Monitoruj baterię sonnena",
+      "uk": "Моніторинг батареї сонен",
+      "zh-cn": "监视你的声音电池"
     },
     "authors": [
       "Moritz Heusinger <moritz.heusinger@gmail.com>"
@@ -141,7 +159,7 @@
     ],
     "dependencies": [
       {
-        "js-controller": ">=3.0.0"
+        "js-controller": ">=5.0.0"
       }
     ],
     "tier": 2
