@@ -2,7 +2,7 @@
   "name": "iobroker.sonnen",
   "version": "1.18.1",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "description": "sonnen",
   "author": {

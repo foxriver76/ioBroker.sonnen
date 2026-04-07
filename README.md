@@ -322,6 +322,9 @@ The channel allows reading and writing configuration values of the battery.
 The channel provides battery specific information like the number of cycle count.
 
 ## Changelog
+
+### **WORK IN PROGRESS**
+- (iobroker-bot) Adapter requires node.js >= 20 now.
 <!--
 	Placeholder for the next version (at the beginning of the line):
 	### __WORK IN PROGRESS__
