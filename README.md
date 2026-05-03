@@ -519,6 +519,8 @@ The channel provides battery specific information like the number of cycle count
 ### 0.0.1
 * (foxriver76) initial release
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 The MIT License (MIT)
 
