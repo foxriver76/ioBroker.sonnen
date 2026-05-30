@@ -132,7 +132,6 @@
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "icon": "sonnen.png",
-    "materialize": true,
     "enabled": true,
     "compact": true,
     "extIcon": "https://raw.githubusercontent.com/foxriver76/ioBroker.sonnen/master/admin/sonnen.png",
@@ -162,7 +161,10 @@
         "js-controller": ">=5.0.0"
       }
     ],
-    "tier": 2
+    "tier": 2,
+    "adminUI": {
+      "config": "materialize"
+    }
   },
   "native": {
     "ip": "",
